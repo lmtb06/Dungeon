@@ -1,0 +1,57 @@
+# Interface graphique
+    - Points de vie
+    - Minimap
+        - Salle actuelle démarquée des autres salles
+    - Numéro de l’étage actuel
+    - Power-ups actifs
+        - Icône pour chaque type de power-up
+    - Affichage de l’arme actuelle avec une icône propre à celle-ci
+
+# Joueur
+    - Déplacements :
+        - Déplacement vertical ou horizontal sur appui de l’une des quatre touches associées.
+        - Déplacement diagonal en combinant une touche de déplacement vertical et horizontal.
+    - Actions :
+        - Attaquer dans une hitbox devant soit en appuyant sur la touche associée.
+        - Lancer un projectile devant soit en appuyant sur la touche associée si l’arme actuelle est une arme à distance.
+        - Attaquer dans une hitbox dépendante de l’arme possédé actuellement.
+    - Propriété :
+        - Points de vie : Lorsqu’ils sont amenés à 0, la partie est perdue.
+        - Arme active : Définit la hitbox d’attaque du joueur et les dégâts qu’il inflige.
+        - Vitesse : Définit sa vitesse de déplacement.
+        - Power-ups : Ensemble des power-ups actifs
+
+# Monstres
+    - Déplacements :
+        - Se déplacer vers le joueur, bloqué par les murs (Pathfinding)
+        - Vers le joueur, pouvant traverser les murs (Fantôme, Volant)
+        - Patrouille entre plusieurs positions
+        - Ennemi immobile
+        - Charge devant lui quand le joueur entre dans sa zone de détection
+    - Attaques :
+        - Les monstres attaquent le personnage s'ils rentrent à son contact, lui infligeant des dégât
+        - Lancer des projectiles qui inflige des dégâts quand ils entrent en contact avec le joueur
+        - Lancer des projectiles en direction du joueur
+# Niveaux
+    - Cases :
+        - Les cases sont des unités d’espace pour chaque salle
+        - Il en existe plusieurs types :
+            - Standard : le joueur et les monstres peuvent se déplacer dessus sans conséquences
+            - Pièges : le joueur et le monstres prennent des dégâts sur ces cases
+            - Téléporteur : ces cases téléportent le joueur à un autre endroit de la salle
+            - Escaliers : si un joueur marche sur une de ces cases, il est amené à l’étage suivant. (Il s’agit de l’objectif de fin de niveau)
+            - Murs : les murs sont des cases solides à travers lequel le joueur et la plupart des monstres ne peuvent pas passer
+            - Power-ups : ces cases vont générer un power-up aléatoire (ou non) que le joueur peut récupérer
+                - Nouvelle arme augmentent les dégâts ou modifiant la hitbox (Permanent)
+                - Point de vie supplémentaire (Permanent)
+                - Vitesse supplémentaire (Permanent et temporaire)
+                - Invincibilité temporaire et dégâts de contact
+            - Portes : ces cases permettent au joueur de passer d’une salle à un autre
+# Salles
+    - Générées à partir d’un fichier fait manuellement
+    - Contiennent plusieurs types de cases
+# Étage
+    - Assemblage procédural de salles
+        - Assemblage labyrinthique
+        - Escalier à la fin
+        - Difficulté augmentant progressivement à chaque fois que l’on monte d’un étage
