@@ -12,7 +12,7 @@
     - Cases :
         - Les cases sont des unités d’espace pour chaque salle
         - Il en existe plusieurs types :
-            - Murs : les murs sont des cases solides à travers lesquels le joueur et la plupart des monstres ne peuvent pas passer
+            - Murs : les murs sont des cases solides à travers lesquelles le joueur et la plupart des monstres ne peuvent pas passer
             - Power-ups : ces cases vont générer un power-up aléatoire (ou non) que le joueur peut récupérer
                 - Point de vie supplémentaire (Permanent)
                 - Vitesse supplémentaire (Permanent et temporaire)
