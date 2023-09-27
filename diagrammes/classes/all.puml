@@ -1,0 +1,90 @@
+@startuml
+
+
+
+abstract class Entity {
+    - health : int
+    - speed : double
+    - body : Body
+    - damages : int
+    + getHealth() : int
+    + damage(int damages) : void
+    + isPlayer() : boolean
+    + isMonster() : boolean
+    + attack(Monster m) : void
+}
+
+class Player {
+    + Player()
+    + isPlayer() : boolean
+}
+
+class Monster {
+    + Monster()
+    + isMonster() : boolean
+}
+
+class Level {
+    - currentRoom : int
+}
+
+class Room {
+
+}
+
+abstract class Tile {
+    
+}
+
+class Wall {
+
+}
+
+class Floor {
+
+}
+
+class Dungeon {
+    - currentLevel : int
+}
+
+abstract class Crossable {
+
+}
+
+abstract class PowerUps {
+    + applyEffect(Player p) : void
+    + disparaitre() : void
+}
+
+class SpeedUp{
+    + applyEffect(Player p) : void
+}
+
+class HealthUp{
+    + applyEffect(Player p) : void
+}
+
+class Main {
+    + create()
+    + render()
+    + dispose()
+}
+
+Dungeon -->"1" Player
+Main -->"1" Dungeon
+Level -->"*" Room
+Dungeon -->"*" Level
+Room -->"*" Tile
+Room -->"*" Entity
+
+Player --|> Entity
+Monster --|> Entity
+
+SpeedUp --|> PowerUps
+HealthUp --|> PowerUps
+Wall --|> Tile
+Floor --|> Crossable
+Crossable --|> Tile
+PowerUps --|> Crossable
+@enduml
