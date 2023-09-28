@@ -44,6 +44,10 @@ class Floor {
 
 }
 
+class Door {
+
+}
+
 class Dungeon {
     - currentLevel : int
 }
@@ -85,6 +89,8 @@ SpeedUp --|> PowerUps
 HealthUp --|> PowerUps
 Wall --|> Tile
 Floor --|> Crossable
+Door --|> Crossable
+Door -->"1" Room
 Crossable --|> Tile
 PowerUps --|> Crossable
 @enduml
