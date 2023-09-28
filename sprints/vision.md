@@ -1,2 +1,3 @@
+# Vision du jeu
 “Dungeon Game” est un jeu dans lequel le joueur doit évoluer à travers un donjon constitué de plusieurs étages. Dans ces étages se trouvent des salles remplies de monstres, de pièges et de bonus qui peuvent impacter positivement ou négativement la progression du joueur. Son objectif est d’atteindre la dernière salle du dernier étage.
 Le joueur incarne un aventurier en quête du secret du donjon. Ce secret se trouve au dernier niveau du donjon derrière moults ennemis et autres pièges. 
