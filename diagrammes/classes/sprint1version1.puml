@@ -11,7 +11,8 @@ abstract class Entity {
     + damage(int damages) : void
     + isPlayer() : boolean
     + isMonster() : boolean
-    + attack(Monster m) : void
+    + attack(Entity m) : void
+    + move(int x, int y) : void
 }
 
 class Player {
@@ -41,6 +42,10 @@ class Wall {
 }
 
 class Floor {
+
+}
+
+class Door {
 
 }
 
@@ -85,6 +90,8 @@ SpeedUp --|> PowerUps
 HealthUp --|> PowerUps
 Wall --|> Tile
 Floor --|> Crossable
+Door --|> Crossable
+Door -->"1" Room
 Crossable --|> Tile
 PowerUps --|> Crossable
 @enduml

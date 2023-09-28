@@ -5,6 +5,9 @@
 - En tant que joueur, je veux voir les power-ups actifs avec des icônes dédiées, afin de jauger rapidement de leur effets.
 - En tant que joueur, je veux avoir un retour visuel rapide du temps qu’il me reste pour les différents power-up.
 - En tant que joueur, je veux voir une icône dédiée pour l’arme que j’équipe, afin de savoir quel genre d’attaques je peux effectuer.
+- En tant que joueur, je veux voir un écran de fin lorsque je quitte le dernier étage.
+- En tant que joueur, je veux voir un écran de mort lorsque je tombe à 0 points de vie.
+
 # Personnage
 ## Actions
 - En tant que joueur, je veux que mon personnage se déplace horizontalement, verticalement et en diagonal en fonction des touches (flèche gauche/droite, flèche haut/bas, combinaison composante horizontale et verticale)
