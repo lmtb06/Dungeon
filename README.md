@@ -19,3 +19,7 @@ Pour lancer effectivement le jeu, tapez la commande
 ### Crédits et librairies
 
 Le projet utilise [LibGDX](https://libgdx.com/) pour faire tourner le jeu.
+
+## Trello
+
+https://trello.com/invite/b/vw1WRuzl/ATTI9007fdf8ebe621905dc3c48a66e6a6bbF54E8997/dungeon-game
