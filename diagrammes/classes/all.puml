@@ -11,7 +11,8 @@ abstract class Entity {
     + damage(int damages) : void
     + isPlayer() : boolean
     + isMonster() : boolean
-    + attack(Monster m) : void
+    + attack(Entity m) : void
+    + move(int x, int y) : void
 }
 
 class Player {
