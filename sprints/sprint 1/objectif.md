@@ -1,0 +1,1 @@
+l'objectif du sprint 1 est d'arriver à la sortie de la salle, des monstres et bonus sont présents pour gêner ou aider le joueur.
