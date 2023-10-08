@@ -1,17 +1,20 @@
 package com.dungeondevs.dungeongame;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 
 public class Jeu extends Game {
+
+    private Dungeon dungeon;
+
     @Override
     public void create() {
-        setScreen(new Dungeon());
+        dungeon = new Dungeon();
+        setScreen(dungeon);
     }
 
     @Override
     public void resize(int width, int height) {
-
+        dungeon.resize(width, height);
     }
 
     @Override

@@ -20,8 +20,6 @@ public class Dungeon implements Screen {
 
     private Viewport fenetre;
 
-
-
     static final float WORLD_WIDTH = 70;
     static final float WORLD_HEIGHT = 70;
 
@@ -38,7 +36,7 @@ public class Dungeon implements Screen {
         camera = new OrthographicCamera(WORLD_WIDTH,WORLD_HEIGHT * (h/w));
 
 
-        camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0f);
+        camera.position.set(camera.viewportWidth+40, camera.viewportHeight, 0f);
         camera.update();
 
 
@@ -58,7 +56,7 @@ public class Dungeon implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //renderer.getBatch().setProjectionMatrix(camera.combined);
-        //renderer.setView(fenetre);
+        //renderer.setView(fenetre)
         renderer.setView(camera);
         renderer.render();
     }
