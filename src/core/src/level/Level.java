@@ -123,8 +123,8 @@ public class Level {
             Monster m = new Monster(Integer.parseInt(so.get(i).getProperties().get("health").toString()),
                     Float.parseFloat(so.get(i).getProperties().get("speed").toString()),
                     Integer.parseInt(so.get(i).getProperties().get("damages").toString()),
-                    new Vector2(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString()),
-                            Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())
+                    new Vector2(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteur,
+                            Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteur
                             ),
                     new Vector2(0.6f,0.6f),
                             this.world
