@@ -13,8 +13,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.dungeondevs.dungeongame.Entity;
 import com.dungeondevs.dungeongame.Monster;
 import com.dungeondevs.dungeongame.Player;
+import com.dungeondevs.dungeongame.PowerUp;
 import sun.tools.jconsole.JConsole;
 
 import java.util.ArrayList;
