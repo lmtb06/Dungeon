@@ -2,6 +2,9 @@ package level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -20,11 +23,12 @@ public class Level {
     private List<Room> rooms;
     private float worldWidth;
     private float worldHeight;
+    private OrthographicCamera cam;
 
 
     public Level(float viewportWidthInMeters, float viewportHeightInMeters) {
 
-        OrthographicCamera cam = new OrthographicCamera(25,25);
+        cam = new OrthographicCamera(25,25);
 
         cam.zoom = 10f ;
         cam.update();
@@ -57,7 +61,21 @@ public class Level {
         playerBody.createFixture(boxFixtureDef);
         boxShape.dispose();
 
-        this.player = new Player(playerBody, null);
+        Texture walkSheet = new Texture(Gdx.files.internal("characterAndTileset/player_walk.png"));
+        TextureRegion[][] tmp = TextureRegion.split(walkSheet,
+                walkSheet.getWidth() / 4,
+                walkSheet.getHeight() / 1);
+
+        TextureRegion[] walkFrames = new TextureRegion[4 * 1];
+        int index = 0;
+        for (int i = 0; i < 1; i++) {
+            for (int j = 0; j < 4; j++) {
+                walkFrames[index++] = tmp[i][j];
+            }
+        }
+        Animation<TextureRegion> walkAnimation = new Animation<TextureRegion>(0.05f, walkFrames);
+
+        this.player = new Player(playerBody, walkAnimation);
     }
 
     private void loadRoom(Room roomToLoad) {
@@ -99,6 +117,10 @@ public class Level {
 
     public World getWorld() {
         return world;
+    }
+
+    public OrthographicCamera getCam () {
+        return cam;
     }
 
     public Viewport getViewport() {

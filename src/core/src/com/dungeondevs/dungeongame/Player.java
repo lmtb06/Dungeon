@@ -12,11 +12,14 @@ public class Player {
     private int contactDamages;
     private int meleeDamages;
 
+    private Animation<TextureRegion> animation;
+
     public Player(Body body, Animation<TextureRegion> animation) {
         float vitesseMarcheHumainMoyenMetreParSec = 1.67f;
         this.body = body;
         this.speedMeterPerSecond = 4* vitesseMarcheHumainMoyenMetreParSec;
         this.health = 100;
+        this.animation = animation;
     }
 
     public void move(Vector2 vector){
@@ -30,5 +33,9 @@ public class Player {
 
     public Body getBody() {
         return body;
+    }
+
+    public Animation<TextureRegion> getAnimation () {
+        return animation;
     }
 }

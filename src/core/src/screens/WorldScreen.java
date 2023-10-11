@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -17,12 +20,16 @@ import level.Level;
 public class WorldScreen implements Screen {
     private final Level currentLevel;
     private final Box2DDebugRenderer debugRenderer;
+
+    private SpriteBatch spriteBatch;
+    private float state;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
     public WorldScreen() {
         debugRenderer = new Box2DDebugRenderer();
         currentLevel = new Level(25,25);
+        spriteBatch = new SpriteBatch();
 
         TmxMapLoader loader = new TmxMapLoader();
         map = loader.load("maps/test2.tmx");
@@ -40,7 +47,7 @@ public class WorldScreen implements Screen {
     @Override
     public void render(float delta) {
 
-
+        state += Gdx.graphics.getDeltaTime();
         // Clear the screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -50,10 +57,17 @@ public class WorldScreen implements Screen {
         // Gestion des inputs
         handleInput();
 
-        //mettre la map
-
-
         Viewport viewport = currentLevel.getViewport();
+
+        TextureRegion playerAnimationFrame = currentLevel.getPlayer().getAnimation().getKeyFrame(state, true);
+
+        Vector2 playerPosition = currentLevel.getPlayer().getPosition();
+        OrthographicCamera cam = currentLevel.getCam();
+
+        spriteBatch.begin();
+        spriteBatch.setProjectionMatrix(cam.combined);
+        spriteBatch.draw(playerAnimationFrame, playerPosition.x - 0.25f, playerPosition.y - 0.25f, .5f, .5f);
+        spriteBatch.end();
 
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
@@ -61,14 +75,12 @@ public class WorldScreen implements Screen {
 
 
 
-        renderer.setView((OrthographicCamera) viewport.getCamera());
+        renderer.setView(cam);
         renderer.render();
 
 
         // rendu debug du monde box2d
-        debugRenderer.render(currentLevel.getWorld(), viewport.getCamera().combined);
-
-
+        debugRenderer.render(currentLevel.getWorld(), cam.combined);
 
     }
 
