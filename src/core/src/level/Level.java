@@ -13,7 +13,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.dungeondevs.dungeongame.Entity;
 import com.dungeondevs.dungeongame.Monster;
 import com.dungeondevs.dungeongame.Player;
 import sun.tools.jconsole.JConsole;
@@ -58,7 +57,6 @@ public class Level {
         loadPlayerCharacter();
         loadRoom();
         viewport.getCamera().position.set(player.getPosition(),0);
-
     }
 
     private void loadPlayerCharacter(){
@@ -124,17 +122,35 @@ public class Level {
         //mise en place des monstres et objets
         for (int i = 0; i < so.getCount(); i++) {
             System.out.println("siu:" +Float.parseFloat(so.get(i).getProperties().get("x spawn").toString()));
-            Monster m = new Monster(Integer.parseInt(so.get(i).getProperties().get("health").toString()),
-                    Float.parseFloat(so.get(i).getProperties().get("speed").toString()),
-                    Integer.parseInt(so.get(i).getProperties().get("damages").toString()),
-                    new Vector2(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteur,
-                            Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteur
+
+            switch (so.get(i).getProperties().get("categorie").toString()){
+                case "monstre":
+                    Monster m = new Monster(Integer.parseInt(so.get(i).getProperties().get("health").toString()),
+                            Float.parseFloat(so.get(i).getProperties().get("speed").toString()),
+                            Integer.parseInt(so.get(i).getProperties().get("damages").toString()),
+                            new Vector2(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteur,
+                                    Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteur
                             ),
-                    new Vector2(0.6f,0.6f),
+                            new Vector2(0.6f,0.6f),
                             this.world
 
                     );
-            monsters.add(m);
+                    break;
+                case "powerUps":
+                    PowerUp pu = new PowerUp(
+                            new Vector2(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteur,
+                                    Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteur
+                            ),
+                            new Vector2(0.6f,0.6f),
+                            this.world,
+                            this
+                    );
+                    world.setContactListener(pu);
+                    break;
+            }
+
+
+
         }
     }
 
