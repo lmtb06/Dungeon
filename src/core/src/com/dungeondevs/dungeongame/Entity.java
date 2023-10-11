@@ -1,6 +1,7 @@
 package com.dungeondevs.dungeongame;
 
-import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
 
 public abstract class Entity {
 
@@ -8,6 +9,28 @@ public abstract class Entity {
     protected double speed;
     protected Body body;
     protected int damages;
+
+    public Entity (int health, double speed, int damages, Vector2 position, Vector2 size, World world) {
+        this.health = health;
+        this.speed = speed;
+        this.damages = damages;
+
+        BodyDef monsterBodyDef = new BodyDef();
+        monsterBodyDef.type = BodyDef.BodyType.DynamicBody;
+        monsterBodyDef.position.set(position.x, position.y);
+        monsterBodyDef.fixedRotation = true;
+        this.body = world.createBody(monsterBodyDef);
+
+        PolygonShape boxShape = new PolygonShape();
+        boxShape.setAsBox(size.x, size.y);
+
+        FixtureDef boxFixtureDef = new FixtureDef();
+        boxFixtureDef.shape = boxShape;
+        boxFixtureDef.density = 1;
+
+        this.body.createFixture(boxFixtureDef);
+        boxShape.dispose();
+    }
 
     /**
      * Récupère la santé actuelle de l'entité.
