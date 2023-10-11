@@ -4,10 +4,10 @@ import com.badlogic.gdx.physics.box2d.Body;
 
 public abstract class Entity {
 
-    private int health;
-    private double speed;
-    private Body body;
-    private int damages;
+    protected int health;
+    protected double speed;
+    protected Body body;
+    protected int damages;
 
     /**
      * Récupère la santé actuelle de l'entité.

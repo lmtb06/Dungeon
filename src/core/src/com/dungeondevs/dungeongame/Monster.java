@@ -1,6 +1,16 @@
 package com.dungeondevs.dungeongame;
 
+import com.badlogic.gdx.math.Vector2;
+
 public class Monster extends Entity{
+
+    public Monster (int health, double speed, int damages, Vector2 position) {
+        this.health = health;
+        this.speed = speed;
+
+        this.damages = damages;
+    }
+
     @Override
     public boolean isPlayer() {
         return false;
