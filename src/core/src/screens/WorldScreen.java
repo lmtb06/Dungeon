@@ -74,7 +74,7 @@ public class WorldScreen implements Screen {
 
         spriteBatch.begin();
         spriteBatch.setProjectionMatrix(cam.combined);
-        spriteBatch.draw(playerAnimationFrame, playerPosition.x - 0.55f, playerPosition.y - 0.55f, 1.1f, 1.1f);
+        spriteBatch.draw(playerAnimationFrame, playerPosition.x - 0.5f, playerPosition.y - 0.5f, 1f, 1f);
         spriteBatch.end();
 
         float w = Gdx.graphics.getWidth();

@@ -59,7 +59,8 @@ public class Level {
         // Create a box body
         BodyDef playerBodyDef = new BodyDef();
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
-        playerBodyDef.position.set(worldWidth/2, worldHeight/2);
+        playerBodyDef.position.set(3,3);
+        playerBodyDef.fixedRotation = true;
         Body playerBody = world.createBody(playerBodyDef);
 
         PolygonShape boxShape = new PolygonShape();
@@ -72,15 +73,17 @@ public class Level {
         playerBody.createFixture(boxFixtureDef);
         boxShape.dispose();
 
-        Texture walkSheet = new Texture(Gdx.files.internal("characterAndTileset/player_walk.png"));
+        Texture walkSheet = new Texture(Gdx.files.internal("characterAndTileset/player_idle.png"));
+        int spritesheetHeight = 1;
+        int spritesheetWidth = 2;
         TextureRegion[][] tmp = TextureRegion.split(walkSheet,
-                walkSheet.getWidth() / 4,
-                walkSheet.getHeight() / 1);
+                walkSheet.getWidth() / spritesheetWidth,
+                walkSheet.getHeight() / spritesheetHeight);
 
-        TextureRegion[] walkFrames = new TextureRegion[4 * 1];
+        TextureRegion[] walkFrames = new TextureRegion[spritesheetWidth * spritesheetHeight];
         int index = 0;
-        for (int i = 0; i < 1; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < spritesheetHeight; i++) {
+            for (int j = 0; j < spritesheetWidth; j++) {
                 walkFrames[index++] = tmp[i][j];
             }
         }
