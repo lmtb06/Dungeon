@@ -21,7 +21,8 @@ abstract class GameCharacter {
     - body : Body
     - contactDamages : int
     - meleeDamages : int
-    + move()
+    + move(vecteur : Vector2): void
+    + getPosition() : Vector2
     + attack()
     + takeDamage()
 }
@@ -63,12 +64,19 @@ Teleporter --|> GameObject
 
 class Level {
     - world : World
-    - renderer : Renderer
-    - camera : OrthographicCamera
-    loadRoom()
-    unloadRoom()
-    update(delta : float) : void
-    render() : void
+    - viewport : Viewport
+    - player : Player
+    - loadRoom(room : Room)
+    - unloadRoom(room : Room)
+    - loadPlayerCharacter() : void
+    - createBoundary(x : float, y : float, width: float, height :float)
+    + getCamera() : OrthographicCamera
+    + getPlayer() : Player
+    + update(delta : float) : void
+    + getWorld() : World
+    + getViewport() : Viewport
+    + getPlayer() : Player
+    + dispose() : void
 }
 
 Level "1"--"1..*" Room : has >
