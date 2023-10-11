@@ -1,11 +1,10 @@
 package level;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import level.tiles.Floor;
 import level.tiles.Tile;
 
 public class Room {
@@ -31,9 +30,10 @@ public class Room {
     private OrthographicCamera oc;
 
 
-    public Room(){
+    public Room(String s){
         TmxMapLoader loader = new TmxMapLoader();
-        map = loader.load("maps/test2.tmx");
+        //map = loader.load("maps/test2.tmx");
+        map = loader.load(s);
 
         omr = new OrthogonalTiledMapRenderer(map);
         oc = new OrthographicCamera();
@@ -52,6 +52,14 @@ public class Room {
         }**/
     }
 
+    public TiledMapTileLayer getMapLayer(int i) {
+        return (TiledMapTileLayer) this.omr.getMap().getLayers().get(i);
+    }
+
+    public TiledMap getMap() {
+        return map;
+    }
+
     public void render() {
         omr.render();
         /**for (int i  = 0; i < this.tableauCases.length; i++){
@@ -60,4 +68,5 @@ public class Room {
             }
         }**/
     }
+
 }

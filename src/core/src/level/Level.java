@@ -6,11 +6,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dungeondevs.dungeongame.Player;
+import sun.tools.jconsole.JConsole;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +24,19 @@ public class Level {
     private final Viewport viewport;
     private Player player;
     private List<Room> rooms;
+
+    private Room roomActuel;
+
     private float worldWidth;
     private float worldHeight;
     private OrthographicCamera cam;
 
 
+
     public Level(float viewportWidthInMeters, float viewportHeightInMeters) {
+
+        //création de salle temporaire
+        roomActuel = new Room("maps/test2.tmx");
 
         cam = new OrthographicCamera(25,25);
 
@@ -35,11 +45,13 @@ public class Level {
         this.world = new World(new Vector2(0,0), true);
         worldWidth = 20;
         worldHeight = 20;
+        this.world.setContactListener(new WorldContactListener());
+
         this.viewport = new FitViewport(viewportWidthInMeters, viewportHeightInMeters, cam);
 
         this.rooms = new ArrayList<Room>(1);
         loadPlayerCharacter();
-        loadRoom(null);
+        loadRoom();
         viewport.getCamera().position.set(player.getPosition(),0);
     }
 
@@ -77,18 +89,35 @@ public class Level {
         this.player = new Player(playerBody, walkAnimation);
     }
 
-    private void loadRoom(Room roomToLoad) {
+    private void loadRoom() {
         float boundaryThickness = 0.5f;  // Set as desired
 
+        TiledMapTileLayer layerCollision = this.roomActuel.getMapLayer(1);
+
+        System.out.println(layerCollision.getWidth());
+        System.out.println(layerCollision.getHeight());
+
+        float facteur = 1.25f;
+
+        for (int i = 0; i < layerCollision.getWidth(); i++) {
+            for (int j = 0; j < layerCollision.getHeight(); j++) {
+                System.out.println(layerCollision.getCell(i,j));
+                if (layerCollision.getCell(i,j) != null){
+                    createBoundary(i*facteur + 0.59f, j*facteur + 0.59f, facteur,facteur);
+                }
+            }
+        }
+
         // Bottom boundary
-        createBoundary(worldWidth / 2, 0, worldWidth, boundaryThickness);
+
         // Top boundary
-        createBoundary(worldWidth / 2, worldHeight, worldWidth, boundaryThickness);
+        /**createBoundary(worldWidth / 2, worldHeight, worldWidth, boundaryThickness);
         // Left boundary
         createBoundary(0, worldHeight / 2, boundaryThickness, worldHeight);
         // Right boundary
-        createBoundary(worldWidth, worldHeight / 2, boundaryThickness, worldHeight);
-    }
+         createBoundary(worldWidth, worldHeight / 2, boundaryThickness, worldHeight);
+            **/
+         }
 
     private void createBoundary(float x, float y, float width, float height) {
         BodyDef bodyDef = new BodyDef();
@@ -128,6 +157,10 @@ public class Level {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public Room getRoomActuel() {
+        return roomActuel;
     }
 
     public void dispose() {

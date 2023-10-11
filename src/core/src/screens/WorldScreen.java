@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import level.Level;
+import level.Room;
 
 public class WorldScreen implements Screen {
     private final Level currentLevel;
@@ -23,20 +24,24 @@ public class WorldScreen implements Screen {
 
     private SpriteBatch spriteBatch;
     private float state;
-    private TiledMap map;
+
+
     private OrthogonalTiledMapRenderer renderer;
 
     public WorldScreen() {
         debugRenderer = new Box2DDebugRenderer();
         currentLevel = new Level(25,25);
+
         spriteBatch = new SpriteBatch();
 
         TmxMapLoader loader = new TmxMapLoader();
-        map = loader.load("maps/test2.tmx");
+
+        //map = loader.load("maps/test2.tmx");
 
 
 
-        renderer = new OrthogonalTiledMapRenderer(map,25/(map.getProperties().get("width",Integer.class)*32f));
+        renderer = new OrthogonalTiledMapRenderer(this.currentLevel.getRoomActuel().getMap(),25/(this.currentLevel.getRoomActuel().getMap().getProperties().get("width",Integer.class)*32f));
+
     }
 
     @Override
