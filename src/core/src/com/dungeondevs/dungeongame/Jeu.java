@@ -1,6 +1,7 @@
 package com.dungeondevs.dungeongame;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import screens.WorldScreen;
 
 public class Jeu extends Game {
@@ -8,7 +9,9 @@ public class Jeu extends Game {
     @Override
     public void create() {
 //        dungeon = new Dungeon();
-        setScreen(new WorldScreen());
+        WorldScreen ws = new WorldScreen();
+        setScreen(ws);
+        Gdx.input.setInputProcessor(ws.getInputProcessor());
     }
 
     @Override
