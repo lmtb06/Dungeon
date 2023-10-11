@@ -7,16 +7,19 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.dungeondevs.dungeongame.Monster;
 import com.dungeondevs.dungeongame.Player;
 import sun.tools.jconsole.JConsole;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class Level {
@@ -100,27 +103,36 @@ public class Level {
         System.out.println(layerCollision.getWidth());
         System.out.println(layerCollision.getHeight());
 
+        MapObjects so = this.roomActuel.getMap().getLayers().get(2).getObjects();
+
+
         float facteur = 1.25f;
 
+        //mise en place des bordure de collisions
         for (int i = 0; i < layerCollision.getWidth(); i++) {
             for (int j = 0; j < layerCollision.getHeight(); j++) {
-                System.out.println(layerCollision.getCell(i,j));
                 if (layerCollision.getCell(i,j) != null){
                     createBoundary(i*facteur + 0.59f, j*facteur + 0.59f, facteur,facteur);
                 }
             }
         }
 
-        // Bottom boundary
+        //mise en place des monstres et objets
+        for (int i = 0; i < so.getCount(); i++) {
+            System.out.println("siu:" +Float.parseFloat(so.get(i).getProperties().get("x spawn").toString()));
+            Monster m = new Monster(Integer.parseInt(so.get(i).getProperties().get("health").toString()),
+                    Float.parseFloat(so.get(i).getProperties().get("speed").toString()),
+                    Integer.parseInt(so.get(i).getProperties().get("damages").toString()),
+                    new Vector2(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString()),
+                            Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())
+                            ),
+                    new Vector2(0.6f,0.6f),
+                            this.world
 
-        // Top boundary
-        /**createBoundary(worldWidth / 2, worldHeight, worldWidth, boundaryThickness);
-        // Left boundary
-        createBoundary(0, worldHeight / 2, boundaryThickness, worldHeight);
-        // Right boundary
-         createBoundary(worldWidth, worldHeight / 2, boundaryThickness, worldHeight);
-            **/
-         }
+                    );
+
+        }
+    }
 
     private void createBoundary(float x, float y, float width, float height) {
         BodyDef bodyDef = new BodyDef();
