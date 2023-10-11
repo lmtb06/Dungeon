@@ -51,7 +51,7 @@ public class Level {
         Body playerBody = world.createBody(playerBodyDef);
 
         PolygonShape boxShape = new PolygonShape();
-        boxShape.setAsBox(0.2f, 0.2f);
+        boxShape.setAsBox(.6f, .6f);
 
         FixtureDef boxFixtureDef = new FixtureDef();
         boxFixtureDef.shape = boxShape;
@@ -72,7 +72,7 @@ public class Level {
                 walkFrames[index++] = tmp[i][j];
             }
         }
-        Animation<TextureRegion> walkAnimation = new Animation<TextureRegion>(0.05f, walkFrames);
+        Animation<TextureRegion> walkAnimation = new Animation<TextureRegion>(0.5f, walkFrames);
 
         this.player = new Player(playerBody, walkAnimation);
     }

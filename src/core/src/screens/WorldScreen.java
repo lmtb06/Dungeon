@@ -64,20 +64,16 @@ public class WorldScreen implements Screen {
         Vector2 playerPosition = currentLevel.getPlayer().getPosition();
         OrthographicCamera cam = currentLevel.getCam();
 
+        renderer.setView(cam);
+        renderer.render();
+
         spriteBatch.begin();
         spriteBatch.setProjectionMatrix(cam.combined);
-        spriteBatch.draw(playerAnimationFrame, playerPosition.x - 0.25f, playerPosition.y - 0.25f, .5f, .5f);
+        spriteBatch.draw(playerAnimationFrame, playerPosition.x - 0.55f, playerPosition.y - 0.55f, 1.1f, 1.1f);
         spriteBatch.end();
 
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
-
-
-
-
-        renderer.setView(cam);
-        renderer.render();
-
 
         // rendu debug du monde box2d
         debugRenderer.render(currentLevel.getWorld(), cam.combined);
