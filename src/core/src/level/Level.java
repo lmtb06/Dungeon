@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.dungeondevs.dungeongame.Entity;
 import com.dungeondevs.dungeongame.Monster;
 import com.dungeondevs.dungeongame.Player;
 import com.dungeondevs.dungeongame.PowerUp;
@@ -34,6 +35,7 @@ public class Level {
     private float worldWidth;
     private float worldHeight;
     private OrthographicCamera cam;
+    private List<Monster> monsters;
 
 
 
@@ -118,19 +120,38 @@ public class Level {
             }
         }
 
+        this.monsters = new ArrayList<>();
         //mise en place des monstres et objets
         for (int i = 0; i < so.getCount(); i++) {
             System.out.println("siu:" +Float.parseFloat(so.get(i).getProperties().get("x spawn").toString()));
-            Monster m = new Monster(Integer.parseInt(so.get(i).getProperties().get("health").toString()),
-                    Float.parseFloat(so.get(i).getProperties().get("speed").toString()),
-                    Integer.parseInt(so.get(i).getProperties().get("damages").toString()),
-                    new Vector2(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteur,
-                            Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteur
+
+            switch (so.get(i).getProperties().get("categorie").toString()){
+                case "monstre":
+                    Monster m = new Monster(Integer.parseInt(so.get(i).getProperties().get("health").toString()),
+                            Float.parseFloat(so.get(i).getProperties().get("speed").toString()),
+                            Integer.parseInt(so.get(i).getProperties().get("damages").toString()),
+                            new Vector2(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteur,
+                                    Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteur
                             ),
-                    new Vector2(0.6f,0.6f),
+                            new Vector2(0.6f,0.6f),
                             this.world
 
                     );
+                    break;
+                case "powerUps":
+                    PowerUp pu = new PowerUp(
+                            new Vector2(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteur,
+                                    Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteur
+                            ),
+                            new Vector2(0.6f,0.6f),
+                            this.world,
+                            this
+                    );
+                    world.setContactListener(pu);
+                    break;
+            }
+
+
 
         }
     }
@@ -152,6 +173,7 @@ public class Level {
     public void update(float delta) {
         world.step(delta, 6, 2);
         Vector2 playerPos = player.getPosition();
+        player.update(world);
 
         // Mise à jour de la position de la caméra
         Camera camera = viewport.getCamera();
@@ -161,6 +183,15 @@ public class Level {
 
     public World getWorld() {
         return world;
+    }
+
+    public Entity getEntityByBody (Body b) {
+        Entity res = null;
+        for (Monster m: monsters) {
+            if(m.getBody() == b)
+                res = m;
+        }
+        return res;
     }
 
     public OrthographicCamera getCam () {
