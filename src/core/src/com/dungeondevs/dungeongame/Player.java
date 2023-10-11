@@ -35,6 +35,30 @@ public class Player {
         return body;
     }
 
+    public int getHealth() {
+        return health;
+    }
+
+    public float getSpeedMeterPerSecond() {
+        return speedMeterPerSecond;
+    }
+
+    public int getContactDamages() {
+        return contactDamages;
+    }
+
+    public int getMeleeDamages() {
+        return meleeDamages;
+    }
+
+    public void setContactDamages(int contactDamages) {
+        this.contactDamages = contactDamages;
+    }
+
+    public void setMeleeDamages(int meleeDamages) {
+        this.meleeDamages = meleeDamages;
+    }
+
     public Animation<TextureRegion> getAnimation () {
         return animation;
     }
