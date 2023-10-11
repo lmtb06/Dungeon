@@ -23,7 +23,7 @@ public class Main extends ApplicationAdapter {
 	public void create () {
 
 		batch = new SpriteBatch();
-		this.salle = new Room();
+		//this.salle = new Room();
 		img = new Texture("badlogic.jpg");
 	}
 
