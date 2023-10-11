@@ -30,7 +30,6 @@ public class Level {
 
         cam = new OrthographicCamera(25,25);
 
-        cam.zoom = 10f ;
         cam.update();
 
         this.world = new World(new Vector2(0,0), true);

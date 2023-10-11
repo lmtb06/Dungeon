@@ -36,7 +36,7 @@ public class WorldScreen implements Screen {
 
 
 
-        renderer = new OrthogonalTiledMapRenderer(map);
+        renderer = new OrthogonalTiledMapRenderer(map,25/(map.getProperties().get("width",Integer.class)*32f));
     }
 
     @Override
