@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.dungeondevs.dungeongame.Entity;
 import com.dungeondevs.dungeongame.Monster;
 import com.dungeondevs.dungeongame.Player;
 import sun.tools.jconsole.JConsole;
@@ -33,6 +34,7 @@ public class Level {
     private float worldWidth;
     private float worldHeight;
     private OrthographicCamera cam;
+    private List<Monster> monsters;
 
 
 
@@ -56,6 +58,7 @@ public class Level {
         loadPlayerCharacter();
         loadRoom();
         viewport.getCamera().position.set(player.getPosition(),0);
+
     }
 
     private void loadPlayerCharacter(){
@@ -92,7 +95,7 @@ public class Level {
         }
         Animation<TextureRegion> walkAnimation = new Animation<TextureRegion>(0.5f, walkFrames);
 
-        this.player = new Player(playerBody, walkAnimation);
+        this.player = new Player(playerBody, walkAnimation, this);
     }
 
     private void loadRoom() {
@@ -117,6 +120,7 @@ public class Level {
             }
         }
 
+        this.monsters = new ArrayList<>();
         //mise en place des monstres et objets
         for (int i = 0; i < so.getCount(); i++) {
             System.out.println("siu:" +Float.parseFloat(so.get(i).getProperties().get("x spawn").toString()));
@@ -130,7 +134,7 @@ public class Level {
                             this.world
 
                     );
-
+            monsters.add(m);
         }
     }
 
@@ -151,6 +155,7 @@ public class Level {
     public void update(float delta) {
         world.step(delta, 6, 2);
         Vector2 playerPos = player.getPosition();
+        player.update(world);
 
         // Mise à jour de la position de la caméra
         Camera camera = viewport.getCamera();
@@ -160,6 +165,15 @@ public class Level {
 
     public World getWorld() {
         return world;
+    }
+
+    public Entity getEntityByBody (Body b) {
+        Entity res = null;
+        for (Monster m: monsters) {
+            if(m.getBody() == b)
+                res = m;
+        }
+        return res;
     }
 
     public OrthographicCamera getCam () {

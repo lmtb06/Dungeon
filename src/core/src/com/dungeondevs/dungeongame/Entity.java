@@ -16,7 +16,7 @@ public abstract class Entity {
         this.damages = damages;
 
         BodyDef monsterBodyDef = new BodyDef();
-        monsterBodyDef.type = BodyDef.BodyType.DynamicBody;
+        monsterBodyDef.type = BodyDef.BodyType.StaticBody;
         monsterBodyDef.position.set(position.x, position.y);
         monsterBodyDef.fixedRotation = true;
         this.body = world.createBody(monsterBodyDef);
@@ -38,6 +38,10 @@ public abstract class Entity {
      */
     public int getHealth() {
         return health;
+    }
+
+    public Body getBody() {
+        return body;
     }
 
     /**
