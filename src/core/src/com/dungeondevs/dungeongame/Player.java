@@ -76,7 +76,7 @@ public class Player {
 
         world.setContactListener(new DamageCollisionListener(currentLevel));
 
-        attackEnd = Gdx.graphics.getDeltaTime() + 0.1f;
+        attackEnd = Gdx.graphics.getDeltaTime() + 0.5f;
         timer = 0f;
     }
 
@@ -91,5 +91,9 @@ public class Player {
                 timer += Gdx.graphics.getDeltaTime();
             }
         }
+    }
+
+    public Body getAttackBody() {
+        return attackBody;
     }
 }

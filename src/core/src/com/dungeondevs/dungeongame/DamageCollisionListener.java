@@ -17,7 +17,12 @@ public class DamageCollisionListener implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
         Monster m = (Monster) level.getEntityByBody(contact.getFixtureB().getBody());
-        if(m != null) System.out.println("Touché mob");
+        //if()
+            System.out.println(level.isAnAttackBody(contact.getFixtureA().getBody())); //m.damage(2);
+            System.out.println(level.isAnAttackBody(contact.getFixtureB().getBody())); //m.damage(2);
+        if(m != null) {
+
+        }
     }
 
     @Override

@@ -176,6 +176,10 @@ public class Level {
         return res;
     }
 
+    public boolean isAnAttackBody (Body b) {
+        return  b == player.getAttackBody();
+    }
+
     public OrthographicCamera getCam () {
         return cam;
     }
