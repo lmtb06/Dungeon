@@ -1,18 +1,12 @@
 @startuml
 
-class Game {
-    initialize()
-    update(delta : float) : void
-    exit()
-}
-
-Game *-- ScreenManager : -screenManager
-Game *-- AnimationManager : -animationManager
-Game *-- EventManager : -eventManager
-Game *-- InputHandler : -currentInputHandler
-
 abstract class GameObject {
-    - animation : Animation
+    GameObject(eventManager : EventManager, animationManager : AnimationManager)
+}
+GameObject *-- EventManager
+GameObject *-- AnimationManager
+
+interface AI {
 }
 
 abstract class GameCharacter {
@@ -21,19 +15,19 @@ abstract class GameCharacter {
     - body : Body
     - contactDamages : int
     - meleeDamages : int
-    + move(vecteur : Vector2): void
+    + move(vecteur : Vector2) : void
     + getPosition() : Vector2
-    + attack()
-    + takeDamage()
+    + attack(target : GameCharacter) : void
+    + takeDamage(amount : int) : void
 }
 GameCharacter --|> GameObject
 
-GameCharacter "1" -- "1" Weapon : has >
 
 class Player {
-    collectPowerUp()
+    applyPowerUp(powerUp : PowerUp) : void
 }
 Player --|> GameCharacter
+Player "1" -- "0..1" Weapon : has >
 Player "1" -- "0..*" PowerUp : has >
 
 
@@ -96,11 +90,22 @@ class Door {
 
 }
 
+
+class DungeonGame {
+    create() : void
+    setInputProcessor(inputProcessor : InputProcessor) : void
+    dispose() : void
+}
+DungeonGame --|> Game
+DungeonGame "1"--"1" ScreenManager
+DungeonGame *-- AnimationManager : -animationManager
+DungeonGame *-- EventManager : -eventManager
+DungeonGame *-- InputProcessor : -currentInputProcessor
+
 class ScreenManager {
-    changeScreen()
+    changeScreen(screen : GameScreen) : void
     getCurrentScreen()
 }
-
 ScreenManager -- GameScreen : -currentScreen >
 ScreenManager -- GameOverScreen : has >
 ScreenManager -- WorldScreen : has >
@@ -108,15 +113,32 @@ ScreenManager -- MainMenuScreen : has >
 ScreenManager -- PauseScreen : has >
 ScreenManager -- EndGameScreen : has >
 
-abstract GameScreen {}
+abstract GameScreen {
+    + getInputProcessor() : InputProcessor
+    + setInputProcessor() : void
+}
 GameScreen --|> Screen
+GameScreen *-- InputProcessor
+MainMenuScreen --|> GameScreen
+WorldScreen --|> GameScreen
+PauseScreen --|> GameScreen
+GameOverScreen --|> GameScreen
+EndGameScreen --|> GameScreen
 
 class MainMenuScreen {
 
 }
 
-class WorldScreen {
 
+class WorldScreen {
+    - moveLeft : boolean
+    - moveRight : boolean
+    - moveUp : boolean
+    - moveDown : boolean
+    + setMoveLeft(state : boolean) : void
+    + setMoveRight(state : boolean) : void
+    + setMoveUp(state : boolean) : void
+    + setMoveDown(state : boolean) : void
 }
 WorldScreen *-- Level : -currentLevel
 
@@ -132,12 +154,6 @@ class EndGameScreen {
 
 }
 
-MainMenuScreen --|> GameScreen
-WorldScreen --|> GameScreen
-PauseScreen --|> GameScreen
-GameOverScreen --|> GameScreen
-EndGameScreen --|> GameScreen
-
 class AnimationManager {
     + addAnimation(animation: Animation): void
     + removeAnimation(animation: Animation): void
@@ -146,6 +162,11 @@ class AnimationManager {
     + stopAnimation(animation: Animation): void
     + update(deltaTime: float): void
 }
+
+class GameObjectAnimation {
+    
+}
+GameObjectAnimation "0..1"--"1" GameObject
 
 class EventManager {
     + subscribe(eventType: String, listener: EventListener): void
@@ -166,11 +187,10 @@ class Event {
     + getData(): Object
 }
 
-class InputHandler {
-    handleInput()
+class WorldScreenInputProcessor {
+    WorldScreenInputProcessor(worldScreen : WorldScreen)
 }
-
-interface AI {
-}
-
+WorldScreenInputProcessor ..|> InputProcessor
+WorldScreenInputProcessor *-- WorldScreen
+interface InputProcessor
 @enduml
