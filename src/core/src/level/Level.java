@@ -1,6 +1,8 @@
 package level;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -21,10 +23,17 @@ public class Level {
 
 
     public Level(float viewportWidthInMeters, float viewportHeightInMeters) {
+
+        OrthographicCamera cam = new OrthographicCamera(25,25);
+
+        cam.zoom = 10f ;
+        cam.update();
+
         this.world = new World(new Vector2(0,0), true);
         worldWidth = 20;
         worldHeight = 20;
-        this.viewport = new FitViewport(viewportWidthInMeters, viewportHeightInMeters);
+        this.viewport = new FitViewport(viewportWidthInMeters, viewportHeightInMeters, cam);
+
         this.rooms = new ArrayList<Room>(1);
         loadPlayerCharacter();
         loadRoom(null);

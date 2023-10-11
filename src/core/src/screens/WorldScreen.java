@@ -4,17 +4,32 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import level.Level;
 
 public class WorldScreen implements Screen {
     private final Level currentLevel;
     private final Box2DDebugRenderer debugRenderer;
+    private TiledMap map;
+    private OrthogonalTiledMapRenderer renderer;
+
     public WorldScreen() {
         debugRenderer = new Box2DDebugRenderer();
         currentLevel = new Level(25,25);
+
+        TmxMapLoader loader = new TmxMapLoader();
+        map = loader.load("maps/test2.tmx");
+
+
+
+        renderer = new OrthogonalTiledMapRenderer(map);
     }
 
     @Override
@@ -35,10 +50,25 @@ public class WorldScreen implements Screen {
         // Gestion des inputs
         handleInput();
 
+        //mettre la map
+
+
         Viewport viewport = currentLevel.getViewport();
+
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();
+
+
+
+
+        renderer.setView((OrthographicCamera) viewport.getCamera());
+        renderer.render();
+
 
         // rendu debug du monde box2d
         debugRenderer.render(currentLevel.getWorld(), viewport.getCamera().combined);
+
+
 
     }
 
