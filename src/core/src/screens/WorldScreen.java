@@ -87,13 +87,16 @@ public class WorldScreen implements Screen {
 
     private void handleInput() {
         Vector2 vecteurDirection = new Vector2();
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) vecteurDirection.x = -1;
-        else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) vecteurDirection.x = 1;
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) vecteurDirection.x = -1;
+        else if (Gdx.input.isKeyPressed(Input.Keys.D)) vecteurDirection.x = 1;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) vecteurDirection.y = 1;
-        else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) vecteurDirection.y = -1;
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) vecteurDirection.y = 1;
+        else if (Gdx.input.isKeyPressed(Input.Keys.S)) vecteurDirection.y = -1;
 
         currentLevel.getPlayer().move(vecteurDirection);
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
+            currentLevel.getPlayer().attack(currentLevel.getWorld());
     }
 
     @Override
