@@ -5,7 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import screens.WorldScreen;
 
 public class WorldScreenInputProcessor implements InputProcessor {
-    private final WorldScreen worldScreen;
+    private WorldScreen worldScreen;
     public WorldScreenInputProcessor(WorldScreen worldScreen) {
         this.worldScreen = worldScreen;
     }
