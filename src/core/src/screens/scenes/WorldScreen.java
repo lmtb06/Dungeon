@@ -1,7 +1,8 @@
-package screens;
+package screens.scenes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,10 +18,14 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import level.Level;
 import level.Room;
+import screens.GameScreen;
+import screens.WorldScreenInputProcessor;
 
-public class WorldScreen implements Screen {
+public class WorldScreen extends GameScreen {
     private final Level currentLevel;
     private final Box2DDebugRenderer debugRenderer;
+
+    private WorldScreenInputProcessor worldScreenInputProcessor;
 
     private SpriteBatch spriteBatch;
     private float state;
@@ -29,6 +34,10 @@ public class WorldScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
 
     public WorldScreen() {
+
+        this.worldScreenInputProcessor = new WorldScreenInputProcessor(this);
+        Gdx.input.setInputProcessor(this.worldScreenInputProcessor);
+
         debugRenderer = new Box2DDebugRenderer();
         currentLevel = new Level(25,25);
 
@@ -123,5 +132,15 @@ public class WorldScreen implements Screen {
     public void dispose() {
         currentLevel.dispose();
         debugRenderer.dispose();
+    }
+
+    @Override
+    public InputProcessor getInputProcessor() {
+        return null;
+    }
+
+    @Override
+    public void setInputProcessor(InputProcessor ip) {
+
     }
 }

@@ -147,7 +147,7 @@ public class Level {
                             this.world,
                             this
                     );
-                    world.setContactListener(pu);
+                    //world.setContactListener(pu);
                     break;
             }
 
