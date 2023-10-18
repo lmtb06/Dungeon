@@ -1,24 +1,26 @@
-package screens;
+package com.dungeondevs.dungeongame.screens.input_processors;
 
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
-import screens.scenes.WorldScreen;
+import com.dungeondevs.dungeongame.screens.ScreenManager;
+import com.dungeondevs.dungeongame.screens.scenes.WorldScreen;
 
-public class WorldScreenInputProcessor implements InputProcessor {
+public class PauseInputProcessor implements InputProcessor {
 
     private WorldScreen world;
     private ScreenManager screenManager;
 
-    public WorldScreenInputProcessor(WorldScreen ws){
+    public PauseInputProcessor(WorldScreen ws){
         super();
         this.world = ws;
+        this.screenManager = this.world.getScreenManager();
     }
 
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode){
             case 111:
-
+                System.out.println("wllh");
+                //this.screenManager.afficherVuePause();
                 break;
         }
 
@@ -66,3 +68,4 @@ public class WorldScreenInputProcessor implements InputProcessor {
         return false;
     }
 }
+

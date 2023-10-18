@@ -1,9 +1,9 @@
 package com.dungeondevs.dungeongame;
 
 import com.badlogic.gdx.Game;
-import screens.ScreenManager;
-import screens.scenes.PauseScreen;
-import screens.scenes.WorldScreen;
+import com.dungeondevs.dungeongame.screens.ScreenManager;
+import com.dungeondevs.dungeongame.screens.scenes.PauseScreen;
+import com.dungeondevs.dungeongame.screens.scenes.WorldScreen;
 
 public class DungeonGame extends Game {
 
@@ -11,12 +11,17 @@ public class DungeonGame extends Game {
 
     @Override
     public void create() {
-        WorldScreen ws = new WorldScreen();
-        PauseScreen ps = new PauseScreen();
-        this.screenManager = new ScreenManager(this, ps, ws);
+        //instanciation du screenmanager et des screen qu'il aura à gérer. Tous les screens ne sont pas encore prêts
+        this.screenManager = new ScreenManager(this);
+        WorldScreen ws = new WorldScreen(this.screenManager);
+        PauseScreen ps = new PauseScreen(this.screenManager, ws);
+        this.screenManager.setWorldScreen(ws);
+        this.screenManager.setPauseScreen(ps);
+
+
+
+        //on met le worldscreen par défaut pour le moment, on changera pour un écran de démarrage pour le moment
         this.screenManager.changerScreen(ws);
-//        dungeon = new Dungeon();
-        //setScreen();
     }
 
     @Override

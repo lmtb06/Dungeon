@@ -1,27 +1,25 @@
-package screens.scenes;
+package com.dungeondevs.dungeongame.screens.scenes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import level.Level;
-import level.Room;
-import screens.GameScreen;
-import screens.WorldScreenInputProcessor;
+import com.dungeondevs.dungeongame.tiled_elements.Level;
+import com.dungeondevs.dungeongame.screens.ScreenManager;
+import com.dungeondevs.dungeongame.screens.input_processors.WorldScreenInputProcessor;
+import com.dungeondevs.dungeongame.screens.GameScreen;
 
 public class WorldScreen extends GameScreen {
+
+    private ScreenManager screenManager;
     private final Level currentLevel;
     private final Box2DDebugRenderer debugRenderer;
 
@@ -33,7 +31,9 @@ public class WorldScreen extends GameScreen {
 
     private OrthogonalTiledMapRenderer renderer;
 
-    public WorldScreen() {
+    public WorldScreen(ScreenManager sm) {
+
+        this.screenManager = sm;
 
         this.worldScreenInputProcessor = new WorldScreenInputProcessor(this);
         Gdx.input.setInputProcessor(this.worldScreenInputProcessor);
@@ -142,5 +142,13 @@ public class WorldScreen extends GameScreen {
     @Override
     public void setInputProcessor(InputProcessor ip) {
 
+    }
+
+    public ScreenManager getScreenManager() {
+        return screenManager;
+    }
+
+    public void setScreenManager(ScreenManager screenManager) {
+        this.screenManager = screenManager;
     }
 }

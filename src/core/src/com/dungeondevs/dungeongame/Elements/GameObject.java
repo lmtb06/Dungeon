@@ -1,21 +1,18 @@
-package com.dungeondevs.dungeongame;
+package com.dungeondevs.dungeongame.Elements;
 
-import Animation.AnimationManager;
-import Events.EventManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.dungeondevs.dungeongame.Animation.GameObjectAnimation;
 
 public abstract class GameObject {
     protected Body body;
 
-    protected EventManager eventManager;
-    protected AnimationManager animationManager;
+    protected GameObjectAnimation animations;
 
-    World monde;
+    protected World monde;
 
-    public GameObject (Vector2 position, Vector2 size, World world, EventManager em, AnimationManager am) {
-        this.eventManager = em;
-        this.animationManager =  am;
+    public GameObject (Vector2 position, Vector2 size, World world) {
+
 
         this.monde = world;
 

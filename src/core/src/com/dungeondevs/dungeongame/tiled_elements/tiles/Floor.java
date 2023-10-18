@@ -1,4 +1,4 @@
-package level.tiles;
+package com.dungeondevs.dungeongame.tiled_elements.tiles;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Texture;

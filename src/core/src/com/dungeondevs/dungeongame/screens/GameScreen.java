@@ -1,4 +1,4 @@
-package screens;
+package com.dungeondevs.dungeongame.screens;
 
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;

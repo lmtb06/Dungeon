@@ -1,4 +1,4 @@
-package com.dungeondevs.dungeongame;
+package com.dungeondevs.dungeongame.Elements;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -43,9 +43,7 @@ public class Dungeon implements Screen {
 
         renderer = new OrthogonalTiledMapRenderer(map);
 
-        /**
-        camera.setToOrtho(false, 160*((Gdx.graphics.getWidth()/2) / (Gdx.graphics.getWidth()/2)), 120*((Gdx.graphics.getWidth()/2) / (Gdx.graphics.getWidth()/2)));
-        **/camera.zoom = 0.5f * ((Gdx.graphics.getWidth()/2) / (Gdx.graphics.getWidth()/2));
+        camera.zoom = 0.5f * ((Gdx.graphics.getWidth()/2) / (Gdx.graphics.getWidth()/2));
 
         fenetre = new FitViewport(800,480,camera);
     }
@@ -55,19 +53,12 @@ public class Dungeon implements Screen {
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //renderer.getBatch().setProjectionMatrix(camera.combined);
-        //renderer.setView(fenetre)
         renderer.setView(camera);
         renderer.render();
     }
 
     @Override
     public void resize(int width, int height) {
-        /**camera.viewportWidth = 30f;
-        camera.viewportHeight = 30f * height/width;
-        camera.update();**/
-        /**fenetre.update(width, height);
-        fenetre.apply();**/
 
         fenetre.update(800,480);
     }
