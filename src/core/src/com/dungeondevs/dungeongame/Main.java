@@ -1,13 +1,11 @@
 package com.dungeondevs.dungeongame;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.ai.steer.behaviors.LookWhereYouAreGoing;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 ;
-import level.Room;
+import com.dungeondevs.dungeongame.tiled_elements.Room;
 
 public class Main extends ApplicationAdapter {
 	SpriteBatch batch;

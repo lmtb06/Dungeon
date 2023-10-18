@@ -1,4 +1,4 @@
-package level;
+package com.dungeondevs.dungeongame.tiled_elements;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -6,22 +6,19 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.dungeondevs.dungeongame.Entity;
-import com.dungeondevs.dungeongame.Monster;
-import com.dungeondevs.dungeongame.Player;
-import com.dungeondevs.dungeongame.PowerUp;
-import sun.tools.jconsole.JConsole;
+import com.dungeondevs.dungeongame.Elements.Entity;
+import com.dungeondevs.dungeongame.Elements.Monster;
+import com.dungeondevs.dungeongame.Elements.Player;
+import com.dungeondevs.dungeongame.Elements.PowerUp;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 public class Level {
@@ -51,7 +48,6 @@ public class Level {
         this.world = new World(new Vector2(0,0), true);
         worldWidth = 20;
         worldHeight = 20;
-        this.world.setContactListener(new WorldContactListener());
 
         this.viewport = new FitViewport(viewportWidthInMeters, viewportHeightInMeters, cam);
 
@@ -147,7 +143,7 @@ public class Level {
                             this.world,
                             this
                     );
-                    world.setContactListener(pu);
+                    //world.setContactListener(pu);
                     break;
             }
 

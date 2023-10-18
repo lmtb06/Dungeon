@@ -1,16 +1,17 @@
-package com.dungeondevs.dungeongame;
+package com.dungeondevs.dungeongame.systems;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import level.Level;
+import com.dungeondevs.dungeongame.Elements.Monster;
+import com.dungeondevs.dungeongame.tiled_elements.Level;
 
-public class DamageCollisionListener implements ContactListener {
+public class GlobalContactListener implements ContactListener {
 
     private Level level;
 
-    public DamageCollisionListener (Level level) {
+    public GlobalContactListener(Level level) {
         this.level = level;
     }
 

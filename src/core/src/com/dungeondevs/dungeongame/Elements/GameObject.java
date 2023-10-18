@@ -1,14 +1,18 @@
-package com.dungeondevs.dungeongame;
+package com.dungeondevs.dungeongame.Elements;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.dungeondevs.dungeongame.Animation.GameObjectAnimation;
 
-public abstract class GameObject implements ContactListener {
+public abstract class GameObject {
     protected Body body;
 
-    World monde;
+    protected GameObjectAnimation animations;
+
+    protected World monde;
 
     public GameObject (Vector2 position, Vector2 size, World world) {
+
 
         this.monde = world;
 

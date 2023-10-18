@@ -1,19 +1,10 @@
 @startuml
 
-class Game {
-    initialize()
-    update(delta : float) : void
-    exit()
-}
-
-Game *-- ScreenManager : -screenManager
-Game *-- AnimationManager : -animationManager
-Game *-- EventManager : -eventManager
-Game *-- InputHandler : -currentInputHandler
-
 abstract class GameObject {
-    - animation : Animation
+    GameObject(eventManager : EventManager, animationManager : AnimationManager)
 }
+
+
 
 abstract class GameCharacter {
     - health : int
@@ -21,31 +12,27 @@ abstract class GameCharacter {
     - body : Body
     - contactDamages : int
     - meleeDamages : int
-    + move(vecteur : Vector2): void
+    - stateMachine : State
+    + move(vecteur : Vector2) : void
     + getPosition() : Vector2
-    + attack()
-    + takeDamage()
+    + attack(target : GameCharacter) : void
+    + takeDamage(amount : int) : void
 }
 GameCharacter --|> GameObject
 
-GameCharacter "1" -- "1" Weapon : has >
 
 class Player {
-    collectPowerUp()
+    applyPowerUp(powerUp : PowerUp) : void
 }
 Player --|> GameCharacter
-Player "1" -- "0..*" PowerUp : has >
 
 
 class Monster {
     patrol()
 }
 Monster --|> GameCharacter
-Monster *-- AI : -ai
 
-class Weapon {
-    attack()
-}
+
 
 class PowerUp {
     activate()
@@ -87,7 +74,6 @@ class Room {
 }
 
 Room -- "0..*" PowerUp : may have >
-Room -- "0..*" Weapon : may have >
 Room -- "1..*" Door : has >
 Room -- "0..*" Trap : may have >
 Room -- "0..*" Monster : may have >
@@ -96,11 +82,20 @@ class Door {
 
 }
 
+
+class DungeonGame {
+    create() : void
+    setInputProcessor(inputProcessor : InputProcessor) : void
+    dispose() : void
+}
+DungeonGame --|> Game
+DungeonGame "1"--"1" ScreenManager
+DungeonGame *-- InputProcessor : -currentInputProcessor
+
 class ScreenManager {
-    changeScreen()
+    changeScreen(screen : GameScreen) : void
     getCurrentScreen()
 }
-
 ScreenManager -- GameScreen : -currentScreen >
 ScreenManager -- GameOverScreen : has >
 ScreenManager -- WorldScreen : has >
@@ -108,15 +103,32 @@ ScreenManager -- MainMenuScreen : has >
 ScreenManager -- PauseScreen : has >
 ScreenManager -- EndGameScreen : has >
 
-abstract GameScreen {}
+abstract GameScreen {
+    + getInputProcessor() : InputProcessor
+    + setInputProcessor() : void
+}
 GameScreen --|> Screen
+
+MainMenuScreen --|> GameScreen
+WorldScreen --|> GameScreen
+PauseScreen --|> GameScreen
+GameOverScreen --|> GameScreen
+EndGameScreen --|> GameScreen
 
 class MainMenuScreen {
 
 }
 
-class WorldScreen {
 
+class WorldScreen {
+    - moveLeft : boolean
+    - moveRight : boolean
+    - moveUp : boolean
+    - moveDown : boolean
+    + setMoveLeft(state : boolean) : void
+    + setMoveRight(state : boolean) : void
+    + setMoveUp(state : boolean) : void
+    + setMoveDown(state : boolean) : void
 }
 WorldScreen *-- Level : -currentLevel
 
@@ -132,45 +144,35 @@ class EndGameScreen {
 
 }
 
-MainMenuScreen --|> GameScreen
-WorldScreen --|> GameScreen
-PauseScreen --|> GameScreen
-GameOverScreen --|> GameScreen
-EndGameScreen --|> GameScreen
+class WorldScreenInputProcessor {
+    WorldScreenInputProcessor(worldScreen : WorldScreen)
+}
+WorldScreenInputProcessor ..|> InputProcessor
+WorldScreenInputProcessor *-- WorldScreen
+interface InputProcessor
 
-class AnimationManager {
-    + addAnimation(animation: Animation): void
-    + removeAnimation(animation: Animation): void
-    + playAnimation(animation: Animation): void
-    + pauseAnimation(animation: Animation): void
-    + stopAnimation(animation: Animation): void
-    + update(deltaTime: float): void
+ ScreenManager *-- WorldScreenInputProcessor 
+
+GlobalContactListener --|> ContactListener
+
+interface ContactListener
+
+class GlobalContactListener{
+
 }
 
-class EventManager {
-    + subscribe(eventType: String, listener: EventListener): void
-    + unsubscribe(eventType: String, listener: EventListener): void
-    + triggerEvent(event: Event): void
-    + queueEvent(event: Event): void
-    + processEvents(): void
+Level "0..1"--"1" GlobalContactListener  
+
+class Animation2D {
+
 }
 
-interface EventListener {
-    onEvent(event: Event): void
+class GameObjectAnimation {
+    
 }
 
-class Event {
-    - type: String
-    - data: Object
-    + getType(): String
-    + getData(): Object
-}
+GameObjectAnimation "1"--"0..*" Animation2D  
 
-class InputHandler {
-    handleInput()
-}
-
-interface AI {
-}
+GameObject "1"--"1" GameObjectAnimation  
 
 @enduml

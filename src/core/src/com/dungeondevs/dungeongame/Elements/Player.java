@@ -1,12 +1,12 @@
-package com.dungeondevs.dungeongame;
+package com.dungeondevs.dungeongame.Elements;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import level.Level;
-import level.Room;
+import com.dungeondevs.dungeongame.systems.GlobalContactListener;
+import com.dungeondevs.dungeongame.tiled_elements.Level;
 
 public class Player {
     private final int health;
@@ -98,7 +98,7 @@ public class Player {
         attackBody.createFixture(boxFixtureDef);
         boxShape.dispose();
 
-        world.setContactListener(new DamageCollisionListener(currentLevel));
+        world.setContactListener(new GlobalContactListener(currentLevel));
 
         attackEnd = Gdx.graphics.getDeltaTime() + 0.1f;
         timer = 0f;

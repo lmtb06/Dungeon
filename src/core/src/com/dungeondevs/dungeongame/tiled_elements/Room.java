@@ -1,11 +1,11 @@
-package level;
+package com.dungeondevs.dungeongame.tiled_elements;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import level.tiles.Tile;
+import com.dungeondevs.dungeongame.tiled_elements.tiles.Tile;
 
 public class Room {
 
