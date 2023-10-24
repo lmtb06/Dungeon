@@ -1,0 +1,44 @@
+@startuml
+
+@startuml
+
+!define enum(x) type "E_#x" <<enumeration>>
+' definit une classe qui hérite automatique de la classe Component
+!define component(x) class "C_#x" <<(C,#FFAAAA) Component>> #x
+
+enum EntityState {
+    IDLE,
+    RUNNING,
+    SLOWINGDOWN
+}
+
+class PhysicComponent {
+    + body : Body
+}
+
+class RenderingComponent {
+    + sprite : Sprite
+}
+
+class AnimationComponent {
+    + animation : Animation
+    + elapasedTime : float
+}
+
+class ControlsComponent {
+    + left : bool
+    + right : bool
+    + up : bool
+    + down : bool
+}
+
+class EntityStateComponent {
+    + timeRemainingInCurrentState : float
+}
+EntityStateComponent *--"+ state\n1" EntityState
+
+class MovementSpecsComponent {
+    + maxSpeedInMeterPerSecond : float
+    + decelarationTimeInSecond : float
+}
+@enduml
