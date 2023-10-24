@@ -1,0 +1,9 @@
+@startuml
+
+[*] --> IDLE
+IDLE --> RUNNING : run
+RUNNING --> SLOWINGDOWN : slowDown
+SLOWINGDOWN --> IDLE : stop
+SLOWINGDOWN --> RUNNING : run
+
+@enduml
