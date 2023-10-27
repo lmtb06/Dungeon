@@ -1,44 +1,167 @@
 @startuml
+/'
+******************
+    Setups and includes
+******************
+'/
+' skinparam groupInheritance 3
+!global $componentClass = com.Artemis.Component
+!global $systemClass = com.Artemis.System
+!global $entityClass = com.Artemis.Entity
 
-@startuml
+class $componentClass {
 
-!define enum(x) type "E_#x" <<enumeration>>
-' definit une classe qui hérite automatique de la classe Component
-!define component(x) class "C_#x" <<(C,#FFAAAA) Component>> #x
-
-enum EntityState {
-    IDLE,
-    RUNNING,
-    SLOWINGDOWN
 }
 
-class PhysicComponent {
-    + body : Body
+class $systemClass {
+
 }
 
-class RenderingComponent {
-    + sprite : Sprite
+class $entityClass {
+    + id: int
 }
 
-class AnimationComponent {
-    + animation : Animation
-    + elapasedTime : float
-}
 
-class ControlsComponent {
-    + left : bool
-    + right : bool
-    + up : bool
-    + down : bool
-}
 
-class EntityStateComponent {
-    + timeRemainingInCurrentState : float
-}
-EntityStateComponent *--"+ state\n1" EntityState
+!procedure $makeComponent($className)
+    $componentClass <|-- $className
+!endprocedure
 
-class MovementSpecsComponent {
-    + maxSpeedInMeterPerSecond : float
-    + decelarationTimeInSecond : float
+!procedure $makeSystem($className)
+    $systemClass <|-- $className
+!endprocedure
+
+!procedure $makeEntity($className)
+    $entityClass <|-- $className
+    $className "1"--"*" $componentClass
+!endprocedure
+
+!procedure $addUsageRelationship($userClassName, $usedClassName, $direction="", $nom="")
+    $userClassName -$direction-> $usedClassName : "$nom"
+!endprocedure
+
+!procedure $addUsageRelationships($className, $listOfUsedClasses, $direction="", $hide=%false(),$nom="")
+    !if (%not($hide))
+        !foreach $usedClassName in %splitstr($listOfUsedClasses, ",")
+            $addUsageRelationship($className, $usedClassName, $direction, $nom)
+        !endfor
+    !endif
+!endprocedure
+/'
+******************
+    Components
+******************
+'/
+    class PhysicsComponent {
+        + body : Body
+    }
+
+    class RenderingComponent {
+        + sprite : Sprite
+    }
+
+    class AnimationComponent {
+        + animation : Animation
+        + elapasedTime : float
+    }
+
+    class InputComponent {
+        + left : bool
+        + right : bool
+        + up : bool
+        + down : bool
+    }
+
+    together {
+        enum EntityState {
+            IDLE
+            RUNNING
+            SLOWINGDOWN
+        }
+
+        class EntityStateComponent {
+            + timeRemainingInCurrentState : float
+        }
+        EntityStateComponent *--"+ state\n1" EntityState
+    }
+
+    class MovementSpecsComponent {
+        + maxSpeedInMeterPerSecond : float
+        + decelarationTimeInSecond : float
+    }
+
+
+
+
+'******************
+$makeComponent(PhysicsComponent)
+$makeComponent(RenderingComponent)
+$makeComponent(AnimationComponent)
+$makeComponent(InputComponent)
+$makeComponent(EntityStateComponent)
+$makeComponent(MovementSpecsComponent)
+
+/'
+******************
+    Systems
+******************
+'/
+    class MovementSystem {
+
+    }
+    $addUsageRelationship(MovementSystem, "PhysicsComponent",$nom="agis sur >")
+    $addUsageRelationships(MovementSystem, "EntityStateComponent,PhysicsComponent,InputComponent,MovementSpecsComponent",$hide=%true())
+    $addUsageRelationship(MovementSystem, StateManagementSystem,$nom="dépend de >")
+    Note top of MovementSystem
+    Le systeme de mouvement n'agit que sur les entités ayant à la fois les composants
+    suivants (en soit le personnage du joueur est la seul entité sur laquelle il va
+    agir):
+    - EntityStateComponent
+    - PhysicsComponent
+    - InputComponent
+    - MovementSpecsComponent
+    End Note
+
+    class StateManagementSystem {
+        + transition(stateComponent: EntityStateComponent, state: EntityState): bool
+    }
+    $addUsageRelationships(StateManagementSystem, "EntityStateComponent",$hide=%false(),$nom="met à jour")
+
+    class PhysicsSystem {
+        - world: libgdx.box2d.World
+    }
+
+    class InputSystem {
+
+    }
+    $addUsageRelationship(InputSystem, InputComponent,$nom="met à jour >")
+
+'******************
+$makeSystem(MovementSystem)
+$makeSystem(StateManagementSystem)
+$makeSystem(PhysicsSystem)
+$makeSystem(InputSystem)
+
+'******************
+
+class PlayerCharacter {
+}
+$addUsageRelationships(PlayerCharacter, "EntityStateComponent,PhysicsComponent,RenderingComponent,AnimationComponent,InputComponent,MovementSpecsComponent", $hide=%false(),$nom="posséde")
+
+$makeEntity(PlayerCharacter)
+Note right of PlayerCharacter
+L'entité du personnage du joueur possède les composants suivant:
+- EntityStateComponent
+- PhysicsComponent
+- RenderingComponent
+- AnimationComponent
+- InputComponent
+- MovementSpecsComponent
+End Note
+
+'*****************
+
+
+class DungeonGame {
 }
 @enduml
