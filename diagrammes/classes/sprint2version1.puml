@@ -52,6 +52,7 @@ class $entityClass {
     Components
 ******************
 '/
+namespace components {
     class PhysicsComponent {
         + body : Body
     }
@@ -71,27 +72,23 @@ class $entityClass {
         + up : bool
         + down : bool
     }
-
-    together {
-        enum EntityState {
-            IDLE
-            RUNNING
-            SLOWINGDOWN
-        }
-
-        class EntityStateComponent {
-            + timeRemainingInCurrentState : float
-        }
-        EntityStateComponent *--"+ state\n1" EntityState
+    
+    enum EntityState {
+        IDLE
+        RUNNING
+        SLOWINGDOWN
     }
+
+    class EntityStateComponent {
+        + timeRemainingInCurrentState : float
+    }
+    EntityStateComponent *--"+ state\n1" EntityState
 
     class MovementSpecsComponent {
         + maxSpeedInMeterPerSecond : float
         + decelarationTimeInSecond : float
     }
-
-
-
+}
 
 '******************
 $makeComponent(PhysicsComponent)
@@ -106,6 +103,7 @@ $makeComponent(MovementSpecsComponent)
     Systems
 ******************
 '/
+namespace systems {
     class MovementSystem {
 
     }
@@ -135,6 +133,7 @@ $makeComponent(MovementSpecsComponent)
 
     }
     $addUsageRelationship(InputSystem, InputComponent,$nom="met à jour >")
+}
 
 '******************
 $makeSystem(MovementSystem)
