@@ -4,15 +4,15 @@ import ancien.dungeongame.screens.ScreenManager;
 import ancien.dungeongame.screens.input_processors.PauseInputProcessor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import ancien.dungeongame.screens.GameScreen;
+import ancien.dungeongame.screens.OldGameScreen;
 
-public class PauseScreen extends GameScreen {
+public class PauseScreenOld extends OldGameScreen {
 
     protected ScreenManager screenManager;
 
     protected PauseInputProcessor pauseScreenInput;
 
-    public PauseScreen(ScreenManager screenManager, WorldScreen ws) {
+    public PauseScreenOld(ScreenManager screenManager, WorldScreenOld ws) {
         super();
         this.screenManager = screenManager;
         this.pauseScreenInput = new PauseInputProcessor(ws);

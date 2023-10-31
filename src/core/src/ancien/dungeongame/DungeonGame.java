@@ -3,54 +3,53 @@ package ancien.dungeongame;
 import com.artemis.*;
 import com.badlogic.gdx.Game;
 import ancien.dungeongame.screens.ScreenManager;
-import ancien.dungeongame.screens.scenes.PauseScreen;
-import ancien.dungeongame.screens.scenes.WorldScreen;
 import com.badlogic.gdx.Gdx;
+import com.dungeondevs.GameScreen;
 import com.dungeondevs.components.InputComponent;
+import com.dungeondevs.components.MapStateComponent;
+import com.dungeondevs.components.LoadMapComponent;
 import com.dungeondevs.systems.InputSystem;
+import com.dungeondevs.systems.MapRendererSystem;
+import com.dungeondevs.systems.MapsLoaderSystem;
+
+import java.util.ArrayList;
 
 public class DungeonGame extends Game {
 
     private ScreenManager screenManager;
-    private World world;
+
+    private GameScreen gs;
+
+    private ArrayList<String> listeMapExistante;
+
 
     @Override
     public void create() {
+
+        /**
         //instanciation du screenmanager et des screen qu'il aura à gérer. Tous les screens ne sont pas encore prêts
         this.screenManager = new ScreenManager(this);
         WorldScreen ws = new WorldScreen(this.screenManager);
         PauseScreen ps = new PauseScreen(this.screenManager, ws);
         this.screenManager.setWorldScreen(ws);
         this.screenManager.setPauseScreen(ps);
+        **/
 
-        // 1. Register any plugins, setup the world.
-        WorldConfiguration setup = new WorldConfigurationBuilder()
-                .with(new InputSystem())
-                .build();
-
-        // 2. Create the world.
-        world = new World(setup);
-
-        Archetype playerArchetype =
-                new ArchetypeBuilder()
-                        .add(InputComponent.class)
-                        .build(world);
-
-        // 3. Create entity. You can do it here or inside systems.
-        Entity player = world.createEntity(playerArchetype);
-
-        // 4. Run the world. HelloWorldSystem should print the hello world message.
-        world.process();
-
+        gs = new GameScreen();
+        setScreen(gs);
         //on met le worldscreen par défaut pour le moment, on changera pour un écran de démarrage pour le moment
-        this.screenManager.changerScreen(ws);
+        //this.screenManager.changerScreen(ws);
+    }
+
+    private void chargerMaps() {
     }
 
     @Override
     public void render() {
-        world.setDelta(Gdx.graphics.getDeltaTime());
+        gs.render(Gdx.graphics.getDeltaTime());
+        /**world.setDelta(Gdx.graphics.getDeltaTime());
         world.process();
-        super.render();
+        super.render();**/
     }
 
     @Override

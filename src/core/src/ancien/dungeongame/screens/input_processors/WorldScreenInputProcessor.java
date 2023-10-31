@@ -1,15 +1,15 @@
 package ancien.dungeongame.screens.input_processors;
 
-import ancien.dungeongame.screens.scenes.WorldScreen;
+import ancien.dungeongame.screens.scenes.WorldScreenOld;
 import com.badlogic.gdx.InputProcessor;
 import ancien.dungeongame.screens.ScreenManager;
 
 public class WorldScreenInputProcessor implements InputProcessor {
 
-    private WorldScreen world;
+    private WorldScreenOld world;
     private ScreenManager screenManager;
 
-    public WorldScreenInputProcessor(WorldScreen ws){
+    public WorldScreenInputProcessor(WorldScreenOld ws){
         super();
         this.world = ws;
         this.screenManager = this.world.getScreenManager();

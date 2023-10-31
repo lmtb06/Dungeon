@@ -15,9 +15,9 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import ancien.dungeongame.screens.ScreenManager;
 import ancien.dungeongame.screens.input_processors.WorldScreenInputProcessor;
-import ancien.dungeongame.screens.GameScreen;
+import ancien.dungeongame.screens.OldGameScreen;
 
-public class WorldScreen extends GameScreen {
+public class WorldScreenOld extends OldGameScreen {
 
     private ScreenManager screenManager;
     private final Level currentLevel;
@@ -31,7 +31,7 @@ public class WorldScreen extends GameScreen {
 
     private OrthogonalTiledMapRenderer renderer;
 
-    public WorldScreen(ScreenManager sm) {
+    public WorldScreenOld(ScreenManager sm) {
 
         this.screenManager = sm;
 

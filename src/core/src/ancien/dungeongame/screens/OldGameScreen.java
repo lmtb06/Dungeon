@@ -3,7 +3,7 @@ package ancien.dungeongame.screens;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 
-public abstract class GameScreen implements Screen {
+public abstract class OldGameScreen implements Screen {
 
     public abstract InputProcessor getInputProcessor();
 
