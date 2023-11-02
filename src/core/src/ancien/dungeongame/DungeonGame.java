@@ -6,7 +6,9 @@ import ancien.dungeongame.screens.ScreenManager;
 import ancien.dungeongame.screens.scenes.PauseScreen;
 import ancien.dungeongame.screens.scenes.WorldScreen;
 import com.badlogic.gdx.Gdx;
+import com.dungeondevs.components.AttackComponent;
 import com.dungeondevs.components.InputComponent;
+import com.dungeondevs.systems.AttackSystem;
 import com.dungeondevs.systems.InputSystem;
 
 public class DungeonGame extends Game {
@@ -26,6 +28,7 @@ public class DungeonGame extends Game {
         // 1. Register any plugins, setup the world.
         WorldConfiguration setup = new WorldConfigurationBuilder()
                 .with(new InputSystem())
+                .with(new AttackSystem())
                 .build();
 
         // 2. Create the world.
@@ -34,6 +37,7 @@ public class DungeonGame extends Game {
         Archetype playerArchetype =
                 new ArchetypeBuilder()
                         .add(InputComponent.class)
+                        .add(AttackComponent.class)
                         .build(world);
 
         // 3. Create entity. You can do it here or inside systems.

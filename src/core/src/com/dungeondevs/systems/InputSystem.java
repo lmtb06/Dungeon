@@ -17,6 +17,7 @@ public class InputSystem extends EntityProcessingSystem {
         inputComponent.right = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
         inputComponent.up = Gdx.input.isKeyPressed(Input.Keys.UP);
         inputComponent.down = Gdx.input.isKeyPressed(Input.Keys.DOWN);
+        inputComponent.space = Gdx.input.isKeyPressed(Input.Keys.SPACE);
 
 
         String output = (inputComponent.up ? " up ":"") + (inputComponent.down ? " down ":"") +
