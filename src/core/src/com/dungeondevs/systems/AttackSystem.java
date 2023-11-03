@@ -22,9 +22,11 @@ public class AttackSystem extends EntityProcessingSystem {
     @Override
     protected void process(Entity e) {
         InputComponent inputComponent = e.getComponent(InputComponent.class);
+        AttackComponent attackComponent = e.getComponent(AttackComponent.class);
+
         long elapsedTime = TimeUtils.timeSinceMillis(lastAttack);
-        if(inputComponent.space && elapsedTime > 500f){
-            AttackComponent attackComponent = e.getComponent(AttackComponent.class);
+
+        if(inputComponent.space && elapsedTime > attackComponent.getAttackDelay()){
             int dmg = attackComponent.getDamages();
             System.out.println("Attacking with " + dmg + " damages");
             lastAttack = TimeUtils.millis();
