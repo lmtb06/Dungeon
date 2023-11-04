@@ -31,6 +31,8 @@ public class AttackSystem extends EntityProcessingSystem {
             System.out.println("Attacking with " + dmg + " damages");
             lastAttack = TimeUtils.millis();
 
+
+
             /*if(attackBody != null)
                 return;
 

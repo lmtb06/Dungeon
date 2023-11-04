@@ -5,9 +5,49 @@
 ******************
 '/
 ' skinparam groupInheritance 3
+
 !global $componentClass = com.Artemis.Component
-!global $systemClass = com.Artemis.System
+!global $systemClass = com.Artemis.EntitySystem
 !global $entityClass = com.Artemis.Entity
+!global $artemisWorldClass = com.Artemis.World
+!global $box2dWorldClass = com.badlogic.gdx.physics.box2d.World
+!global $archetypeClass = com.Artemis.Archetype
+
+!procedure $defineAsComponent($className)
+    $componentClass <|-- $className
+!endprocedure
+
+!procedure $defineAsSystem($className)
+    $systemClass <|-- $className
+!endprocedure
+
+!procedure $defineAsEntity($className)
+    $entityClass <|-- $className
+    $addRelationship($className, $componentClass, $relationship="has", $rightMultiplicity="*", $sign="->")
+!endprocedure
+
+!procedure $defineAsArchetype($className)
+    $archetypeClass <|-- $className
+!endprocedure
+
+!procedure $addRelationship($class1Name, $class2Name, $leftMultiplicity="", $rightMultiplicity="", $sign="->", $relationship="uses", $direction=">", $hide=%false())
+    !if %not($hide)
+        "$class1Name" $sign "$class2Name" : $leftMultiplicity $relationship $rightMultiplicity
+    !endif
+!endprocedure
+
+!procedure $addRelationshipsToClass($className, $classes, $leftMultiplicity="", $rightMultiplicity="", $sign="->", $relationship="", $hideRelationships=%false())
+
+    !foreach $class in %splitstr($classes, ",")
+        $addRelationship($className, $class, $leftMultiplicity, $rightMultiplicity, $sign, $relationship, ">", $hideRelationships)
+    !endfor
+!endprocedure
+
+class $artemisWorldClass {
+
+}
+!$classes = $entityClass + "," + $componentClass + "," + $systemClass + "," + $archetypeClass
+$addRelationshipsToClass($artemisWorldClass, $classes, $rightMultiplicity="*", $sign="->", $relationship="has", $hideRelationships=%false())
 
 class $componentClass {
 
@@ -21,32 +61,10 @@ class $entityClass {
     + id: int
 }
 
+class $archetypeClass {
 
+}
 
-!procedure $makeComponent($className)
-    $componentClass <|-- $className
-!endprocedure
-
-!procedure $makeSystem($className)
-    $systemClass <|-- $className
-!endprocedure
-
-!procedure $makeEntity($className)
-    $entityClass <|-- $className
-    $className "1"--"*" $componentClass
-!endprocedure
-
-!procedure $addUsageRelationship($userClassName, $usedClassName, $direction="", $nom="")
-    $userClassName -$direction-> $usedClassName : "$nom"
-!endprocedure
-
-!procedure $addUsageRelationships($className, $listOfUsedClasses, $direction="", $hide=%false(),$nom="")
-    !if (%not($hide))
-        !foreach $usedClassName in %splitstr($listOfUsedClasses, ",")
-            $addUsageRelationship($className, $usedClassName, $direction, $nom)
-        !endfor
-    !endif
-!endprocedure
 /'
 ******************
     Components
@@ -72,31 +90,46 @@ namespace components {
         + up : bool
         + down : bool
     }
-    
+
+    class AttackComponent {
+
+    }
+
+    class HealthComponent {
+
+    }
+
     enum EntityState {
         IDLE
         RUNNING
-        SLOWINGDOWN
+        SLOWING_DOWN
     }
 
     class EntityStateComponent {
         + timeRemainingInCurrentState : float
     }
-    EntityStateComponent *--"+ state\n1" EntityState
+
+    $addRelationship(EntityStateComponent, EntityState, $leftMultiplicity="1", $rightMultiplicity="1", $sign="*-", $relationship="has state", $direction=">", $hide=%false())
 
     class MovementSpecsComponent {
         + maxSpeedInMeterPerSecond : float
-        + decelarationTimeInSecond : float
+        + decelarationPerSecond : float
     }
+
+    class WorldComponent {
+
+    }
+    $addRelationship(WorldComponent, $box2dWorldClass, $sign="--*", $hide=%false())
 }
 
 '******************
-$makeComponent(PhysicsComponent)
-$makeComponent(RenderingComponent)
-$makeComponent(AnimationComponent)
-$makeComponent(InputComponent)
-$makeComponent(EntityStateComponent)
-$makeComponent(MovementSpecsComponent)
+$defineAsComponent(PhysicsComponent)
+$defineAsComponent(RenderingComponent)
+$defineAsComponent(AnimationComponent)
+$defineAsComponent(InputComponent)
+$defineAsComponent(EntityStateComponent)
+$defineAsComponent(MovementSpecsComponent)
+$defineAsComponent(WorldComponent)
 
 /'
 ******************
@@ -107,9 +140,27 @@ namespace systems {
     class MovementSystem {
 
     }
-    $addUsageRelationship(MovementSystem, "PhysicsComponent",$nom="agis sur >")
-    $addUsageRelationships(MovementSystem, "EntityStateComponent,PhysicsComponent,InputComponent,MovementSpecsComponent",$hide=%true())
-    $addUsageRelationship(MovementSystem, StateManagementSystem,$nom="dépend de >")
+
+    class CollisionSystem {
+    }
+
+    class AttackSystem {
+    }
+    $addRelationship(AttackSystem, AttackComponent, $sign="-->", $relationship="uses", $hide=%false())
+    $addRelationship(AttackSystem, HealthComponent, $sign="-->", $relationship="uses", $hide=%false())
+    $addRelationship(AttackSystem, PhysicsComponent, $sign="-->", $relationship="uses", $hide=%false())
+
+    /' movement system only act on entities which have all of the following components
+
+    - EntityStateComponent
+    - PhysicsComponent
+    - InputComponent
+    - MovementSpecsComponent
+    '/
+    $addRelationshipsToClass(MovementSystem, "EntityStateComponent, PhysicsComponent, InputComponent, MovementSpecsComponent", $rightMultiplicity="*", $sign="->", $relationship="only act on", $hideRelationships=%true())
+
+    $addRelationship(MovementSystem, StateManagementSystem, $sign="-->", $relationship="uses", $hide=%false())
+
     Note top of MovementSystem
     Le systeme de mouvement n'agit que sur les entités ayant à la fois les composants
     suivants (en soit le personnage du joueur est la seul entité sur laquelle il va
@@ -123,44 +174,53 @@ namespace systems {
     class StateManagementSystem {
         + transition(stateComponent: EntityStateComponent, state: EntityState): bool
     }
-    $addUsageRelationships(StateManagementSystem, "EntityStateComponent",$hide=%false(),$nom="met à jour")
+    $addRelationship(StateManagementSystem, EntityStateComponent, $sign="-->", $relationship="uses", $hide=%false())
 
     class PhysicsSystem {
+        - accumulator: float
         - world: libgdx.box2d.World
     }
 
     class InputSystem {
 
     }
-    $addUsageRelationship(InputSystem, InputComponent,$nom="met à jour >")
+    $addRelationship(InputSystem, InputComponent, $sign="-->", $relationship="uses", $hide=%false())
 }
 
 '******************
-$makeSystem(MovementSystem)
-$makeSystem(StateManagementSystem)
-$makeSystem(PhysicsSystem)
-$makeSystem(InputSystem)
+$defineAsSystem(MovementSystem)
+$defineAsSystem(StateManagementSystem)
+$defineAsSystem(PhysicsSystem)
+$defineAsSystem(InputSystem)
 
 '******************
+namespace archetypes {
 
-class PlayerCharacter {
+    class PlayerCharacter {
+    }
+    $addRelationshipsToClass(PlayerCharacter, "EntityStateComponent,PhysicsComponent,RenderingComponent,AnimationComponent,InputComponent,MovementSpecsComponent", $rightMultiplicity="1", $sign="-->", $relationship="has", $hideRelationships=%false())
+
+
+
+
+    $defineAsArchetype(PlayerCharacter)
+    Note right of PlayerCharacter
+    L'archetype personnage du joueur possède les composants suivant:
+    - EntityStateComponent
+    - PhysicsComponent
+    - RenderingComponent
+    - AnimationComponent
+    - InputComponent
+    - MovementSpecsComponent
+    End Note
 }
-$addUsageRelationships(PlayerCharacter, "EntityStateComponent,PhysicsComponent,RenderingComponent,AnimationComponent,InputComponent,MovementSpecsComponent", $hide=%false(),$nom="posséde")
-
-$makeEntity(PlayerCharacter)
-Note right of PlayerCharacter
-L'entité du personnage du joueur possède les composants suivant:
-- EntityStateComponent
-- PhysicsComponent
-- RenderingComponent
-- AnimationComponent
-- InputComponent
-- MovementSpecsComponent
-End Note
-
 '*****************
 
 
-class DungeonGame {
+class com.dungeondevs.DungeonGame {
 }
+com.dungeondevs.DungeonGame *-- $artemisWorldClass : posséde > "1"
+com.dungeondevs.DungeonGame *-- $box2dWorldClass : posséde > "1"
+
+' hide components
 @enduml
