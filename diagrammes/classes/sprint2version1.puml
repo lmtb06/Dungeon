@@ -90,7 +90,7 @@ namespace components {
         + up : bool
         + down : bool
     }
-    
+
     enum EntityState {
         IDLE
         RUNNING
@@ -109,9 +109,21 @@ namespace components {
     }
 
     class WorldComponent {
-        
+
     }
     $addRelationship(WorldComponent, $box2dWorldClass, $sign="--*", $hide=%false())
+
+        enum MapState{
+            ACTUEL
+            ATTENTE_AFFICHAGE
+            NON_CHARGEE
+        }
+
+    class MapStateComponent {
+        + timeRemainingInCurrentState : float
+    }
+
+    $addRelationship(MapStateComponent, MapState, $leftMultiplicity="1", $rightMultiplicity="1", $sign="*-", $relationship="has state", $direction=">", $hide=%false())
 }
 
 '******************
@@ -132,9 +144,9 @@ namespace systems {
     class MovementSystem {
 
     }
-    
+
     /' movement system only act on entities which have all of the following components
-    
+
     - EntityStateComponent
     - PhysicsComponent
     - InputComponent
@@ -143,7 +155,7 @@ namespace systems {
     $addRelationshipsToClass(MovementSystem, "EntityStateComponent, PhysicsComponent, InputComponent, MovementSpecsComponent", $rightMultiplicity="*", $sign="->", $relationship="only act on", $hideRelationships=%true())
 
     $addRelationship(MovementSystem, StateManagementSystem, $sign="-->", $relationship="uses", $hide=%false())
-    
+
     Note top of MovementSystem
     Le systeme de mouvement n'agit que sur les entités ayant à la fois les composants
     suivants (en soit le personnage du joueur est la seul entité sur laquelle il va
@@ -178,7 +190,7 @@ $defineAsSystem(InputSystem)
 
 '******************
 namespace archetypes {
-        
+
     class PlayerCharacter {
     }
     $addRelationshipsToClass(PlayerCharacter, "EntityStateComponent,PhysicsComponent,RenderingComponent,AnimationComponent,InputComponent,MovementSpecsComponent", $rightMultiplicity="1", $sign="-->", $relationship="has", $hideRelationships=%false())
@@ -196,6 +208,13 @@ namespace archetypes {
     - InputComponent
     - MovementSpecsComponent
     End Note
+
+    class Map {
+    }
+    $addRelationshipsToClass(Map, "RenderingComponent,", $rightMultiplicity="1", $sign="-->", $relationship="has", $hideRelationships=%false())
+
+    class Porte {
+    }
 }
 '*****************
 

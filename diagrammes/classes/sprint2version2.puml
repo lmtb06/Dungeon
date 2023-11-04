@@ -63,6 +63,10 @@ namespace com.dungeonsdevs.components {
     $defineAsComponent(InputComponent)
     $defineAsComponent(EntityStateComponent)
     $defineAsComponent(MovementComponent)
+    $defineAsComponent(MapStateComponent)
+    $defineAsComponent(LoadedMapComponent)
+    $defineAsComponent(TransitionPorteComponent)
+    $defineAsComponent(SalleActuelleJoueurComponent)
 
     class PhysicsComponent {
         + body : Body
@@ -83,7 +87,7 @@ namespace com.dungeonsdevs.components {
         + up : bool
         + down : bool
     }
-    
+
     enum EntityState {
         IDLE
         RUNNING
@@ -100,8 +104,37 @@ namespace com.dungeonsdevs.components {
         + decelerationTimeInSeconds : float
         + initialVelocityAtStartOfDeceleration : Vector2
     }
+        enum MapState{
+            ACTUEL
+            ATTENTE_AFFICHAGE
+            NON_CHARGEE
+        }
 
+    class MapStateComponent {
+        + etatSalle
+    }
+
+    class LoadedMapComponent {
+            + asset
+            + idMap
+    }
+
+    class TransitionPorteComponent {
+                + salleActuelle
+                + salleSuivante
+    }
+
+        class SalleActuelleJoueurComponent {
+                + idMap
+        }
+
+    $addRelationship(MapStateComponent, MapState, $rightMultiplicity="1", $sign="*--")
     $addRelationship(EntityStateComponent, EntityState, $rightMultiplicity="1", $sign="*--")
+
+
+
+
+
 }
 
 namespace com.dungeonsdevs.screens {
@@ -138,11 +171,15 @@ namespace com.dungeonsdevs.systems {
         - transitionToIdle(entity: Entity, physicsComponent: PhysicsComponent, movementComponent: MovementComponent): void
         - slowDown(entity: Entity, stateComponent: EntityStateComponent, movementComponent: MovementComponent, physicsComponent: PhysicsComponent): void
     }
-    
+
 
     class StateManagementSystem {
         # process(entity: Entity)
         + transition(stateComponent: EntityStateComponent, state: EntityState): bool
+    }
+
+    class MapStateManagementSystem {
+        # process(entity: Entity)
     }
 
     class PhysicsSystem {
@@ -161,19 +198,26 @@ namespace com.dungeonsdevs.systems {
 
     }
 
+    class ChangeurDeSalleSystem {
+
+    }
+
     $addRelationship(MovementSystem, StateManagementSystem, $sign="-->", $relationship="uses")
     $addRelationship(MovementSystem, InputComponent, $sign="-->", $relationship="checks")
     $addRelationshipsToClass(MovementSystem, "EntityStateComponent, PhysicsComponent", $rightMultiplicity="*", $sign="-->", $relationship="updates")
     $addRelationship(StateManagementSystem, EntityStateComponent, $sign="-->", $relationship="updates")
     $addRelationship(PhysicsSystem, $box2dWorldClass, $sign="-->", $rightMultiplicity="1", $relationship="updates", $direction=">")
     $addRelationship(InputSystem, InputComponent, $sign="-->", $relationship="updates")
+    $addRelationship(ChangeurDeSalleSystem, MapStateComponent, $sign="-->", $relationship="updates")
+    $addRelationship(ChangeurDeSalleSystem, SalleActuelleJoueurComponent, $sign="-->", $relationship="updates")
 
     $defineAsSystem(MovementSystem, "EntityProcessingSystem")
     $defineAsSystem(StateManagementSystem, "EntityProcessingSystem")
     $defineAsSystem(PhysicsSystem, "IntervalEntitySystem")
     $defineAsSystem(InputSystem, "EntityProcessingSystem")
     $defineAsSystem(RenderingSystem)
-    
+    $defineAsSystem(ChangeurDeSalleSystem)
+
 
     Note top of MovementSystem
     Le Systeme de mouvement n'agit que sur les entités d'Archetype PlayerCharacter
@@ -187,9 +231,11 @@ namespace utils {
     class GameAspects {
         + PLAYER_CHARACTER_ASPECT : Aspect.Builder
     }
-    
+
     class GameArchetypes {
-        + PLAYER_CHARACTER_ARCHETYPE : ArchetypeBuilder
+        + PLAYER_CHARACTER_ARCHETYPE : Archetype.Builder
+        + MAP_ARCHETYPE : Archetype.Builder
+        + PORTE_ARCHETYPE : Archetype.Builder
     }
 
     class Constants {
@@ -205,6 +251,16 @@ namespace utils {
     - AnimationComponent
     - InputComponent
     - MovementComponent
+    - SalleActuelleJoueurComponent
+    L'archetype Map possède les composants suivant:
+    - LoadedMapComponent
+    - MapStateComponent
+    - RenderingComponent
+    L'archetype Porte possède les composants suivant:
+    - PhysicsComponent
+    - MapStateComponent
+    L'archetype Mur possède les composants suivant:
+    - PhysicsComponent
     End Note
     PlayerCharacterArchetypeNote .. GameArchetypes::PLAYER_CHARACTER_ARCHETYPE
     PlayerCharacterArchetypeNote .. GameAspects::PLAYER_CHARACTER_ASPECT
