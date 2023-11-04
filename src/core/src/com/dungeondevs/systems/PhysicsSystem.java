@@ -6,8 +6,8 @@ import com.badlogic.gdx.physics.box2d.World;
 
 
 public class PhysicsSystem extends IntervalEntitySystem {
-    private World box2dWorld;
-    private float timeStep;
+    private final World box2dWorld;
+    private final float timeStep;
     private static final int VELOCITY_ITERATIONS = 6;
     private static final int POSITION_ITERATIONS = 2;
 
