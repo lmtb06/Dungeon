@@ -1,4 +1,4 @@
-package com.dungeondevs.components;
+package com.dungeondevs.components.Maps;
 
 import com.artemis.Component;
 import com.dungeondevs.Enumeration.LevelState;

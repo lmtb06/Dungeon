@@ -1,14 +1,12 @@
 package com.dungeondevs;
 
 import com.artemis.*;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dungeondevs.components.InputComponent;
-import com.dungeondevs.components.LoadMapComponent;
-import com.dungeondevs.components.MapStateComponent;
+import com.dungeondevs.components.Maps.LoadMapComponent;
+import com.dungeondevs.components.Maps.MapStateComponent;
+import com.dungeondevs.systems.ChangeurDeSalleSystem;
 import com.dungeondevs.systems.InputSystem;
 import com.dungeondevs.systems.MapRendererSystem;
 import com.dungeondevs.systems.MapsLoaderSystem;
@@ -26,6 +24,7 @@ public class GameScreen implements Screen {
                 .with(new InputSystem())
                 .with(new MapsLoaderSystem())
                 .with(new MapRendererSystem())
+                .with(new ChangeurDeSalleSystem())
                 .build();
 
         // 2. Create the world.

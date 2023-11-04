@@ -1,16 +1,9 @@
 package ancien.dungeongame;
 
-import com.artemis.*;
 import com.badlogic.gdx.Game;
 import ancien.dungeongame.screens.ScreenManager;
 import com.badlogic.gdx.Gdx;
 import com.dungeondevs.GameScreen;
-import com.dungeondevs.components.InputComponent;
-import com.dungeondevs.components.MapStateComponent;
-import com.dungeondevs.components.LoadMapComponent;
-import com.dungeondevs.systems.InputSystem;
-import com.dungeondevs.systems.MapRendererSystem;
-import com.dungeondevs.systems.MapsLoaderSystem;
 
 import java.util.ArrayList;
 

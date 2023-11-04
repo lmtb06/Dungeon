@@ -1,6 +1,5 @@
 package com.dungeondevs.systems;
 
-import ancien.dungeongame.tiled_elements.Room;
 import com.artemis.Entity;
 import com.artemis.annotations.All;
 import com.artemis.systems.EntityProcessingSystem;
@@ -10,15 +9,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dungeondevs.Enumeration.LevelState;
-import com.dungeondevs.components.LoadMapComponent;
-import com.dungeondevs.components.MapStateComponent;
-
-import java.util.ArrayList;
+import com.dungeondevs.components.Maps.LoadMapComponent;
+import com.dungeondevs.components.Maps.MapStateComponent;
 
 @All(LoadMapComponent.class)
 public class MapRendererSystem extends EntityProcessingSystem {

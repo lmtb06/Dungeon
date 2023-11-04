@@ -1,14 +1,11 @@
 package com.dungeondevs.systems;
 
-import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.annotations.All;
-import com.artemis.systems.EntityProcessingSystem;
 import com.dungeondevs.Enumeration.LevelState;
-import com.dungeondevs.components.InputComponent;
-import com.dungeondevs.components.LoadMapComponent;
-import com.dungeondevs.components.MapStateComponent;
+import com.dungeondevs.components.Maps.LoadMapComponent;
+import com.dungeondevs.components.Maps.MapStateComponent;
 
 /**
  * Classe s'occupant de charger tous les fichiers de maps existantes dans les assets. Elle n'est pour le moment pas complète TODO
