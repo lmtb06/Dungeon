@@ -90,15 +90,7 @@ namespace components {
         + up : bool
         + down : bool
     }
-
-    class AttackComponent {
-
-    }
-
-    class HealthComponent {
-
-    }
-
+    
     enum EntityState {
         IDLE
         RUNNING
@@ -117,7 +109,7 @@ namespace components {
     }
 
     class WorldComponent {
-
+        
     }
     $addRelationship(WorldComponent, $box2dWorldClass, $sign="--*", $hide=%false())
 }
@@ -140,18 +132,9 @@ namespace systems {
     class MovementSystem {
 
     }
-
-    class CollisionSystem {
-    }
-
-    class AttackSystem {
-    }
-    $addRelationship(AttackSystem, AttackComponent, $sign="-->", $relationship="uses", $hide=%false())
-    $addRelationship(AttackSystem, HealthComponent, $sign="-->", $relationship="uses", $hide=%false())
-    $addRelationship(AttackSystem, PhysicsComponent, $sign="-->", $relationship="uses", $hide=%false())
-
+    
     /' movement system only act on entities which have all of the following components
-
+    
     - EntityStateComponent
     - PhysicsComponent
     - InputComponent
@@ -160,7 +143,7 @@ namespace systems {
     $addRelationshipsToClass(MovementSystem, "EntityStateComponent, PhysicsComponent, InputComponent, MovementSpecsComponent", $rightMultiplicity="*", $sign="->", $relationship="only act on", $hideRelationships=%true())
 
     $addRelationship(MovementSystem, StateManagementSystem, $sign="-->", $relationship="uses", $hide=%false())
-
+    
     Note top of MovementSystem
     Le systeme de mouvement n'agit que sur les entités ayant à la fois les composants
     suivants (en soit le personnage du joueur est la seul entité sur laquelle il va
@@ -195,7 +178,7 @@ $defineAsSystem(InputSystem)
 
 '******************
 namespace archetypes {
-
+        
     class PlayerCharacter {
     }
     $addRelationshipsToClass(PlayerCharacter, "EntityStateComponent,PhysicsComponent,RenderingComponent,AnimationComponent,InputComponent,MovementSpecsComponent", $rightMultiplicity="1", $sign="-->", $relationship="has", $hideRelationships=%false())

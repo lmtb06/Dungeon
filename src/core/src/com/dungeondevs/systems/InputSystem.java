@@ -1,5 +1,6 @@
 package com.dungeondevs.systems;
 
+import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.All;
 import com.artemis.systems.EntityProcessingSystem;
@@ -9,21 +10,14 @@ import com.dungeondevs.components.InputComponent;
 
 @All(InputComponent.class)
 public class InputSystem extends EntityProcessingSystem {
+    private ComponentMapper<InputComponent> inputComponentMapper;
     @Override
     protected void process(Entity e) {
-        InputComponent inputComponent = e.getComponent(InputComponent.class);
+        InputComponent inputComponent = inputComponentMapper.get(e);
 
         inputComponent.left = Gdx.input.isKeyPressed(Input.Keys.LEFT);
         inputComponent.right = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
         inputComponent.up = Gdx.input.isKeyPressed(Input.Keys.UP);
         inputComponent.down = Gdx.input.isKeyPressed(Input.Keys.DOWN);
-        inputComponent.space = Gdx.input.isKeyPressed(Input.Keys.SPACE);
-
-
-        String output = (inputComponent.up ? " up ":"") + (inputComponent.down ? " down ":"") +
-                (inputComponent.left ? " left ":"") + (inputComponent.right ? " right ":"");
-        if (!output.isEmpty())
-            System.out.println(output);
-
     }
 }

@@ -1,12 +1,12 @@
 package ancien.dungeongame.screens;
 
-import ancien.dungeongame.DungeonGame;
 import ancien.dungeongame.screens.scenes.WorldScreen;
 import ancien.dungeongame.screens.scenes.PauseScreen;
+import com.dungeondevs.DungeonGame;
 
 public class ScreenManager {
 
-    private DungeonGame game;
+    private final DungeonGame game;
 
     private GameScreen currentScreen;
 
