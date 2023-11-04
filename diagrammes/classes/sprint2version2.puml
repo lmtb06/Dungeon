@@ -189,7 +189,7 @@ namespace utils {
     }
     
     class GameArchetypes {
-        + PLAYER_CHARACTER_ARCHETYPE : Archetype.Builder
+        + PLAYER_CHARACTER_ARCHETYPE : ArchetypeBuilder
     }
 
     class Constants {
