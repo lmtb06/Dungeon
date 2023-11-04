@@ -1,18 +1,18 @@
 package ancien.dungeongame.screens;
 
-import ancien.dungeongame.DungeonGame;
-import ancien.dungeongame.screens.scenes.WorldScreenOld;
-import ancien.dungeongame.screens.scenes.PauseScreenOld;
+import ancien.dungeongame.screens.scenes.WorldScreen;
+import ancien.dungeongame.screens.scenes.PauseScreen;
+import com.dungeondevs.DungeonGame;
 
 public class ScreenManager {
 
-    private DungeonGame game;
+    private final DungeonGame game;
 
-    private OldGameScreen currentScreen;
+    private GameScreen currentScreen;
 
-    private WorldScreenOld worldScreen;
+    private WorldScreen worldScreen;
 
-    private PauseScreenOld pauseScreen;
+    private PauseScreen pauseScreen;
 
     public ScreenManager(DungeonGame dg){
 
@@ -20,16 +20,16 @@ public class ScreenManager {
         this.game = dg;
     }
 
-    public void changerScreen(OldGameScreen gs){
+    public void changerScreen(GameScreen gs){
         this.currentScreen = gs;
         this.game.setScreen(gs);
     }
 
-    public void setWorldScreen(WorldScreenOld ws) {
+    public void setWorldScreen(WorldScreen ws) {
         this.worldScreen = ws;
     }
 
-    public void setPauseScreen(PauseScreenOld ps) {
+    public void setPauseScreen(PauseScreen ps) {
         this.pauseScreen = ps;
 
     }
