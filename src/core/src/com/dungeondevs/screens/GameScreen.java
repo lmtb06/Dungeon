@@ -15,6 +15,7 @@ import com.dungeondevs.components.Level.SalleAssocieeComponent;
 import com.dungeondevs.systems.*;
 import com.dungeondevs.systems.*;
 import com.dungeondevs.utils.Constants;
+import com.dungeondevs.utils.FixtureUserData;
 import com.dungeondevs.utils.GameArchetypes;
 
 public class GameScreen implements Screen {
@@ -51,7 +52,8 @@ public class GameScreen implements Screen {
         boxFixtureDef.shape = boxShape;
         boxFixtureDef.density = 1;
 
-        playerBody.createFixture(boxFixtureDef);
+        Fixture fixture = playerBody.createFixture(boxFixtureDef);
+
         boxShape.dispose();
 
         // Monde Artemis
@@ -75,6 +77,7 @@ public class GameScreen implements Screen {
                         .build(artemisWorld);
 
         Entity player = artemisWorld.createEntity(playerArchetype);
+        fixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Player, player));
         player.getComponent(EntityStateComponent.class).state = EntityState.IDLE;
         player.getComponent(PhysicsComponent.class).body = playerBody;
         player.getComponent(InputComponent.class).left = false;
