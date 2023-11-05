@@ -11,10 +11,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dungeondevs.DungeonGame;
 import com.dungeondevs.components.*;
-import com.dungeondevs.systems.InputSystem;
-import com.dungeondevs.systems.MovementSystem;
-import com.dungeondevs.systems.PhysicsSystem;
-import com.dungeondevs.systems.StateManagementSystem;
+import com.dungeondevs.systems.*;
 import com.dungeondevs.utils.Constants;
 import com.dungeondevs.utils.GameArchetypes;
 
@@ -61,6 +58,9 @@ public class GameScreen implements Screen {
                 .with(new MovementSystem())
                 .with(new PhysicsSystem(box2dWorld, tempsParFrame))
                 .with(new StateManagementSystem())
+                .with(new CollisionSystem(box2dWorld))
+                .with(new AttackSystem(box2dWorld))
+                .with(new AttackEntitySystem(box2dWorld))
                 .build();
 
         artemisWorld = new World(setup);
