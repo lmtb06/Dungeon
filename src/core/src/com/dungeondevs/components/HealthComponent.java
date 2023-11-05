@@ -10,4 +10,8 @@ public class HealthComponent extends Component {
         this.health -= amount;
         System.out.println("Une entite a pris " + amount + "pts de degets (" + health + " PV restant(s))");
     }
+
+    public int getHealth() {
+        return health;
+    }
 }
