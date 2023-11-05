@@ -11,6 +11,7 @@ import com.dungeondevs.components.Level.SalleAssocieeComponent;
 import com.dungeondevs.components.Maps.ActiveEntity;
 import com.dungeondevs.components.Maps.LoadMapComponent;
 import com.dungeondevs.components.PhysicsComponent;
+import com.dungeondevs.utils.FixtureUserData;
 import com.dungeondevs.utils.GameArchetypes;
 
 @All(LoadMapComponent.class)
@@ -76,7 +77,8 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         boxFixtureDef.shape = boxShape;
                         boxFixtureDef.density = 1;
 
-                        playerBody.createFixture(boxFixtureDef);
+                        Fixture fixture = playerBody.createFixture(boxFixtureDef);
+                        fixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Monster, monstre));
                         boxShape.dispose();
 
                         //Composant relatif à la salle dans laquelle il se trouve

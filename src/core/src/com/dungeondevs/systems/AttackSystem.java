@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.dungeondevs.components.*;
+import com.dungeondevs.utils.FixtureUserData;
 import com.dungeondevs.utils.GameArchetypes;
 
 /**
@@ -66,13 +67,14 @@ public class AttackSystem extends EntityProcessingSystem {
             boxFixtureDef.density = 1;
             boxFixtureDef.isSensor = true;
 
-            attackBody.createFixture(boxFixtureDef);
+            Fixture fixture = attackBody.createFixture(boxFixtureDef);
             boxShape.dispose();
 
             Archetype attackArchetype = GameArchetypes.ATTACK_ENTITY_ARCHETYPE
                     .build(world);
 
             Entity attack = world.createEntity(attackArchetype);
+            fixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Attack, attack));
             attack.getComponent(PhysicsComponent.class).body = attackBody;
             attack.getComponent(AttackEntityComponent.class).startTime = TimeUtils.millis();
             attack.getComponent(AttackEntityComponent.class).autoDestroyTime = 100;
