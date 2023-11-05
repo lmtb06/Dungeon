@@ -67,6 +67,8 @@ namespace com.dungeonsdevs.components {
     $defineAsComponent(LoadedMapComponent)
     $defineAsComponent(TransitionPorteComponent)
     $defineAsComponent(SalleActuelleJoueurComponent)
+    $defineAsComponent(HealthComponent)
+    $defineAsComponent(PlayerCharacterComponent)
 
     class PhysicsComponent {
         + body : Body
@@ -104,11 +106,11 @@ namespace com.dungeonsdevs.components {
         + decelerationTimeInSeconds : float
         + initialVelocityAtStartOfDeceleration : Vector2
     }
-        enum MapState{
-            ACTUEL
-            ATTENTE_AFFICHAGE
-            NON_CHARGEE
-        }
+    enum MapState{
+        ACTUEL
+        ATTENTE_AFFICHAGE
+        NON_CHARGEE
+    }
 
     class MapStateComponent {
         + etatSalle
@@ -124,16 +126,20 @@ namespace com.dungeonsdevs.components {
                 + salleSuivante
     }
 
-        class SalleActuelleJoueurComponent {
-                + idMap
-        }
+    class SalleActuelleJoueurComponent {
+            + idMap
+    }
+
+    class HealthComponent {
+        + health : int
+    }
+
+    class PlayerCharacterComponent {
+        ' Sert juste à identifier les entités qui sont des joueurs
+    }
 
     $addRelationship(MapStateComponent, MapState, $rightMultiplicity="1", $sign="*--")
     $addRelationship(EntityStateComponent, EntityState, $rightMultiplicity="1", $sign="*--")
-
-
-
-
 
 }
 
@@ -144,9 +150,6 @@ namespace com.dungeonsdevs.screens {
         + resize(width: int, height: int)
         + dispose()
     }
-    !$classes = $artemisWorldClass + "," + $box2dWorldClass
-    $addRelationshipsToClass(GameScreen, $classes, $rightMultiplicity="1", $sign="*--", $relationship="has")
-    $addRelationship(GameScreen, DungeonGame, $rightMultiplicity="1", $sign="*--", $relationship="has")
 
     $defineAsScreen(GameScreen)
 }
@@ -202,6 +205,15 @@ namespace com.dungeonsdevs.systems {
 
     }
 
+    class HudSystem {
+        - Stage hudStage
+        - Label healthLabel
+        - ComponentMapper<HealthComponent> healthMapper
+        # processSystem() : void
+        - updateHealthLabel(healthComponent: HealthComponent) : void
+        # dispose() :void
+    }
+
     $addRelationship(MovementSystem, StateManagementSystem, $sign="-->", $relationship="uses")
     $addRelationship(MovementSystem, InputComponent, $sign="-->", $relationship="checks")
     $addRelationshipsToClass(MovementSystem, "EntityStateComponent, PhysicsComponent", $rightMultiplicity="*", $sign="-->", $relationship="updates")
@@ -210,6 +222,7 @@ namespace com.dungeonsdevs.systems {
     $addRelationship(InputSystem, InputComponent, $sign="-->", $relationship="updates")
     $addRelationship(ChangeurDeSalleSystem, MapStateComponent, $sign="-->", $relationship="updates")
     $addRelationship(ChangeurDeSalleSystem, SalleActuelleJoueurComponent, $sign="-->", $relationship="updates")
+    $addRelationship(HudSystem, HealthComponent, $sign="-->", $rightMultiplicity="1", $relationship="reads")
 
     $defineAsSystem(MovementSystem, "EntityProcessingSystem")
     $defineAsSystem(StateManagementSystem, "EntityProcessingSystem")
@@ -217,6 +230,7 @@ namespace com.dungeonsdevs.systems {
     $defineAsSystem(InputSystem, "EntityProcessingSystem")
     $defineAsSystem(RenderingSystem)
     $defineAsSystem(ChangeurDeSalleSystem)
+    $defineAsSystem(HudSystem, "BaseEntitySystem")
 
 
     Note top of MovementSystem
@@ -224,7 +238,8 @@ namespace com.dungeonsdevs.systems {
     End Note
 }
 
-
+!$classes = $artemisWorldClass + "," + $box2dWorldClass + ", DungeonGame,HudSystem"
+    $addRelationshipsToClass(GameScreen, $classes, $rightMultiplicity="1", $sign="*--", $relationship="has")
 '*****************
 
 namespace utils {
@@ -252,6 +267,7 @@ namespace utils {
     - InputComponent
     - MovementComponent
     - SalleActuelleJoueurComponent
+    - PlayerCharacterComponent
     L'archetype Map possède les composants suivant:
     - LoadedMapComponent
     - MapStateComponent
