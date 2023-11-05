@@ -1,4 +1,4 @@
-package com.dungeondevs.systems;
+package com.dungeondevs.systems.Map;
 
 import com.artemis.Entity;
 import com.artemis.annotations.All;
