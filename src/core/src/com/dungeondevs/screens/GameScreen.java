@@ -11,10 +11,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dungeondevs.DungeonGame;
 import com.dungeondevs.components.*;
-import com.dungeondevs.systems.InputSystem;
-import com.dungeondevs.systems.MovementSystem;
-import com.dungeondevs.systems.PhysicsSystem;
-import com.dungeondevs.systems.StateManagementSystem;
+import com.dungeondevs.components.Level.SalleAssocieeComponent;
+import com.dungeondevs.systems.*;
 import com.dungeondevs.utils.Constants;
 import com.dungeondevs.utils.GameArchetypes;
 
@@ -57,10 +55,14 @@ public class GameScreen implements Screen {
 
         // Monde Artemis
         WorldConfiguration setup = new WorldConfigurationBuilder()
+                .with(new MapsLoaderSystem())
                 .with(new InputSystem())
                 .with(new MovementSystem())
                 .with(new PhysicsSystem(box2dWorld, tempsParFrame))
                 .with(new StateManagementSystem())
+                .with(new MapRendererSystem())
+                .with(new ChangeurDeSalleSystem())
+                .with(new RoomIntializerSystem(box2dWorld))
                 .build();
 
         artemisWorld = new World(setup);
@@ -77,7 +79,15 @@ public class GameScreen implements Screen {
         player.getComponent(InputComponent.class).down = false;
         player.getComponent(MovementComponent.class).maxSpeedInMeterPerSecond = Constants.PLAYER_CHAR_MAX_VELOCITY;
         player.getComponent(MovementComponent.class).decelerationTimeInSeconds = Constants.PLAYER_CHAR_DECELERATION_TIME;
+        player.getComponent(SalleAssocieeComponent.class).idMap = 0;
 
+        Archetype mapArchetype = GameArchetypes.MAP_ARCHETYPE
+                .build(artemisWorld);
+
+        Entity map = artemisWorld.createEntity(mapArchetype);
+        //artemisWorld.getSystem(MapsLoaderSystem.class).process();
+
+        artemisWorld.getSystem(ChangeurDeSalleSystem.class).setJoueur(player);
     }
 
     @Override

@@ -2,30 +2,26 @@ package com.dungeondevs.systems;
 
 import com.artemis.Entity;
 import com.artemis.annotations.All;
-import com.artemis.annotations.One;
 import com.artemis.systems.EntityProcessingSystem;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.dungeondevs.Enumeration.LevelState;
-import com.dungeondevs.components.InputComponent;
-import com.dungeondevs.components.Level.PorteComponent;
-import com.dungeondevs.components.Level.SalleActuelJoueurComponent;
-import com.dungeondevs.components.Maps.LoadMapComponent;
-import com.dungeondevs.components.Maps.MapStateComponent;
+import com.dungeondevs.components.Level.SalleAssocieeComponent;
+import com.dungeondevs.components.Maps.ActiveEntity;
 
-@One({PorteComponent.class, MapStateComponent.class})
+@All({SalleAssocieeComponent.class, ActiveEntity.class})
 public class ChangeurDeSalleSystem extends EntityProcessingSystem {
+
+    public Entity joueur;
+
     @Override
     protected void process(Entity e) {
 
-        if (e.getComponent(MapStateComponent.class).etat == LevelState.actuel){
-            if (e.getComponent(PorteComponent.class).idMapDansLaquelleElleSeTrouve == e.getComponent(LoadMapComponent.class).idmap /** On rajoutera ici la collision **/ && Gdx.input.isKeyPressed(Input.Keys.ENTER)){
-                e.getComponent(MapStateComponent.class).etat = LevelState.actuelleAttenteAffichage;
-                System.out.println("aloaaaaa");
-            }
+        if (this.joueur != null){
+            e.getComponent(ActiveEntity.class).active = e.getComponent(SalleAssocieeComponent.class).idMap == joueur.getComponent(SalleAssocieeComponent.class).idMap;
         }
+
+        /** A ecrire pour de vrai quand on aura les déplacements **/
     }
 
-    /** A ecrire pour de vrai quand on aura les déplacements **/
-
+    public void setJoueur(Entity joueur) {
+        this.joueur = joueur;
+    }
 }

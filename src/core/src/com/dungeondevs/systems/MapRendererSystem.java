@@ -3,17 +3,10 @@ package com.dungeondevs.systems;
 import com.artemis.Entity;
 import com.artemis.annotations.All;
 import com.artemis.systems.EntityProcessingSystem;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.dungeondevs.Enumeration.LevelState;
 import com.dungeondevs.components.Maps.LoadMapComponent;
-import com.dungeondevs.components.Maps.MapStateComponent;
 
 @All(LoadMapComponent.class)
 public class MapRendererSystem extends EntityProcessingSystem {
@@ -25,7 +18,8 @@ public class MapRendererSystem extends EntityProcessingSystem {
 
     @Override
     protected void process(Entity e) {
-        if (e.getComponent(MapStateComponent.class).etat.equals(LevelState.actuelleAttenteAffichage)){
+
+        /**if (e.getComponent(MapStateComponent.class).etat.equals(LevelState.actuelleAttenteAffichage)){
 
             TmxMapLoader loader = new TmxMapLoader();
             //map = loader.load("maps/test2.tmx");
@@ -53,7 +47,7 @@ public class MapRendererSystem extends EntityProcessingSystem {
 
         cam.update();
         renderer.render();
-
+    **/
     }
 
     public Viewport getViewport() {
