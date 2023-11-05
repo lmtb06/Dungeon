@@ -1,4 +1,4 @@
-package com.dungeondevs.systems;
+package com.dungeondevs.systems.Map;
 
 import com.artemis.Archetype;
 import com.artemis.Entity;
@@ -13,12 +13,17 @@ import com.dungeondevs.components.Maps.LoadMapComponent;
 import com.dungeondevs.components.PhysicsComponent;
 import com.dungeondevs.utils.GameArchetypes;
 
+import java.util.ArrayList;
+
 @All(LoadMapComponent.class)
 public class RoomIntializerSystem extends EntityProcessingSystem {
 
     private World world;
 
+    public ArrayList<Entity> listeEntiteADesactiver;
+
     public RoomIntializerSystem(World world) {
+        listeEntiteADesactiver = new ArrayList<>();
         this.world = world;
     }
 
@@ -41,6 +46,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         mur.getComponent(PhysicsComponent.class).body = createBoundary(i*facteur + 0.59f, j*facteur + 0.59f, facteur,facteur);
                         mur.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
                         mur.getComponent(ActiveEntity.class).active = false;
+                        listeEntiteADesactiver.add(mur);
                     }
                 }
             }
@@ -82,6 +88,8 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         //Composant relatif à la salle dans laquelle il se trouve
                         monstre.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
                         monstre.getComponent(ActiveEntity.class).active = false;
+
+                        listeEntiteADesactiver.add(monstre);
                         /**Monster m = new Monster(Integer.parseInt(so.get(i).getProperties().get("health").toString()),
                                 Float.parseFloat(so.get(i).getProperties().get("speed").toString()),
                                 Integer.parseInt(so.get(i).getProperties().get("damages").toString()),
@@ -132,4 +140,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
         return body;
     }
 
+    public ArrayList<Entity> getListeEntiteADesactiver() {
+        return listeEntiteADesactiver;
+    }
 }
