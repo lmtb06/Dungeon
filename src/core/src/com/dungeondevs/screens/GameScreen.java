@@ -13,6 +13,7 @@ import com.dungeondevs.DungeonGame;
 import com.dungeondevs.components.*;
 import com.dungeondevs.components.Level.SalleAssocieeComponent;
 import com.dungeondevs.systems.*;
+import com.dungeondevs.systems.*;
 import com.dungeondevs.utils.Constants;
 import com.dungeondevs.utils.GameArchetypes;
 
@@ -60,6 +61,9 @@ public class GameScreen implements Screen {
                 .with(new MovementSystem())
                 .with(new PhysicsSystem(box2dWorld, tempsParFrame))
                 .with(new StateManagementSystem())
+                .with(new CollisionSystem(box2dWorld))
+                .with(new AttackSystem(box2dWorld))
+                .with(new AttackEntitySystem(box2dWorld))
                 .with(new MapRendererSystem())
                 .with(new ChangeurDeSalleSystem())
                 .with(new RoomIntializerSystem(box2dWorld))

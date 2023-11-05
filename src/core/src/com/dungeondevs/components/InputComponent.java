@@ -7,4 +7,5 @@ public class InputComponent extends Component {
     public boolean right;
     public boolean up;
     public boolean down;
+    public boolean space;
 }
