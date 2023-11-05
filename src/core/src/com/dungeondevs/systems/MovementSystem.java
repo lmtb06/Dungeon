@@ -29,7 +29,6 @@ public class MovementSystem extends EntityProcessingSystem {
         InputComponent inputComponent = inputMapper.get(e);
         PhysicsComponent physicsComponent = physicsMapper.get(e);
         MovementComponent movementComponent = movementSpecsMapper.get(e);
-
         Vector2 movementVector = calculateMovementVector(inputComponent);
         boolean shouldMove = !movementVector.isZero();
 

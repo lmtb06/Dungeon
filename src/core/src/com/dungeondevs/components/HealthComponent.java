@@ -4,7 +4,7 @@ import com.artemis.Component;
 
 public class HealthComponent extends Component {
 
-    private int health = 10;
+    public int health = 10;
 
     public void damage (int amount) {
         this.health -= amount;

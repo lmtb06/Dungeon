@@ -7,12 +7,11 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dungeondevs.DungeonGame;
 import com.dungeondevs.components.*;
 import com.dungeondevs.components.Level.SalleAssocieeComponent;
-import com.dungeondevs.systems.*;
 import com.dungeondevs.systems.*;
 import com.dungeondevs.utils.Constants;
 import com.dungeondevs.utils.FixtureUserData;
@@ -20,14 +19,15 @@ import com.dungeondevs.utils.GameArchetypes;
 
 public class GameScreen implements Screen {
     private final DungeonGame game;
-    private final Viewport viewport;
+    private final Viewport worldViewport;
     private final World artemisWorld;
     private final com.badlogic.gdx.physics.box2d.World box2dWorld;
     private final Box2DDebugRenderer debugRenderer;
+    private final HudSystem hudSystem;
 
     public GameScreen(DungeonGame game) {
         this.game = game;
-        this.viewport = new FitViewport(10, 10);
+        this.worldViewport = new ExtendViewport(10, 10);
         box2dWorld = new com.badlogic.gdx.physics.box2d.World(new Vector2(0, 0), true);
         debugRenderer = new Box2DDebugRenderer();
 
@@ -35,8 +35,8 @@ public class GameScreen implements Screen {
         float tempsParFrame = 1f / Constants.FOREGROUND_FRAME_RATE;
 
         // Viewport FitViewport
-        viewport.getCamera().position.set(0,0,0);
-        viewport.getCamera().update();
+        worldViewport.getCamera().position.set(0,0,0);
+        worldViewport.getCamera().update();
 
         // Monde box2d
         //Create a default box 1meter tall and 0.3 meter large and a mass of 10 kg for the box2d world
@@ -50,7 +50,7 @@ public class GameScreen implements Screen {
 
         FixtureDef boxFixtureDef = new FixtureDef();
         boxFixtureDef.shape = boxShape;
-        boxFixtureDef.density = 1;
+        boxFixtureDef.density = 10;
 
         Fixture fixture = playerBody.createFixture(boxFixtureDef);
 
@@ -70,9 +70,11 @@ public class GameScreen implements Screen {
                 .with(new ChangeurDeSalleSystem())
                 .with(new RoomIntializerSystem(box2dWorld))
                 .with(new HealthSystem(box2dWorld))
+                .with(new HudSystem())
                 .build();
 
         artemisWorld = new World(setup);
+        this.hudSystem = artemisWorld.getSystem(HudSystem.class);
 
         Archetype playerArchetype = GameArchetypes.PLAYER_CHARACTER_ARCHETYPE
                         .build(artemisWorld);
@@ -109,7 +111,7 @@ public class GameScreen implements Screen {
         ScreenUtils.clear(0, 0, 0.2f, 1);
 
         // Mise à jour de la caméra
-        Camera camera = viewport.getCamera();
+        Camera camera = worldViewport.getCamera();
         camera.update();
 
         // rendu debug du monde box2d
@@ -122,7 +124,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height);
+        worldViewport.update(width, height);
+        hudSystem.resize(width, height);
     }
 
     @Override

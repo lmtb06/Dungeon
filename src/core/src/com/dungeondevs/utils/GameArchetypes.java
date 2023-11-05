@@ -16,7 +16,8 @@ public class GameArchetypes {
             .add(SalleAssocieeComponent.class)
             .add(AttackComponent.class)
             .add(HealthComponent.class)
-            .add(MovementComponent.class);
+            .add(MovementComponent.class)
+            .add(PlayerCharacterComponent.class);
 
     public static final ArchetypeBuilder MAP_ARCHETYPE = new ArchetypeBuilder()
             .add(LoadMapComponent.class);
