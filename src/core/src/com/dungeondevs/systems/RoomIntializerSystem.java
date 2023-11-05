@@ -84,6 +84,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         //Composant relatif à la salle dans laquelle il se trouve
                         monstre.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
                         monstre.getComponent(ActiveEntity.class).active = false;
+                        monstre.getComponent(PhysicsComponent.class).body = playerBody;
                         /**Monster m = new Monster(Integer.parseInt(so.get(i).getProperties().get("health").toString()),
                                 Float.parseFloat(so.get(i).getProperties().get("speed").toString()),
                                 Integer.parseInt(so.get(i).getProperties().get("damages").toString()),
