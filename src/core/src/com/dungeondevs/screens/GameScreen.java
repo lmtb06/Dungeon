@@ -72,6 +72,7 @@ public class GameScreen implements Screen {
                 .with(new MapRendererSystem())
                 .with(new ChangeurDeSalleSystem())
                 .with(new RoomIntializerSystem(box2dWorld))
+                .with(new HealthSystem(box2dWorld))
                 .build();
 
         artemisWorld = new World(setup);
