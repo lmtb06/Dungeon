@@ -11,6 +11,8 @@ public class AttackComponent extends Component {
         return damages;
     }
 
+    public void setDamage(int attackDamages) { this.damages = attackDamages; }
+
     public long getAttackDelay() {
         return attackDelay;
     }

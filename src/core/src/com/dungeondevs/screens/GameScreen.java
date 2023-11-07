@@ -13,7 +13,6 @@ import com.dungeondevs.DungeonGame;
 import com.dungeondevs.components.*;
 import com.dungeondevs.components.Level.SalleAssocieeComponent;
 import com.dungeondevs.systems.*;
-import com.dungeondevs.systems.*;
 import com.dungeondevs.utils.Constants;
 import com.dungeondevs.utils.FixtureUserData;
 import com.dungeondevs.utils.GameArchetypes;
@@ -70,6 +69,7 @@ public class GameScreen implements Screen {
                 .with(new ChangeurDeSalleSystem())
                 .with(new RoomIntializerSystem(box2dWorld))
                 .with(new HealthSystem(box2dWorld))
+                .with(new PowerUpSystem(box2dWorld))
                 .build();
 
         artemisWorld = new World(setup);

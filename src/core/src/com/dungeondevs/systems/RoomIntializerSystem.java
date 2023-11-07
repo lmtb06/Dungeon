@@ -4,6 +4,7 @@ import com.artemis.Archetype;
 import com.artemis.Entity;
 import com.artemis.annotations.All;
 import com.artemis.systems.EntityProcessingSystem;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.physics.box2d.*;
@@ -11,8 +12,10 @@ import com.dungeondevs.components.Level.SalleAssocieeComponent;
 import com.dungeondevs.components.Maps.ActiveEntity;
 import com.dungeondevs.components.Maps.LoadMapComponent;
 import com.dungeondevs.components.PhysicsComponent;
+import com.dungeondevs.components.PowerUpTypeComponent;
 import com.dungeondevs.utils.FixtureUserData;
 import com.dungeondevs.utils.GameArchetypes;
+import com.dungeondevs.components.PowerUpType;
 
 @All(LoadMapComponent.class)
 public class RoomIntializerSystem extends EntityProcessingSystem {
@@ -57,6 +60,8 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
             Archetype monsterArchetype = GameArchetypes.MONSTRE_ARCHETYPE
                     .build(getWorld());
 
+            Archetype powerUpArchetype = GameArchetypes.POWER_UP_ARCHETYPE.build(getWorld());
+
             for (int i = 0; i < so.getCount(); i++) {
                 System.out.println("siu:" +Float.parseFloat(so.get(i).getProperties().get("x spawn").toString()));
 
@@ -97,6 +102,31 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         );**/
                         break;
                     case "powerUps":
+                        Entity powerUp = getWorld().createEntity(powerUpArchetype);
+
+                        BodyDef powerUpBodyDef = new BodyDef();
+                        powerUpBodyDef.type = BodyDef.BodyType.DynamicBody;
+                        powerUpBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurEntity, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurEntity);
+                        Body powerUpBody = world.createBody(powerUpBodyDef);
+
+                        PolygonShape boxShapePowerUp = new PolygonShape();
+                        boxShapePowerUp.setAsBox(0.3f, 0.3f);
+
+                        FixtureDef boxFixtureDefPowerUp = new FixtureDef();
+                        boxFixtureDefPowerUp.shape = boxShapePowerUp;
+                        boxFixtureDefPowerUp.density = 1;
+
+                        Fixture fixturePowerUp = powerUpBody.createFixture(boxFixtureDefPowerUp);
+                        fixturePowerUp.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.PowerUp, powerUp));
+                        boxShapePowerUp.dispose();
+
+                        //Composant relatif à la salle dans laquelle il se trouve
+                        powerUp.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
+                        powerUp.getComponent(ActiveEntity.class).active = false;
+                        powerUp.getComponent(PhysicsComponent.class).body = powerUpBody;
+                        powerUp.getComponent(PowerUpTypeComponent.class).powerUpType=PowerUpType.ATTACK_TEMPO;
+                        powerUp.getComponent(PowerUpTypeComponent.class).duration=3000;
+                        powerUp.getComponent(PowerUpTypeComponent.class).value=1f;
                         /**PowerUp pu = new PowerUp(
                                 new Vector2(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteur,
                                         Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteur

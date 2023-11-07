@@ -16,7 +16,8 @@ public class GameArchetypes {
             .add(SalleAssocieeComponent.class)
             .add(AttackComponent.class)
             .add(HealthComponent.class)
-            .add(MovementComponent.class);
+            .add(MovementComponent.class)
+            .add(PowerUpComponent.class);
 
     public static final ArchetypeBuilder MAP_ARCHETYPE = new ArchetypeBuilder()
             .add(LoadMapComponent.class);
@@ -46,4 +47,10 @@ public class GameArchetypes {
             .add(ContactDamageComponent.class)
             .add(AttackEntityComponent.class)
             .add(RenderingComponent.class);
+
+    public static final ArchetypeBuilder POWER_UP_ARCHETYPE = new ArchetypeBuilder()
+            .add(PhysicsComponent.class)
+            .add(SalleAssocieeComponent.class)
+            .add(ActiveEntity.class)
+            .add(PowerUpTypeComponent.class);
 }

@@ -1,11 +1,11 @@
 package com.dungeondevs.systems;
 
 import com.artemis.BaseSystem;
-import com.artemis.Entity;
-import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.physics.box2d.*;
 import com.dungeondevs.components.ContactDamageComponent;
 import com.dungeondevs.components.HealthComponent;
+import com.dungeondevs.components.PowerUpComponent;
+import com.dungeondevs.components.PowerUpTypeComponent;
 import com.dungeondevs.utils.FixtureUserData;
 
 public class CollisionSystem extends BaseSystem implements ContactListener {
@@ -25,6 +25,7 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
 
         if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Monster){
             if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
+                System.out.println("AA");
                 fixtureUserDataA.getEntity().getComponent(HealthComponent.class).damage(
                         fixtureUserDataB.getEntity().getComponent(ContactDamageComponent.class).getDamages()
                 );
@@ -36,6 +37,12 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
                 fixtureUserDataA.getEntity().getComponent(HealthComponent.class).damage(
                         fixtureUserDataB.getEntity().getComponent(ContactDamageComponent.class).getDamages()
                 );
+            }
+        }
+
+        if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.PowerUp){
+            if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
+                fixtureUserDataA.getEntity().getComponent(PowerUpComponent.class).applyPowerUP(fixtureUserDataB.getEntity().getComponent(PowerUpTypeComponent.class));
             }
         }
 
