@@ -38,7 +38,7 @@ public class PowerUpSystem extends EntityProcessingSystem {
         AttackComponent attackComponent = e.getComponent(AttackComponent.class);
         HealthComponent healthComponent = e.getComponent(HealthComponent.class);
        powerUpComponent.getSpeedLastAppliedTime();
-       System.out.println(attackComponent.getDamages());
+       System.out.println(healthComponent.getHealth());
         if(powerUpComponent.powerUpNTBA!=null){
             switch(powerUpComponent.powerUpNTBA.powerUpType){
                 case SPEED_DEFIN:
@@ -71,6 +71,12 @@ public class PowerUpSystem extends EntityProcessingSystem {
                     break;
                 case HEALTH_DEFIN:
                     healthComponent.setMaxHealth(healthComponent.getMaxHealth()+(int)powerUpComponent.powerUpNTBA.value);
+                    powerUpComponent.powerUpNTBA=null;
+                    break;
+
+                case HEALTH_HEAL:
+                    healthComponent.heal((int)powerUpComponent.powerUpNTBA.value);
+                    powerUpComponent.powerUpNTBA=null;
                     break;
             }
         }

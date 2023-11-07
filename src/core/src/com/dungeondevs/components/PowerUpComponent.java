@@ -15,7 +15,7 @@ public class PowerUpComponent extends Component{
     public float originalSpeed = 0;
 
 
-    public long attackLastAppliedTime = 1;
+    public long attackLastAppliedTime = 0;
 
     public long attackDuration = 0;
 

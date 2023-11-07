@@ -124,9 +124,9 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         powerUp.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
                         powerUp.getComponent(ActiveEntity.class).active = false;
                         powerUp.getComponent(PhysicsComponent.class).body = powerUpBody;
-                        powerUp.getComponent(PowerUpTypeComponent.class).powerUpType=PowerUpType.ATTACK_TEMPO;
-                        powerUp.getComponent(PowerUpTypeComponent.class).duration=3000;
-                        powerUp.getComponent(PowerUpTypeComponent.class).value=1f;
+                        powerUp.getComponent(PowerUpTypeComponent.class).powerUpType=PowerUpType.HEALTH_HEAL;
+                        powerUp.getComponent(PowerUpTypeComponent.class).duration=0;
+                        powerUp.getComponent(PowerUpTypeComponent.class).value=10;
                         /**PowerUp pu = new PowerUp(
                                 new Vector2(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteur,
                                         Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteur

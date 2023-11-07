@@ -10,7 +10,7 @@ public class HealthComponent extends Component {
         return maxHealth;
     }
 
-    private int maxHealth = 10;
+    private int maxHealth = 11;
 
     public void damage (int amount) {
         this.health -= amount;
@@ -23,6 +23,13 @@ public class HealthComponent extends Component {
 
     public void setMaxHealth(int maxHealth) {
         this.maxHealth = maxHealth;
+    }
+
+    public void heal(int hp){
+        this.health+=hp;
+        if(this.health>=this.maxHealth){
+            this.health=maxHealth;
+        }
     }
 
 }
