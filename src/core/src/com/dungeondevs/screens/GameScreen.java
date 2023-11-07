@@ -13,7 +13,6 @@ import com.dungeondevs.DungeonGame;
 import com.dungeondevs.components.*;
 import com.dungeondevs.components.Level.SalleAssocieeComponent;
 import com.dungeondevs.systems.*;
-import com.dungeondevs.systems.Map.ChangeurDeSalleSystem;
 import com.dungeondevs.systems.Map.MapRendererSystem;
 import com.dungeondevs.systems.Map.MapsLoaderSystem;
 import com.dungeondevs.systems.Map.RoomIntializerSystem;
@@ -70,7 +69,6 @@ public class GameScreen implements Screen {
                 .with(new AttackSystem(box2dWorld))
                 .with(new AttackEntitySystem(box2dWorld))
                 .with(new MapRendererSystem())
-                .with(new ChangeurDeSalleSystem())
                 .with(new RoomIntializerSystem(box2dWorld))
                 .with(new HealthSystem(box2dWorld))
                 .build();
@@ -95,10 +93,12 @@ public class GameScreen implements Screen {
         Archetype mapArchetype = GameArchetypes.MAP_ARCHETYPE
                 .build(artemisWorld);
 
-        Entity map = artemisWorld.createEntity(mapArchetype);
+        Entity map1 = artemisWorld.createEntity(mapArchetype);
+        Entity map2 = artemisWorld.createEntity(mapArchetype);
         //artemisWorld.getSystem(MapsLoaderSystem.class).process();
 
-        artemisWorld.getSystem(ChangeurDeSalleSystem.class).setJoueur(player);
+        //artemisWorld.getSystem(ChangeurDeSalleSystem.class).setJoueur(player);
+        artemisWorld.getSystem(RoomIntializerSystem.class).setJoueur(player);
     }
 
     @Override

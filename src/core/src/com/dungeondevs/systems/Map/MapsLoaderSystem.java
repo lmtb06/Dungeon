@@ -27,17 +27,23 @@ public class MapsLoaderSystem extends EntitySystem {
         for (Entity m: getEntities()
              ) {
             if (m.getComponent(LoadMapComponent.class).lienAsset == null){
-                m.getComponent(LoadMapComponent.class).lienAsset = "maps/test2.tmx";
-                m.getComponent(LoadMapComponent.class).idmap = idMapCourant;
-                m.getComponent(LoadMapComponent.class).loaded = false;
-                m.getComponent(LoadMapComponent.class).map = loader.load(m.getComponent(LoadMapComponent.class).lienAsset);
-                /**if (m.getComponent(LoadMapComponent.class).idmap == 0){
-                    m.getComponent(MapStateComponent.class).etat = LevelState.actuelleAttenteAffichage;
-                }else {
-                    m.getComponent(MapStateComponent.class).etat = LevelState.nonCommencee;
-                }**/
+
+                if (idMapCourant == 0){
+                    m.getComponent(LoadMapComponent.class).lienAsset = "maps/test2.tmx";
+                    m.getComponent(LoadMapComponent.class).idmap = idMapCourant;
+                    m.getComponent(LoadMapComponent.class).loaded = false;
+                    m.getComponent(LoadMapComponent.class).map = loader.load(m.getComponent(LoadMapComponent.class).lienAsset);
+                    System.out.println("salut : "+m.getComponent(LoadMapComponent.class).map);
+                }
+                if (idMapCourant == 1){
+                    m.getComponent(LoadMapComponent.class).lienAsset = "maps/test3.tmx";
+                    m.getComponent(LoadMapComponent.class).idmap = idMapCourant;
+                    m.getComponent(LoadMapComponent.class).loaded = false;
+                    m.getComponent(LoadMapComponent.class).map = loader.load(m.getComponent(LoadMapComponent.class).lienAsset);
+                    System.out.println("salut : "+m.getComponent(LoadMapComponent.class).map);
+                }
                 idMapCourant ++;
-                System.out.println("salut : "+idMapCourant);
+
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.dungeondevs.systems;
+package com.dungeondevs.systems.Map;
 
 import com.artemis.Archetype;
 import com.artemis.Entity;
@@ -7,6 +7,8 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
+import com.dungeondevs.components.Level.PorteComponent;
 import com.dungeondevs.components.Level.SalleAssocieeComponent;
 import com.dungeondevs.components.Maps.ActiveEntity;
 import com.dungeondevs.components.Maps.LoadMapComponent;
@@ -14,23 +16,52 @@ import com.dungeondevs.components.PhysicsComponent;
 import com.dungeondevs.utils.FixtureUserData;
 import com.dungeondevs.utils.GameArchetypes;
 
-@All(LoadMapComponent.class)
+import java.util.ArrayList;
+
+@All({LoadMapComponent.class})
 public class RoomIntializerSystem extends EntityProcessingSystem {
 
-    private World world;
+    private World box2dworld;
+
+    public int salleActuelle = -1;
+
+    public Entity joueur;
+
+    public Array<Body> listeEntiteADesactiver;
 
     public RoomIntializerSystem(World world) {
-        this.world = world;
+        listeEntiteADesactiver = new Array<>();
+        this.box2dworld = world;
     }
 
     @Override
     protected void process(Entity e) {
-        LoadMapComponent lmc = e.getComponent(LoadMapComponent.class);
-        if (!lmc.loaded){
+
+        //System.out.println(joueur.getComponent(SalleAssocieeComponent.class).idMap != salleActuelle);
+        if (joueur!=null && joueur.getComponent(SalleAssocieeComponent.class).idMap != salleActuelle ){
+            if (joueur.getComponent(SalleAssocieeComponent.class).idMap == e.getComponent(LoadMapComponent.class).idmap){
+
+
+            LoadMapComponent lmc = e.getComponent(LoadMapComponent.class);
+            System.out.println("nbEntites : "+lmc.map.getLayers().get(2).getObjects().getCount());
+            //if (lmc.idmap == joueur.getComponent(SalleAssocieeComponent.class).idMap){
+
+            System.out.println(this.box2dworld.getBodyCount());
+            for (Body entitsBody: listeEntiteADesactiver) {
+                if (joueur.getComponent(PhysicsComponent.class).body != entitsBody){
+                    this.box2dworld.destroyBody(entitsBody);
+                }
+
+            }
+
+            //System.out.println(this.box2dworld.getBodyCount() + "world");
+            //System.out.println(listeEntiteADesactiver.size + "liste");
+
 
             float facteur = 0.5f;
             //collision
             TiledMapTileLayer layerCollision = (TiledMapTileLayer) lmc.map.getLayers().get(1);
+            //System.out.println("layer collision : " + layerCollision.);
 
             Archetype murArchetype = GameArchetypes.MUR_ARCHETYPE
                     .build(getWorld());
@@ -39,7 +70,8 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                 for (int j = 0; j < layerCollision.getHeight(); j++) {
                     if (layerCollision.getCell(i,j) != null){
                         Entity mur = getWorld().createEntity(murArchetype);
-                        mur.getComponent(PhysicsComponent.class).body = createBoundary(i*facteur + 0.59f, j*facteur + 0.59f, facteur,facteur);
+                        BodyDef bodyDef = new BodyDef();
+                        mur.getComponent(PhysicsComponent.class).body = createBoundary(i*facteur + 0.59f, j*facteur + 0.59f, facteur,facteur, bodyDef);
                         mur.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
                         mur.getComponent(ActiveEntity.class).active = false;
                     }
@@ -57,6 +89,10 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
             Archetype monsterArchetype = GameArchetypes.MONSTRE_ARCHETYPE
                     .build(getWorld());
 
+            Archetype porteArchetype = GameArchetypes.PORTE_ARCHETYPE
+                    .build(getWorld());
+
+
             for (int i = 0; i < so.getCount(); i++) {
                 System.out.println("siu:" +Float.parseFloat(so.get(i).getProperties().get("x spawn").toString()));
 
@@ -68,7 +104,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         BodyDef playerBodyDef = new BodyDef();
                         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
                         playerBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurEntity, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurEntity);
-                        Body playerBody = world.createBody(playerBodyDef);
+                        Body playerBody = box2dworld.createBody(playerBodyDef);
 
                         PolygonShape boxShape = new PolygonShape();
                         boxShape.setAsBox(0.2f, 0.2f);
@@ -86,27 +122,36 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         monstre.getComponent(ActiveEntity.class).active = false;
                         monstre.getComponent(PhysicsComponent.class).body = playerBody;
 
-                        /**Monster m = new Monster(Integer.parseInt(so.get(i).getProperties().get("health").toString()),
-                                Float.parseFloat(so.get(i).getProperties().get("speed").toString()),
-                                Integer.parseInt(so.get(i).getProperties().get("damages").toString()),
-                                new Vector2(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteur,
-                                        Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteur
-                                ),
-                                new Vector2(0.6f,0.6f),
-                                this.world
-
-                        );**/
                         break;
                     case "powerUps":
-                        /**PowerUp pu = new PowerUp(
-                                new Vector2(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteur,
-                                        Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteur
-                                ),
-                                new Vector2(0.6f,0.6f),
-                                this.world,
-                                this
-                        );**/
+
                         break;
+                    case "porte":
+                        Entity porte = getWorld().createEntity(porteArchetype);
+
+                        //Body porte
+                        BodyDef porteBodyDef = new BodyDef();
+                        porteBodyDef.type = BodyDef.BodyType.StaticBody;
+                        porteBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurEntity, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurEntity);
+                        Body porteBody = box2dworld.createBody(porteBodyDef);
+
+                        PolygonShape porteboxShape = new PolygonShape();
+                        porteboxShape.setAsBox(0.2f, 0.2f);
+
+                        FixtureDef porteboxFixtureDef = new FixtureDef();
+                        porteboxFixtureDef.shape = porteboxShape;
+                        porteboxFixtureDef.density = 1;
+
+                        Fixture portefixture = porteBody.createFixture(porteboxFixtureDef);
+                        portefixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Porte, porte));
+                        porteboxShape.dispose();
+
+                        porte.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
+                        porte.getComponent(PorteComponent.class).idMapDansLaquelleElleSeTrouve = lmc.idmap;
+                        porte.getComponent(PorteComponent.class).idMapVersLaquelleElleMene = Integer.parseInt(so.get(i).getProperties().get("versSalle").toString());
+
+                        porte.getComponent(PhysicsComponent.class).body = porteBody;
+
                 }
 
 
@@ -115,25 +160,31 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
 
 
 
-            System.out.printf("count: "+ layerCollision.getHeight() +" "+ so.getCount());
+
 
             e.getComponent(LoadMapComponent.class).loaded = true;
-        }
+            salleActuelle = joueur.getComponent(SalleAssocieeComponent.class).idMap;
+                this.box2dworld.getBodies(listeEntiteADesactiver);
+            }
+            }
     }
 
-    private Body createBoundary(float x, float y, float width, float height) {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-        bodyDef.position.set(x, y);
+    private Body createBoundary(float x, float y, float width, float height, BodyDef bdf) {
+
+        bdf.type = BodyDef.BodyType.StaticBody;
+        bdf.position.set(x, y);
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(width / 2, height / 2);
 
-        Body body = world.createBody(bodyDef);
+        Body body = box2dworld.createBody(bdf);
         body.createFixture(shape, 0);
 
         shape.dispose();
         return body;
     }
 
+    public void setJoueur(Entity joueur) {
+        this.joueur = joueur;
+    }
 }
