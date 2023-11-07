@@ -54,11 +54,14 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
 
             }
 
-            //System.out.println(this.box2dworld.getBodyCount() + "world");
-            //System.out.println(listeEntiteADesactiver.size + "liste");
+            float facteurCase = 0.5f;
 
-
+            float decalageX = facteurCase*4;
+                float decalageY = facteurCase*2;
             float facteur = 0.5f;
+
+            float facteurX = 0.5f;
+            float facteurY = 0.5f;
             //collision
             TiledMapTileLayer layerCollision = (TiledMapTileLayer) lmc.map.getLayers().get(1);
             //System.out.println("layer collision : " + layerCollision.);
@@ -71,7 +74,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                     if (layerCollision.getCell(i,j) != null){
                         Entity mur = getWorld().createEntity(murArchetype);
                         BodyDef bodyDef = new BodyDef();
-                        mur.getComponent(PhysicsComponent.class).body = createBoundary(i*facteur + 0.59f, j*facteur + 0.59f, facteur,facteur, bodyDef);
+                        mur.getComponent(PhysicsComponent.class).body = createBoundary((i*facteurX) - decalageX, (j*facteurY) - decalageY, facteur,facteur, bodyDef);
                         mur.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
                         mur.getComponent(ActiveEntity.class).active = false;
                     }
@@ -103,7 +106,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         //Body Monstre
                         BodyDef playerBodyDef = new BodyDef();
                         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
-                        playerBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurEntity, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurEntity);
+                        playerBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
                         Body playerBody = box2dworld.createBody(playerBodyDef);
 
                         PolygonShape boxShape = new PolygonShape();
@@ -132,7 +135,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         //Body porte
                         BodyDef porteBodyDef = new BodyDef();
                         porteBodyDef.type = BodyDef.BodyType.StaticBody;
-                        porteBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurEntity, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurEntity);
+                        porteBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
                         Body porteBody = box2dworld.createBody(porteBodyDef);
 
                         PolygonShape porteboxShape = new PolygonShape();
