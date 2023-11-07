@@ -46,7 +46,9 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
             System.out.println("nbEntites : "+lmc.map.getLayers().get(2).getObjects().getCount());
             //if (lmc.idmap == joueur.getComponent(SalleAssocieeComponent.class).idMap){
 
-            System.out.println(this.box2dworld.getBodyCount());
+            //System.out.println(this.box2dworld.getBodyCount());
+                this.box2dworld.getBodies(listeEntiteADesactiver);
+
             for (Body entitsBody: listeEntiteADesactiver) {
                 if (joueur.getComponent(PhysicsComponent.class).body != entitsBody){
                     this.box2dworld.destroyBody(entitsBody);
@@ -167,7 +169,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
 
             e.getComponent(LoadMapComponent.class).loaded = true;
             salleActuelle = joueur.getComponent(SalleAssocieeComponent.class).idMap;
-                this.box2dworld.getBodies(listeEntiteADesactiver);
+
             }
             }
     }

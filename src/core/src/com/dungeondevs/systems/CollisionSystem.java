@@ -48,6 +48,14 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
             }
         }
 
+        if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Attack){
+            if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Monster){
+                fixtureUserDataB.getEntity().getComponent(HealthComponent.class).damage(
+                        fixtureUserDataA.getEntity().getComponent(ContactDamageComponent.class).getDamages()
+                );
+            }
+        }
+
     }
 
     @Override
