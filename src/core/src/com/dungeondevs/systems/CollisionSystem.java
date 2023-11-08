@@ -8,6 +8,7 @@ import com.dungeondevs.components.ContactDamageComponent;
 import com.dungeondevs.components.HealthComponent;
 import com.dungeondevs.components.Level.PorteComponent;
 import com.dungeondevs.components.Level.SalleAssocieeComponent;
+import com.dungeondevs.components.PowerUpUserComponent;
 import com.dungeondevs.utils.FixtureUserData;
 
 public class CollisionSystem extends BaseSystem implements ContactListener {
@@ -38,6 +39,12 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
                 fixtureUserDataA.getEntity().getComponent(HealthComponent.class).damage(
                         fixtureUserDataB.getEntity().getComponent(ContactDamageComponent.class).getDamages()
                 );
+            }
+        }
+
+        if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.PowerUp){
+            if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
+                fixtureUserDataA.getEntity().getComponent(PowerUpUserComponent.class).applyPowerUP(fixtureUserDataB.getEntity());
             }
         }
 
