@@ -39,6 +39,7 @@ namespace com.badlogic {
 
 !procedure $defineAsScreen($className)
     com.badlogic.gdx.Screen <|.. $className
+    com.dungeonsdevs.screens.DungeonGameScreen <|.. $className
 !endprocedure
 
 !procedure $addRelationship($class1Name, $class2Name, $leftMultiplicity=" ", $rightMultiplicity=" ", $sign="--", $relationship="", $direction=">")
@@ -144,14 +145,24 @@ namespace com.dungeonsdevs.components {
 }
 
 namespace com.dungeonsdevs.screens {
+    interface DungeonGameScreen {
+        + reinitialize()
+    }
     class GameScreen {
         + GameScreen(game: DungeonGame)
         + render(delta: float)
         + resize(width: int, height: int)
         + dispose()
     }
+    class GameOverScreen {
+        + GameOverScreen(game: DungeonGame)
+        + render(delta: float)
+        + resize(width: int, height: int)
+        + dispose()
+    }
 
     $defineAsScreen(GameScreen)
+    $defineAsScreen(GameOverScreen)
 }
 
 /'
@@ -214,6 +225,11 @@ namespace com.dungeonsdevs.systems {
         # dispose() :void
     }
 
+    class GameOverSystem {
+        + GameOverSystem(game: DungeonGame)
+        # process(entity: Entity)
+    }
+
     $addRelationship(MovementSystem, StateManagementSystem, $sign="-->", $relationship="uses")
     $addRelationship(MovementSystem, InputComponent, $sign="-->", $relationship="checks")
     $addRelationshipsToClass(MovementSystem, "EntityStateComponent, PhysicsComponent", $rightMultiplicity="*", $sign="-->", $relationship="updates")
@@ -223,6 +239,8 @@ namespace com.dungeonsdevs.systems {
     $addRelationship(ChangeurDeSalleSystem, MapStateComponent, $sign="-->", $relationship="updates")
     $addRelationship(ChangeurDeSalleSystem, SalleActuelleJoueurComponent, $sign="-->", $relationship="updates")
     $addRelationship(HudSystem, HealthComponent, $sign="-->", $rightMultiplicity="1", $relationship="reads")
+    $addRelationship(GameOverSystem, HealthComponent, $sign="-->", $rightMultiplicity="1", $relationship="reads")
+    $addRelationship(GameOverSystem, DungeonGame, $sign="*--", $rightMultiplicity="1", $relationship="has")
 
     $defineAsSystem(MovementSystem, "EntityProcessingSystem")
     $defineAsSystem(StateManagementSystem, "EntityProcessingSystem")
@@ -231,6 +249,7 @@ namespace com.dungeonsdevs.systems {
     $defineAsSystem(RenderingSystem)
     $defineAsSystem(ChangeurDeSalleSystem)
     $defineAsSystem(HudSystem, "BaseEntitySystem")
+    $defineAsSystem(GameOverSystem, "EntityProcessingSystem")
 
 
     Note top of MovementSystem
@@ -286,9 +305,12 @@ namespace utils {
 
 
 class DungeonGame extends com.badlogic.gdx.Game {
-    + create()
-    + render()
+    + create() : void
+    + render() : void
+    + restartGame() : void
+    + gameOver() : void
 }
+$addRelationshipsToClass(DungeonGame, "GameScreen, GameOverScreen", $rightMultiplicity="1", $sign="*--", $relationship="has")
 
 ' hide components
 
