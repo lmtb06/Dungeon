@@ -8,11 +8,13 @@ import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
+import com.dungeondevs.components.InformationTPComponent;
 import com.dungeondevs.components.Level.PorteComponent;
 import com.dungeondevs.components.Level.SalleAssocieeComponent;
 import com.dungeondevs.components.Maps.ActiveEntity;
 import com.dungeondevs.components.Maps.LoadMapComponent;
 import com.dungeondevs.components.PhysicsComponent;
+import com.dungeondevs.components.PiegeActifComponent;
 import com.dungeondevs.utils.FixtureUserData;
 import com.dungeondevs.utils.GameArchetypes;
 
@@ -41,12 +43,10 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
         if (joueur!=null && joueur.getComponent(SalleAssocieeComponent.class).idMap != salleActuelle ){
             if (joueur.getComponent(SalleAssocieeComponent.class).idMap == e.getComponent(LoadMapComponent.class).idmap){
 
-
             LoadMapComponent lmc = e.getComponent(LoadMapComponent.class);
-            System.out.println("nbEntites : "+lmc.map.getLayers().get(2).getObjects().getCount());
-            //if (lmc.idmap == joueur.getComponent(SalleAssocieeComponent.class).idMap){
 
-            //System.out.println(this.box2dworld.getBodyCount());
+            ArrayList<Entity> listeTpSalle = new ArrayList();
+
                 this.box2dworld.getBodies(listeEntiteADesactiver);
 
             for (Body entitsBody: listeEntiteADesactiver) {
@@ -95,6 +95,12 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                     .build(getWorld());
 
             Archetype porteArchetype = GameArchetypes.PORTE_ARCHETYPE
+                    .build(getWorld());
+
+            Archetype trapArchetype = GameArchetypes.TRAP_ENTITY_ARCHETYPE
+                    .build(getWorld());
+
+            Archetype teleporteurArchetype = GameArchetypes.TELEPORTEUR_ENTITY_ARCHETYPE
                     .build(getWorld());
 
 
@@ -156,14 +162,107 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         porte.getComponent(PorteComponent.class).idMapVersLaquelleElleMene = Integer.parseInt(so.get(i).getProperties().get("versSalle").toString());
 
                         porte.getComponent(PhysicsComponent.class).body = porteBody;
+                        break;
 
+                    case "piege":
+                        Entity trap = getWorld().createEntity(trapArchetype);
+
+                        //Body trap
+                        BodyDef trapBodyDef = new BodyDef();
+                        trapBodyDef.type = BodyDef.BodyType.StaticBody;
+                        trapBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
+                        Body trapBody = box2dworld.createBody(trapBodyDef);
+
+                        PolygonShape trapboxShape = new PolygonShape();
+                        trapboxShape.setAsBox(0.2f, 0.2f);
+
+                        FixtureDef trapboxFixtureDef = new FixtureDef();
+                        trapboxFixtureDef.shape = trapboxShape;
+                        trapboxFixtureDef.density = 1;
+
+                        Fixture trapfixture = trapBody.createFixture(trapboxFixtureDef);
+                        trapfixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Trap, trap));
+                        trapboxShape.dispose();
+
+                        trap.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
+
+                        trap.getComponent(PiegeActifComponent.class).action = true;
+
+                        trap.getComponent(PhysicsComponent.class).body = trapBody;
+                        break;
+
+                    case "teleporteur":
+                        Entity teleporteur = getWorld().createEntity(teleporteurArchetype);
+
+                        //Body Teleporteur
+                        BodyDef teleporteurBodyDef = new BodyDef();
+                        teleporteurBodyDef.type = BodyDef.BodyType.StaticBody;
+                        Float coordonneeX = Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX;
+                        Float coordonneeY = Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY;
+                        teleporteurBodyDef.position.set(coordonneeX, coordonneeY);
+                        Body teleporteurBody = box2dworld.createBody(teleporteurBodyDef);
+
+                        PolygonShape teleporteurboxShape = new PolygonShape();
+                        teleporteurboxShape.setAsBox(0.2f, 0.2f);
+
+                        FixtureDef teleporteurboxFixtureDef = new FixtureDef();
+                        teleporteurboxFixtureDef.shape = teleporteurboxShape;
+                        teleporteurboxFixtureDef.density = 1;
+
+                        Fixture teleporteurfixture = teleporteurBody.createFixture(teleporteurboxFixtureDef);
+                        teleporteurfixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Teleporteur, teleporteur));
+                        teleporteurboxShape.dispose();
+
+                        //idmap du teleporteur
+                        teleporteur.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
+
+                        //information tp component
+                        teleporteur.getComponent(InformationTPComponent.class).idTeleporteurAssocie = Integer.parseInt(so.get(i).getProperties().get("TPRelie").toString());
+                        teleporteur.getComponent(InformationTPComponent.class).idTeleporteur = Integer.parseInt(so.get(i).getProperties().get("IDTP").toString());
+                        teleporteur.getComponent(InformationTPComponent.class).coordonneeX = coordonneeX;
+                        teleporteur.getComponent(InformationTPComponent.class).coordonneeY = coordonneeY;
+                        teleporteur.getComponent(InformationTPComponent.class).directionDeSortie = so.get(i).getProperties().get("directionSortie").toString();
+
+
+                        teleporteur.getComponent(PhysicsComponent.class).body = teleporteurBody;
+
+                        listeTpSalle.add(teleporteur);
+
+                        break;
                 }
 
 
 
             }
 
+            //lier les teleporteurs entre eux
+                for (Entity tps: listeTpSalle) {
+                    //System.out.println(tps.getComponent(InformationTPComponent.class).);
+                    for (Entity tpsTmp: listeTpSalle) {
+                        if (tps.getComponent(InformationTPComponent.class).idTeleporteurAssocie == tpsTmp.getComponent(InformationTPComponent.class).idTeleporteur){
+                            Float decalageTpX = 0.0f;
+                            Float decalageTpY = 0.0f;
+                            switch (tps.getComponent(InformationTPComponent.class).directionDeSortie){
+                                case "droite" :
+                                    decalageTpX = facteurCase;
+                                    break;
+                                case "gauche" :
+                                    decalageTpX = -facteurCase;
+                                    break;
+                                case "haut" :
+                                    decalageTpY = facteurCase;
+                                    break;
+                                case "bas" :
+                                    decalageTpY = -facteurCase;
+                                    break;
+                            }
+                            System.out.println();
 
+                            tps.getComponent(InformationTPComponent.class).TPVersLaPositionX = tpsTmp.getComponent(InformationTPComponent.class).coordonneeX + decalageTpX;
+                            tps.getComponent(InformationTPComponent.class).TPVersLaPositionY = tpsTmp.getComponent(InformationTPComponent.class).coordonneeY + decalageTpY;
+                        }
+                    }
+                }
 
 
 

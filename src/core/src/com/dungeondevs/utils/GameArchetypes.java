@@ -20,7 +20,9 @@ public class GameArchetypes {
             .add(MovementComponent.class)
             .add(PowerUpUserComponent.class)
             .add(MovementComponent.class)
-            .add(PlayerCharacterComponent.class);
+            .add(PlayerCharacterComponent.class)
+            .add(TeleportationComponent.class)
+            .add(MovementComponent.class);
 
     public static final ArchetypeBuilder MAP_ARCHETYPE = new ArchetypeBuilder()
             .add(LoadMapComponent.class);
@@ -50,6 +52,19 @@ public class GameArchetypes {
             .add(PhysicsComponent.class)
             .add(ContactDamageComponent.class)
             .add(AttackEntityComponent.class)
+            .add(RenderingComponent.class);
+
+    public static final ArchetypeBuilder TRAP_ENTITY_ARCHETYPE = new ArchetypeBuilder()
+            .add(PhysicsComponent.class)
+            .add(ContactDamageComponent.class)
+            .add(SalleAssocieeComponent.class)
+            .add(PiegeActifComponent.class)
+            .add(RenderingComponent.class);
+
+    public static final ArchetypeBuilder TELEPORTEUR_ENTITY_ARCHETYPE = new ArchetypeBuilder()
+            .add(PhysicsComponent.class)
+            .add(SalleAssocieeComponent.class)
+            .add(InformationTPComponent.class)
             .add(RenderingComponent.class);
 
     public static final ArchetypeBuilder POWER_UP_ARCHETYPE = new ArchetypeBuilder()
