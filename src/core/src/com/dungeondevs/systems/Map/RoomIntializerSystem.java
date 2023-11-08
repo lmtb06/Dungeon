@@ -8,13 +8,11 @@ import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
-import com.dungeondevs.components.InformationTPComponent;
+import com.dungeondevs.components.*;
 import com.dungeondevs.components.Level.PorteComponent;
 import com.dungeondevs.components.Level.SalleAssocieeComponent;
 import com.dungeondevs.components.Maps.ActiveEntity;
 import com.dungeondevs.components.Maps.LoadMapComponent;
-import com.dungeondevs.components.PhysicsComponent;
-import com.dungeondevs.components.PiegeActifComponent;
 import com.dungeondevs.utils.FixtureUserData;
 import com.dungeondevs.utils.GameArchetypes;
 
@@ -103,6 +101,9 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
             Archetype teleporteurArchetype = GameArchetypes.TELEPORTEUR_ENTITY_ARCHETYPE
                     .build(getWorld());
 
+                Archetype powerUpArchetype = GameArchetypes.POWER_UP_ARCHETYPE
+                        .build(getWorld());
+
 
             for (int i = 0; i < so.getCount(); i++) {
                 System.out.println("siu:" +Float.parseFloat(so.get(i).getProperties().get("x spawn").toString()));
@@ -135,8 +136,34 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
 
                         break;
                     case "powerUps":
+                        Entity powerUp = getWorld().createEntity(powerUpArchetype);
 
+                        BodyDef powerUpBodyDef = new BodyDef();
+                        powerUpBodyDef.type = BodyDef.BodyType.DynamicBody;
+                        powerUpBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
+                        Body powerUpBody = box2dworld.createBody(powerUpBodyDef);
+
+                        PolygonShape boxShapePowerUp = new PolygonShape();
+                        boxShapePowerUp.setAsBox(0.2f, 0.2f);
+
+                        FixtureDef boxFixtureDefPowerUp = new FixtureDef();
+                        boxFixtureDefPowerUp.shape = boxShapePowerUp;
+                        boxFixtureDefPowerUp.density = 1;
+                        boxFixtureDefPowerUp.isSensor = true;
+
+                        Fixture fixturePowerUp = powerUpBody.createFixture(boxFixtureDefPowerUp);
+                        fixturePowerUp.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.PowerUp, powerUp));
+                        boxShapePowerUp.dispose();
+
+                        //Composant relatif à la salle dans laquelle il se trouve
+                        powerUp.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
+                        powerUp.getComponent(ActiveEntity.class).active = false;
+                        powerUp.getComponent(PhysicsComponent.class).body = powerUpBody;
+                        powerUp.getComponent(PowerUpTypeComponent.class).powerUpType= PowerUpType.SPEED_TEMPO;
+                        powerUp.getComponent(PowerUpTypeComponent.class).duration=3000;
+                        powerUp.getComponent(PowerUpTypeComponent.class).value=3f;
                         break;
+
                     case "porte":
                         Entity porte = getWorld().createEntity(porteArchetype);
 

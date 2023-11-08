@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="10" height="7" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="9">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="10" height="7" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="10">
  <tileset firstgid="1" source="Dungeon_Tileset.tsx"/>
  <layer id="1" name="Calque de Tuiles 1" width="10" height="7">
   <data encoding="csv">
@@ -61,6 +61,13 @@
     <property name="directionSortie" value="droite"/>
     <property name="x spawn" value="8"/>
     <property name="y spawn" value="4"/>
+   </properties>
+  </object>
+  <object id="9" x="111.301" y="80.1305" width="16.3199" height="15.9935">
+   <properties>
+    <property name="categorie" value="powerUps"/>
+    <property name="x spawn" value="7"/>
+    <property name="y spawn" value="1"/>
    </properties>
   </object>
  </objectgroup>
