@@ -25,6 +25,7 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
         FixtureUserData fixtureUserDataA = (FixtureUserData) contact.getFixtureA().getUserData();
         FixtureUserData fixtureUserDataB = (FixtureUserData) contact.getFixtureB().getUserData();
 
+        // Dégâts de contact avec le monstre
         if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Monster){
             if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
                 fixtureUserDataA.getEntity().getComponent(HealthComponent.class).damage(
@@ -33,6 +34,7 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
             }
         }
 
+        // Dégâts de l'entité d'attaque contre le monstre
         if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Attack){
             if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Monster){
                 fixtureUserDataA.getEntity().getComponent(HealthComponent.class).damage(
@@ -41,18 +43,21 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
             }
         }
 
+        // Collision du joueur avec un power-up
         if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.PowerUp){
             if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
                 fixtureUserDataA.getEntity().getComponent(PowerUpUserComponent.class).applyPowerUP(fixtureUserDataB.getEntity());
             }
         }
 
+        // Collision du joueur avec la porte
         if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Porte){
             if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
                 fixtureUserDataA.getEntity().getComponent(SalleAssocieeComponent.class).idMap = fixtureUserDataB.getEntity().getComponent(PorteComponent.class).idMapVersLaquelleElleMene;
             }
         }
 
+        // Dégâts de l'entité d'attaque contre le monstre
         if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Attack){
             if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Monster){
                 fixtureUserDataB.getEntity().getComponent(HealthComponent.class).damage(
@@ -61,6 +66,7 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
             }
         }
 
+        // Collision du joueur avec les pièges
         if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
             if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Trap){
                 //TODO Appliquer les deats
@@ -69,6 +75,7 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
             }
         }
 
+        // Collision du joueur avec les téléporteurs
         if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
             if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Teleporteur){
                 //TODO Appliquer les deats
