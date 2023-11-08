@@ -7,7 +7,7 @@
 ## Actions
 - En tant que joueur, je veux pouvoir tuer des monstres et les faire disparaitre
 - En tant que joueur, je veux pouvoir améliorer les statistiques de mon personnage de façon temporaire et/ou permanente grâce à des power-ups, afin d’améliorer mon expérience de jeu et d’avoir une sensation de progression.  
-- En tant que joueur, je veux attaquer les ennemis qui se trouvent dans une certaine hitbox en appuyant sur une touche spécifique et en fonction de la direction que je vais appuyer (par défaut la hitbox sera vers la direction courante du joueur), afin de pouvoir combattre.
+- En tant que joueur, je veux attaquer les ennemis qui se trouvent dans une certaine hitbox en appuyant sur une touche spécifique, afin de pouvoir combattre.
 ## Propriétés
 - En tant que joueur, je veux que le jeu se termine si les points de vie de mon personnage arrivent à zéro, afin d’avoir un challenge.
 - En tant que joueur, je veux que mon personnage soit invincible pendant 2 secondes après avoir reçu des dégâts, afin de ne pas me retrouver coincé entre plusieurs monstres et mourir sans pouvoir rien faire.
@@ -21,6 +21,7 @@
 - En tant que level designer, je veux pouvoir choisir la position initiale de différents monstres et du joueur au sein de chacune des salles
 - En tant que level designer, je veux pouvoir mettre différents power ups dans les cartes pour améliorer le personnage durant un laps de temps
 - En tant que level designer, je veux que ma salle puisse être connectée à d’autres salles via des portes placées sur les murs
+- En tant que level designer, je veux que certaines cases ne soient pas traversables
 
 # Monstres
 ## Attaques
