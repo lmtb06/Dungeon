@@ -1,190 +1,228 @@
 @startuml
+/'
+******************
+    Setups and includes
+******************
+'/
+' skinparam groupInheritance 3
 
-abstract class GameObject {
-    GameObject(eventManager : EventManager, animationManager : AnimationManager)
-}
-GameObject *-- EventManager
-GameObject *-- AnimationManager
+!global $componentClass = com.Artemis.Component
+!global $systemClass = com.Artemis.EntitySystem
+!global $entityClass = com.Artemis.Entity
+!global $artemisWorldClass = com.Artemis.World
+!global $box2dWorldClass = com.badlogic.gdx.physics.box2d.World
+!global $archetypeClass = com.Artemis.Archetype
 
+!procedure $defineAsComponent($className)
+    $componentClass <|-- $className
+!endprocedure
 
+!procedure $defineAsSystem($className)
+    $systemClass <|-- $className
+!endprocedure
 
-abstract class GameCharacter {
-    - health : int
-    - speedMeterPerSecond : float
-    - body : Body
-    - contactDamages : int
-    - meleeDamages : int
-    - stateMachine : State
-    + move(vecteur : Vector2) : void
-    + getPosition() : Vector2
-    + attack(target : GameCharacter) : void
-    + takeDamage(amount : int) : void
-}
-GameCharacter --|> GameObject
+!procedure $defineAsEntity($className)
+    $entityClass <|-- $className
+    $addRelationship($className, $componentClass, $relationship="has", $rightMultiplicity="*", $sign="->")
+!endprocedure
 
+!procedure $defineAsArchetype($className)
+    $archetypeClass <|-- $className
+!endprocedure
 
-class Player {
-    applyPowerUp(powerUp : PowerUp) : void
-}
-Player --|> GameCharacter
+!procedure $addRelationship($class1Name, $class2Name, $leftMultiplicity="", $rightMultiplicity="", $sign="->", $relationship="uses", $direction=">", $hide=%false())
+    !if %not($hide)
+        "$class1Name" $sign "$class2Name" : $leftMultiplicity $relationship $rightMultiplicity
+    !endif
+!endprocedure
 
+!procedure $addRelationshipsToClass($className, $classes, $leftMultiplicity="", $rightMultiplicity="", $sign="->", $relationship="", $hideRelationships=%false())
 
-class Monster {
-    patrol()
-}
-Monster --|> GameCharacter
+    !foreach $class in %splitstr($classes, ",")
+        $addRelationship($className, $class, $leftMultiplicity, $rightMultiplicity, $sign, $relationship, ">", $hideRelationships)
+    !endfor
+!endprocedure
 
-
-
-class PowerUp {
-    activate()
-    deactivate()
-}
-PowerUp --|> GameObject
-
-class Trap {
-
-}
-
-class Teleporter {
+class $artemisWorldClass {
 
 }
-Teleporter --|> GameObject
+!$classes = $entityClass + "," + $componentClass + "," + $systemClass + "," + $archetypeClass
+$addRelationshipsToClass($artemisWorldClass, $classes, $rightMultiplicity="*", $sign="->", $relationship="has", $hideRelationships=%false())
 
-class Level {
-    - world : World
-    - viewport : Viewport
-    - player : Player
-    - loadRoom(room : Room)
-    - unloadRoom(room : Room)
-    - loadPlayerCharacter() : void
-    - createBoundary(x : float, y : float, width: float, height :float)
-    + getCamera() : OrthographicCamera
-    + getPlayer() : Player
-    + update(delta : float) : void
-    + getWorld() : World
-    + getViewport() : Viewport
-    + getPlayer() : Player
-    + dispose() : void
-}
-
-Level "1"--"1..*" Room : has >
-Level "1"--"1" Player : contains >
-
-class Room {
-    spawnMonster()
-}
-
-Room -- "0..*" PowerUp : may have >
-Room -- "1..*" Door : has >
-Room -- "0..*" Trap : may have >
-Room -- "0..*" Monster : may have >
-
-class Door {
+class $componentClass {
 
 }
 
-
-class DungeonGame {
-    create() : void
-    setInputProcessor(inputProcessor : InputProcessor) : void
-    dispose() : void
-}
-DungeonGame --|> Game
-DungeonGame "1"--"1" ScreenManager
-DungeonGame *-- AnimationManager : -animationManager
-DungeonGame *-- EventManager : -eventManager
-DungeonGame *-- InputProcessor : -currentInputProcessor
-
-class ScreenManager {
-    changeScreen(screen : GameScreen) : void
-    getCurrentScreen()
-}
-ScreenManager -- GameScreen : -currentScreen >
-ScreenManager -- GameOverScreen : has >
-ScreenManager -- WorldScreen : has >
-ScreenManager -- MainMenuScreen : has >
-ScreenManager -- PauseScreen : has >
-ScreenManager -- EndGameScreen : has >
-
-abstract GameScreen {
-    + getInputProcessor() : InputProcessor
-    + setInputProcessor() : void
-}
-GameScreen --|> Screen
-GameScreen *-- InputProcessor
-MainMenuScreen --|> GameScreen
-WorldScreen --|> GameScreen
-PauseScreen --|> GameScreen
-GameOverScreen --|> GameScreen
-EndGameScreen --|> GameScreen
-
-class MainMenuScreen {
+class $systemClass {
 
 }
 
-
-class WorldScreen {
-    - moveLeft : boolean
-    - moveRight : boolean
-    - moveUp : boolean
-    - moveDown : boolean
-    + setMoveLeft(state : boolean) : void
-    + setMoveRight(state : boolean) : void
-    + setMoveUp(state : boolean) : void
-    + setMoveDown(state : boolean) : void
+class $entityClass {
+    + id: int
 }
-WorldScreen *-- Level : -currentLevel
 
-class PauseScreen {
+class $archetypeClass {
 
 }
 
-class GameOverScreen {
+/'
+******************
+    Components
+******************
+'/
+namespace components {
+    class PhysicsComponent {
+        + body : Body
+    }
 
+    class RenderingComponent {
+        + sprite : Sprite
+    }
+
+    class AnimationComponent {
+        + animation : Animation
+        + elapasedTime : float
+    }
+
+    class InputComponent {
+        + left : bool
+        + right : bool
+        + up : bool
+        + down : bool
+    }
+
+    enum EntityState {
+        IDLE
+        RUNNING
+        SLOWING_DOWN
+    }
+
+    class EntityStateComponent {
+        + timeRemainingInCurrentState : float
+    }
+
+    $addRelationship(EntityStateComponent, EntityState, $leftMultiplicity="1", $rightMultiplicity="1", $sign="*-", $relationship="has state", $direction=">", $hide=%false())
+
+    class MovementSpecsComponent {
+        + maxSpeedInMeterPerSecond : float
+        + decelarationPerSecond : float
+    }
+
+    class WorldComponent {
+
+    }
+    $addRelationship(WorldComponent, $box2dWorldClass, $sign="--*", $hide=%false())
+
+        enum MapState{
+            ACTUEL
+            ATTENTE_AFFICHAGE
+            NON_CHARGEE
+        }
+
+    class MapStateComponent {
+        + timeRemainingInCurrentState : float
+    }
+
+    $addRelationship(MapStateComponent, MapState, $leftMultiplicity="1", $rightMultiplicity="1", $sign="*-", $relationship="has state", $direction=">", $hide=%false())
 }
 
-class EndGameScreen {
+'******************
+$defineAsComponent(PhysicsComponent)
+$defineAsComponent(RenderingComponent)
+$defineAsComponent(AnimationComponent)
+$defineAsComponent(InputComponent)
+$defineAsComponent(EntityStateComponent)
+$defineAsComponent(MovementSpecsComponent)
+$defineAsComponent(WorldComponent)
 
+/'
+******************
+    Systems
+******************
+'/
+namespace systems {
+    class MovementSystem {
+
+    }
+
+    /' movement system only act on entities which have all of the following components
+
+    - EntityStateComponent
+    - PhysicsComponent
+    - InputComponent
+    - MovementSpecsComponent
+    '/
+    $addRelationshipsToClass(MovementSystem, "EntityStateComponent, PhysicsComponent, InputComponent, MovementSpecsComponent", $rightMultiplicity="*", $sign="->", $relationship="only act on", $hideRelationships=%true())
+
+    $addRelationship(MovementSystem, StateManagementSystem, $sign="-->", $relationship="uses", $hide=%false())
+
+    Note top of MovementSystem
+    Le systeme de mouvement n'agit que sur les entités ayant à la fois les composants
+    suivants (en soit le personnage du joueur est la seul entité sur laquelle il va
+    agir):
+    - EntityStateComponent
+    - PhysicsComponent
+    - InputComponent
+    - MovementSpecsComponent
+    End Note
+
+    class StateManagementSystem {
+        + transition(stateComponent: EntityStateComponent, state: EntityState): bool
+    }
+    $addRelationship(StateManagementSystem, EntityStateComponent, $sign="-->", $relationship="uses", $hide=%false())
+
+    class PhysicsSystem {
+        - accumulator: float
+        - world: libgdx.box2d.World
+    }
+
+    class InputSystem {
+
+    }
+    $addRelationship(InputSystem, InputComponent, $sign="-->", $relationship="uses", $hide=%false())
 }
 
-class AnimationManager {
-    + addAnimation(animation: Animation): void
-    + removeAnimation(animation: Animation): void
-    + playAnimation(animation: Animation): void
-    + pauseAnimation(animation: Animation): void
-    + stopAnimation(animation: Animation): void
-    + update(deltaTime: float): void
-}
+'******************
+$defineAsSystem(MovementSystem)
+$defineAsSystem(StateManagementSystem)
+$defineAsSystem(PhysicsSystem)
+$defineAsSystem(InputSystem)
 
-class GameObjectAnimation {
+'******************
+namespace archetypes {
 
-}
-GameObjectAnimation "0..1"--"1" GameObject
+    class PlayerCharacter {
+    }
+    $addRelationshipsToClass(PlayerCharacter, "EntityStateComponent,PhysicsComponent,RenderingComponent,AnimationComponent,InputComponent,MovementSpecsComponent", $rightMultiplicity="1", $sign="-->", $relationship="has", $hideRelationships=%false())
 
-class EventManager {
-    + subscribe(eventType: String, listener: EventListener): void
-    + unsubscribe(eventType: String, listener: EventListener): void
-    + triggerEvent(event: Event): void
-    + queueEvent(event: Event): void
-    + processEvents(): void
-}
 
-interface EventListener {
-    onEvent(event: Event): void
-}
 
-class Event {
-    - type: String
-    - data: Object
-    + getType(): String
-    + getData(): Object
-}
 
-class WorldScreenInputProcessor {
-    WorldScreenInputProcessor(worldScreen : WorldScreen)
+    $defineAsArchetype(PlayerCharacter)
+    Note right of PlayerCharacter
+    L'archetype personnage du joueur possède les composants suivant:
+    - EntityStateComponent
+    - PhysicsComponent
+    - RenderingComponent
+    - AnimationComponent
+    - InputComponent
+    - MovementSpecsComponent
+    End Note
+
+    class Map {
+    }
+    $addRelationshipsToClass(Map, "RenderingComponent,", $rightMultiplicity="1", $sign="-->", $relationship="has", $hideRelationships=%false())
+
+    class Porte {
+    }
 }
-WorldScreenInputProcessor ..|> InputProcessor
-WorldScreenInputProcessor *-- WorldScreen
-interface InputProcessor
+'*****************
+
+
+class com.dungeondevs.DungeonGame {
+}
+com.dungeondevs.DungeonGame *-- $artemisWorldClass : posséde > "1"
+com.dungeondevs.DungeonGame *-- $box2dWorldClass : posséde > "1"
+
+' hide components
 @enduml

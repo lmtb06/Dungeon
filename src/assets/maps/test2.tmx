@@ -1,46 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="10" height="7" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="6">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="10" height="7" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="10">
  <tileset firstgid="1" source="Dungeon_Tileset.tsx"/>
  <layer id="1" name="Calque de Tuiles 1" width="10" height="7">
   <data encoding="csv">
-31,2,2,2,2,2,37,2,2,6,
-11,23,23,23,23,23,23,23,23,16,
-11,23,23,23,23,23,23,23,23,16,
-11,23,23,23,23,23,23,23,23,16,
-11,23,23,23,23,23,23,23,23,16,
-11,23,23,23,23,23,23,23,23,16,
-41,42,42,42,42,42,42,42,42,46
+31,2,2,2,2,2,5,2,2,6,
+11,23,23,23,23,79,23,23,23,16,
+11,23,23,23,23,79,23,23,23,16,
+11,23,23,23,23,79,23,23,23,16,
+11,23,23,23,23,79,23,23,23,16,
+11,23,23,23,23,79,23,23,23,16,
+41,42,42,37,42,42,42,42,42,46
 </data>
  </layer>
  <layer id="4" name="collision" width="10" height="7" visible="0">
   <data encoding="csv">
-87,87,87,87,87,87,0,87,87,87,
-87,0,0,0,0,0,0,0,0,87,
-87,0,0,0,0,0,0,0,0,87,
-87,0,0,0,0,0,0,0,0,87,
-87,0,0,0,0,0,0,0,0,87,
-87,0,0,0,0,0,0,0,0,87,
-87,87,87,87,87,87,87,87,87,87
+87,87,87,87,87,87,87,87,87,87,
+87,0,0,0,0,87,0,0,0,87,
+87,0,0,0,0,87,0,0,0,87,
+87,0,0,0,0,87,0,0,0,87,
+87,0,0,0,0,87,0,0,0,87,
+87,0,0,0,0,87,0,0,0,87,
+87,87,87,0,87,87,87,87,87,87
 </data>
  </layer>
  <objectgroup id="5" name="entites">
-  <object id="4" x="96.6136" y="32.8029" width="16.3199" height="15.9935">
+  <object id="4" x="47.4648" y="96.1666" width="16.3199" height="15.9935">
+   <properties>
+    <property name="categorie" value="porte"/>
+    <property name="versSalle" value="1"/>
+    <property name="x spawn" value="3"/>
+    <property name="y spawn" value="0"/>
+   </properties>
+  </object>
+  <object id="6" x="31.3266" y="32.7998" width="16.3199" height="15.9935">
    <properties>
     <property name="categorie" value="monstre"/>
     <property name="damages" value="1"/>
     <property name="health" value="3"/>
     <property name="speed" value="0"/>
     <property name="type" value="immobile"/>
-    <property name="x spawn" value="6"/>
-    <property name="y spawn" value="5"/>
+    <property name="x spawn" value="2"/>
+    <property name="y spawn" value="4"/>
    </properties>
   </object>
-  <object id="5" x="78.9882" y="63.4843" width="16.3199" height="15.9935">
+  <object id="7" x="15.9935" y="80.7833" width="16.3199" height="15.9935">
+   <properties>
+    <property name="IDTP" value="0"/>
+    <property name="TPRelie" value="1"/>
+    <property name="categorie" value="teleporteur"/>
+    <property name="directionSortie" value="gauche"/>
+    <property name="x spawn" value="1"/>
+    <property name="y spawn" value="1"/>
+   </properties>
+  </object>
+  <object id="8" x="127.621" y="31.4973" width="16.3199" height="15.9935">
+   <properties>
+    <property name="IDTP" value="1"/>
+    <property name="TPRelie" value="0"/>
+    <property name="categorie" value="teleporteur"/>
+    <property name="directionSortie" value="droite"/>
+    <property name="x spawn" value="8"/>
+    <property name="y spawn" value="4"/>
+   </properties>
+  </object>
+  <object id="9" x="111.301" y="80.1305" width="16.3199" height="15.9935">
    <properties>
     <property name="categorie" value="powerUps"/>
-    <property name="type" value="damage"/>
-    <property name="x spawn" value="5"/>
-    <property name="y spawn" value="2"/>
+    <property name="x spawn" value="7"/>
+    <property name="y spawn" value="1"/>
    </properties>
   </object>
  </objectgroup>

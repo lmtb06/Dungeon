@@ -1,0 +1,49 @@
+@startuml
+
+actor Joueur as J
+participant "DungeonGame" as DG
+participant "GameScreen" as GS
+participant "artemis.World" as AW
+participant "MapsLoaderSystem" as MLS
+participant "RoomInitializerSystem" as RIS
+participant "MapRendererSystem" as MRS
+participant "PhysicsSystem" as PS
+participant "InputSystem" as IS
+participant "StateManagementSystem" as SMS
+participant "MovementSystem" as MS
+participant "HealthSystem" as HS
+participant "InvincibilitySystem" as INS
+participant "AttackSystem" as AS
+participant "CollisionSystem" as CS
+participant "PowerUpSystem" as PU
+participant "GameOverSystem" as GOS
+participant "HudSystem" as HUS
+
+J -> DG: Démarre le jeu
+DG -> GS: Initialise l'écran de jeu
+DG -> AW: Prépare la configuration du monde
+GS -> AW: Commence les opérations du monde
+AW -> RIS: Prépare les salles avec la physique du jeu
+AW -> MLS: Charge les données de la carte
+loop Chaque Frame à 120fps
+    GS -> GS: Prépare l'affichage
+    GS -> J : Affichage du monde physique
+    AW -> MRS: Dessine les éléments de la carte
+    AW -> PS: Gère la physique du jeu
+    AW -> IS: Interprète les actions du joueur
+    IS -> J: Récupère les actions du joueur
+    J -> IS: Envoie les actions du joueur
+    IS -> IS: Met à jour le input component du joueur
+    AW -> SMS: Met à jour le temps restant pour les états des entités
+    AW -> MS: Met à jour le vecteur vitesse du joueur en fonction de son état et du input component
+    AW -> HS: Supprime les entités mortes
+    AW -> INS: Met à jour le temps d'invincibilité restant et l'enlève si nécessaire
+    AW -> AS: Exécute les actions d'attaque
+    AW -> CS: Gére les collisions (avec les powerup, pieges, monstres, etc.)
+    AW -> PU : Applique les effets des Powers-Ups sur le joueur
+    AW -> GOS: Vérifie si le jeu est terminé (que le personnage est mort)
+    GS -> HUS: Affiche les informations à l'écran
+end
+GS -> DG: Termine le jeu
+
+@enduml
