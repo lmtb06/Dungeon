@@ -1,0 +1,474 @@
+@startuml
+/'
+******************
+    Setups and includes
+******************
+'/
+skinparam linetype ortho
+skinparam Nodesep 100
+' skinparam ranksep 100
+skinparam groupInheritance 3
+
+!global $artemisWorldClass = com.Artemis.World
+!global $box2dWorldClass = com.badlogic.gdx.physics.box2d.World
+
+
+namespace com.Artemis {
+
+}
+
+namespace com.badlogic {
+
+}
+
+!procedure $defineAsComponent($className)
+    com.Artemis.Component <|-- $className
+!endprocedure
+
+!procedure $defineAsSystem($className, $systemType="EntitySystem")
+    com.Artemis.$systemType <|-- $className
+!endprocedure
+
+!procedure $defineAsEntity($className)
+    com.Artemis.Entity <|-- $className
+!endprocedure
+
+!procedure $defineAsArchetype($className)
+    com.Artemis.Archetype <|-- $className
+!endprocedure
+
+!procedure $defineAsScreen($className)
+    com.badlogic.gdx.Screen <|.. $className
+    com.dungeonsdevs.screens.DungeonGameScreen <|.. $className
+!endprocedure
+
+!procedure $addRelationship($class1Name, $class2Name, $leftMultiplicity=" ", $rightMultiplicity=" ", $sign="--", $relationship="", $direction=">")
+    $class1Name "$leftMultiplicity"$sign"$rightMultiplicity" $class2Name : $relationship $direction
+!endprocedure
+
+!unquoted procedure $addRelationshipsToClass($className, $classes, $leftMultiplicity=" ", $rightMultiplicity=" ", $sign="--", $relationship="", $direction=">")
+    !foreach $class in %splitstr($classes, ",")
+        $addRelationship($className, $class, $leftMultiplicity, $rightMultiplicity, $sign, $relationship, $direction)
+    !endfor
+!endprocedure
+
+/'
+******************
+    Components
+******************
+'/
+namespace com.dungeonsdevs.components {
+    $defineAsComponent(PhysicsComponent)
+    $defineAsComponent(RenderingComponent)
+    $defineAsComponent(AnimationComponent)
+    $defineAsComponent(InputComponent)
+    $defineAsComponent(EntityStateComponent)
+    $defineAsComponent(MovementComponent)
+    $defineAsComponent(LoadedMapComponent)
+    $defineAsComponent(TransitionPorteComponent)
+    $defineAsComponent(SalleActuelleJoueurComponent)
+    $defineAsComponent(HealthComponent)
+    $defineAsComponent(PlayerCharacterComponent)
+    $defineAsComponent(InvincibilityComponent)
+    $defineAsComponent(AttackComponent)
+    $defineAsComponent(AttackEntityComponent)
+    $defineAsComponent(ContactDamageComponent)
+    $defineAsComponent(SalleAssocieeComponent)
+    $defineAsComponent(InformationTPComponent)
+    $defineAsComponent(PiegeActifComponent)
+    $defineAsComponent(PowerUpType)
+    $defineAsComponent(PowerUpTypeComponent)
+    $defineAsComponent(PowerUpUserComponent)
+    $defineAsComponent(TeleportationComponent)
+
+
+    class PhysicsComponent {
+        + body : Body
+    }
+
+    class RenderingComponent {
+        + textureRegion : TextureRegion
+    }
+
+    class AnimationComponent {
+        + animation : Animation<TextureRegion>
+        + elapasedTime : float
+    }
+
+    class InputComponent {
+        + left : bool
+        + right : bool
+        + up : bool
+        + down : bool
+    }
+
+    enum EntityState {
+        IDLE
+        RUNNING
+        SLOWING_DOWN
+    }
+
+    class EntityStateComponent {
+        + timeRemainingInCurrentState : float
+    }
+
+
+    class MovementComponent {
+        + maxSpeedInMeterPerSecond : float
+        + decelerationTimeInSeconds : float
+        + initialVelocityAtStartOfDeceleration : Vector2
+    }
+
+    class LoadedMapComponent {
+            + lienasset : String
+            + idMap : int
+            + loaded : Boolean
+            + map : TiledMap
+    }
+
+    class TransitionPorteComponent {
+                + salleActuelle
+                + salleSuivante
+    }
+
+    class SalleActuelleJoueurComponent {
+            + idMap
+    }
+
+    class HealthComponent {
+        + health : int
+        + maxHealth : int
+    }
+
+    class AttackComponent {
+        - damages : int
+        - attackDelay : long
+    }
+
+        class AttackEntityComponent {
+            + startime : long
+            + autodestroyTime : long
+            + boundbody : Body
+            + offset : float
+        }
+
+        class ContactDamageComponent {
+            + damages : int
+        }
+
+    class PlayerCharacterComponent {
+        ' Sert juste à identifier les entités qui sont des joueurs
+    }
+
+    class InvincibilityComponent {
+        + timeRemaining : float
+    }
+
+    class AttackComponent {
+        - idMapDansLaquelleElleSeTrouve : int
+        - idMapVersLaquelleEllemène : int
+    }
+
+    class SalleAssocieeComponent {
+        - idmap : int
+    }
+
+    class InformationTPComponent {
+        - idTeleporteur : int
+        - idTeleporteurAssocie : int
+        - directionDeSortie : String
+        - TpVersLaPositionX : Float
+        - TpVersLaPositionY : Float
+        - coordonneeX : int
+        - coordonneeY : int
+    }
+
+    class PiegeActifComponent {
+        - action : Boolean
+    }
+
+    enum PowerUpType{
+        SPEED_DEFIN
+        SPEED_TEMPO
+        ATTACK_DEFIN
+        ATTACK_TEMPO
+        HEALTH_DEFIN
+        HEALTH_TEMPO
+    }
+
+    class PowerUpTypeComponent {
+        - powerUpType : PowerUpType
+        - duration : long
+        - value : float
+    }
+
+    class PowerUpUserComponent {
+        - powerUpNtba : Entity
+        - speedLastAppliedTime : long
+        - speedDuration : long
+        - attackLastAppliedTime : long
+        - attackDuration : long
+        - originalAttack : float
+        - OriginalSpeed : float
+    }
+    class TeleportationComponent {
+        - X : float
+        - Y : float
+        - doitEtreFait : boolean
+    }
+
+    $addRelationship(EntityStateComponent, EntityState, $rightMultiplicity="1", $sign="*--")
+    $addRelationship(PowerUpType, PowerUpTypeComponent, $rightMultiplicity="1", $sign="*--")
+
+}
+
+namespace com.dungeonsdevs.screens {
+    interface DungeonGameScreen {
+        + reinitialize()
+    }
+    class GameScreen {
+        + GameScreen(game: DungeonGame)
+        + render(delta: float)
+        + resize(width: int, height: int)
+        + dispose()
+    }
+    class GameOverScreen {
+        + GameOverScreen(game: DungeonGame)
+        + render(delta: float)
+        + resize(width: int, height: int)
+        + dispose()
+    }
+
+    $defineAsScreen(GameScreen)
+    $defineAsScreen(GameOverScreen)
+}
+
+/'
+******************
+    Systems
+******************
+'/
+namespace com.dungeonsdevs.systems {
+    class MovementSystem {
+        - Logger logger
+        - ComponentMapper<EntityStateComponent> stateMapper
+        - ComponentMapper<PhysicsComponent> physicsMapper
+        - ComponentMapper<MovementComponent> movementSpecsMapper
+        - ComponentMapper<InputComponent> inputMapper
+        # process(entity: Entity)
+        - calculateMovementVector(input: InputComponent): Vector2
+        - transitionAndRun(entity: Entity, movementVector: Vector2, movementComponent: MovementComponent, physicsComponent: PhysicsComponent): void
+        ' private void transitionToSlowingDown(Entity e, MovementComponent movementComponent, PhysicsComponent physicsComponent)
+        - transitionToSlowingDown(entity: Entity, movementComponent: MovementComponent, physicsComponent: PhysicsComponent): void
+        - transitionToIdle(entity: Entity, physicsComponent: PhysicsComponent, movementComponent: MovementComponent): void
+        - slowDown(entity: Entity, stateComponent: EntityStateComponent, movementComponent: MovementComponent, physicsComponent: PhysicsComponent): void
+    }
+
+
+    class StateManagementSystem {
+        # process(entity: Entity)
+        + transition(stateComponent: EntityStateComponent, state: EntityState): bool
+    }
+
+    class MapStateManagementSystem {
+        # process(entity: Entity)
+    }
+
+    class PhysicsSystem {
+        - timeStep : float
+        - VELOCITY_ITERATIONS : int
+        - POSITION_ITERATIONS : int
+        # processSystem()
+    }
+
+    class InputSystem {
+        - ComponentMapper<InputComponent> inputMapper
+        # process(entity: Entity)
+    }
+
+    class RenderingSystem {
+
+    }
+
+    class ChangeurDeSalleSystem {
+
+    }
+
+    class HudSystem {
+        - Stage hudStage
+        - Label healthLabel
+        - ComponentMapper<HealthComponent> healthMapper
+        # processSystem() : void
+        - updateHealthLabel(healthComponent: HealthComponent) : void
+        # dispose() :void
+    }
+
+    class GameOverSystem {
+        + GameOverSystem(game: DungeonGame)
+        # process(entity: Entity)
+    }
+
+    class InvincibilitySystem {
+        - ComponentMapper<InvincibilityComponent> invincibilityMapper
+        # process(entity: Entity)
+    }
+
+    class AttackEntitySystem {
+        - world : World
+        # process(entity: Entity)
+    }
+
+    class AttackSystem {
+        - world : World
+        - lastAttack : long
+        # process(entity: Entity)
+    }
+
+    class CollisionSystem {
+        + BeginContact(Contact contact)
+    }
+
+    class MapLoaderSystem {
+        + loader : TxMapLoader
+        + idMap : int
+        + ProcessSystem(Entity e)
+    }
+
+    class RoomInitializerSystem {
+        + box2dworld : World
+        + salleActuelle : int
+        + joueur : Entity
+        + listeADesactiver : Array<Body>
+        + ProcessSystem(Entity e)
+        + createBoundary(float x, float y, float width, float height, BodyDef bdf)
+    }
+    class powerUpSystem {
+        + box2dworld : World
+        + Process(Entity e)
+    }
+
+    class TeleportationSystem {
+        + Process(Entity e)
+    }
+
+    class TrapExtinctionSystem {
+        + box2dworld : World
+        + Process(Entity e)
+    }
+
+        $addRelationship(RoomInitializerSystem, PowerUpTypeComponent, $sign="-->", $relationship="updates")
+        $addRelationship(powerUpSystem, PowerUpTypeComponent, $sign="-->", $relationship="updates")
+    $addRelationship(CollisionSystem, PowerUpUserComponent, $sign="-->", $relationship="updates")
+    $addRelationship(powerUpSystem, PowerUpUserComponent, $sign="-->", $relationship="updates")
+    $addRelationship(CollisionSystem, ContactDamageComponent, $sign="-->", $relationship="updates")
+    $addRelationship(RoomInitializerSystem, SalleAssocieeComponent, $sign="-->", $relationship="updates")
+
+    $addRelationship(CollisionSystem, TransitionPorteComponent, $sign="-->", $relationship="updates")
+    $addRelationship(MapLoaderSystem, LoadedMapComponent, $sign="-->", $relationship="updates")
+    $addRelationship(RoomInitializerSystem, LoadedMapComponent, $sign="-->", $relationship="uses")
+    $addRelationship(powerUpSystem, MovementComponent, $sign="-->", $relationship="updates")
+    $addRelationship(TrapExtinctionSystem, PiegeActifComponent, $sign="-->", $relationship="updates")
+    $addRelationship(TeleportationSystem, TeleportationComponent, $sign="-->", $relationship="updates")
+    $addRelationship(AttackEntitySystem, AttackEntityComponent, $sign="-->", $relationship="uses")
+    $addRelationship(AttackSystem, AttackComponent, $sign="-->", $relationship="uses")
+    $addRelationship(MovementSystem, StateManagementSystem, $sign="-->", $relationship="uses")
+    $addRelationship(MovementSystem, InputComponent, $sign="-->", $relationship="checks")
+    $addRelationshipsToClass(MovementSystem, "EntityStateComponent, PhysicsComponent", $rightMultiplicity="*", $sign="-->", $relationship="updates")
+    $addRelationship(StateManagementSystem, EntityStateComponent, $sign="-->", $relationship="updates")
+    $addRelationship(PhysicsSystem, $box2dWorldClass, $sign="-->", $rightMultiplicity="1", $relationship="updates", $direction=">")
+    $addRelationship(InputSystem, InputComponent, $sign="-->", $relationship="updates")
+    $addRelationship(ChangeurDeSalleSystem, MapStateComponent, $sign="-->", $relationship="updates")
+    $addRelationship(ChangeurDeSalleSystem, SalleActuelleJoueurComponent, $sign="-->", $relationship="updates")
+    $addRelationship(HudSystem, HealthComponent, $sign="-->", $rightMultiplicity="1", $relationship="reads")
+    $addRelationship(GameOverSystem, HealthComponent, $sign="-->", $rightMultiplicity="1", $relationship="reads")
+    $addRelationship(GameOverSystem, DungeonGame, $sign="*--", $rightMultiplicity="1", $relationship="has")
+    $addRelationship(InvincibilitySystem, InvincibilityComponent, $sign="-->", $relationship="updates")
+
+    $defineAsSystem(MovementSystem, "EntityProcessingSystem")
+    $defineAsSystem(StateManagementSystem, "EntityProcessingSystem")
+    $defineAsSystem(PhysicsSystem, "IntervalEntitySystem")
+    $defineAsSystem(InputSystem, "EntityProcessingSystem")
+    $defineAsSystem(RenderingSystem)
+    $defineAsSystem(ChangeurDeSalleSystem)
+    $defineAsSystem(HudSystem, "BaseEntitySystem")
+    $defineAsSystem(GameOverSystem, "EntityProcessingSystem")
+    $defineAsSystem(InvincibilitySystem, "EntityProcessingSystem")
+
+    $defineAsSystem(CollisionSystem, "BaseSystem")
+    $defineAsSystem(MapLoaderSystem, "EntitySystem")
+    $defineAsSystem(RoomInitializerSystem, "EntityProcessingSystem")
+    $defineAsSystem(PowerUpType, "EntityProcessingSystem")
+    $defineAsSystem(TrapExtinctionSystem, "EntityProcessingSystem")
+    $defineAsSystem(TeleportationSystem, "EntityProcessingSystem")
+
+
+
+    Note top of MovementSystem
+    Le Systeme de mouvement n'agit que sur les entités d'Archetype PlayerCharacter
+    End Note
+}
+
+!$classes = $artemisWorldClass + "," + $box2dWorldClass + ", DungeonGame,HudSystem"
+    $addRelationshipsToClass(GameScreen, $classes, $rightMultiplicity="1", $sign="*--", $relationship="has")
+'*****************
+
+namespace utils {
+    class GameAspects {
+        + PLAYER_CHARACTER_ASPECT : Aspect.Builder
+    }
+
+    class GameArchetypes {
+        + PLAYER_CHARACTER_ARCHETYPE : Archetype.Builder
+        + MAP_ARCHETYPE : Archetype.Builder
+        + PORTE_ARCHETYPE : Archetype.Builder
+        + MUR_ARCHETYPE : Archetype.Builder
+        + MONSTRE_ARCHETYPE : Archetype.Builder
+        + ATTACK_ENTITY_ARCHETYPE : Archetype.Builder
+        + TRAP_ENTITY_ARCHETYPE : Archetype.Builder
+        + TELEPORTEUR_ENTITY_ARCHETYPE : Archetype.Builder
+        + POWER_UP_ARCHETYPE : Archetype.Builder
+    }
+
+    class Constants {
+        + PLAYER_CHAR_MAX_VELOCITY : float
+        + PLAYER_CHAR_DECELERATION_TIME : float
+    }
+
+    Note as PlayerCharacterArchetypeNote
+    L'archetype PlayerCharacter possède les composants suivant:
+    - EntityStateComponent
+    - PhysicsComponent
+    - RenderingComponent
+    - AnimationComponent
+    - InputComponent
+    - MovementComponent
+    - SalleActuelleJoueurComponent
+    - PlayerCharacterComponent
+    L'archetype Map possède les composants suivant:
+    - LoadedMapComponent
+    - MapStateComponent
+    - RenderingComponent
+    L'archetype Porte possède les composants suivant:
+    - PhysicsComponent
+    - MapStateComponent
+    L'archetype Mur possède les composants suivant:
+    - PhysicsComponent
+    End Note
+    PlayerCharacterArchetypeNote .. GameArchetypes::PLAYER_CHARACTER_ARCHETYPE
+    PlayerCharacterArchetypeNote .. GameAspects::PLAYER_CHARACTER_ASPECT
+}
+
+'*****************
+
+
+class DungeonGame extends com.badlogic.gdx.Game {
+    + create() : void
+    + render() : void
+    + restartGame() : void
+    + gameOver() : void
+}
+$addRelationshipsToClass(DungeonGame, "GameScreen, GameOverScreen", $rightMultiplicity="1", $sign="*--", $relationship="has")
+
+' hide components
+
+@enduml
