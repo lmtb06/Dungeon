@@ -5,7 +5,6 @@ import com.artemis.annotations.All;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dungeondevs.components.*;
-import com.dungeondevs.utils.Constants;
 import com.badlogic.gdx.utils.TimeUtils;
 
 /**
@@ -29,61 +28,64 @@ public class PowerUpSystem extends EntityProcessingSystem {
 
     @Override
     protected void process(Entity e) {
-        PowerUpComponent powerUpComponent = e.getComponent(PowerUpComponent.class);
+        PowerUpUserComponent powerUpUserComponent = e.getComponent(PowerUpUserComponent.class);
         MovementComponent movementComponent = e.getComponent(MovementComponent.class);
         AttackComponent attackComponent = e.getComponent(AttackComponent.class);
         HealthComponent healthComponent = e.getComponent(HealthComponent.class);
-       powerUpComponent.getSpeedLastAppliedTime();
-       System.out.println(healthComponent.getHealth());
-        if(powerUpComponent.powerUpNTBA!=null){
-            switch(powerUpComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).powerUpType){
+       powerUpUserComponent.getSpeedLastAppliedTime();
+        if(powerUpUserComponent.powerUpNTBA!=null){
+            switch(powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).powerUpType){
                 case SPEED_DEFIN:
-                    movementComponent.maxSpeedInMeterPerSecond+=powerUpComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value;
+                    movementComponent.maxSpeedInMeterPerSecond+= powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value;
                     break;
                 case SPEED_TEMPO:
-                    powerUpComponent.speedDuration=powerUpComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).duration;
-                    if(powerUpComponent.getSpeedLastAppliedTime()==0){
-                        powerUpComponent.setOriginalSpeed(movementComponent.maxSpeedInMeterPerSecond);
-                        movementComponent.maxSpeedInMeterPerSecond += powerUpComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value;
+                    powerUpUserComponent.speedDuration= powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).duration;
+                    if(powerUpUserComponent.getSpeedLastAppliedTime()==0){
+                        powerUpUserComponent.setOriginalSpeed(movementComponent.maxSpeedInMeterPerSecond);
+                        movementComponent.maxSpeedInMeterPerSecond += powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value;
                     }
-                    powerUpComponent.setSpeedLastAppliedTime(TimeUtils.millis());
+                    powerUpUserComponent.setSpeedLastAppliedTime(TimeUtils.millis());
                     break;
 
                 case ATTACK_DEFIN:
-                    attackComponent.setDamage(attackComponent.getDamages()+(int)powerUpComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value);
+                    attackComponent.setDamage(attackComponent.getDamages()+(int) powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value);
                     break;
 
                 case ATTACK_TEMPO:
-                    powerUpComponent.attackDuration=powerUpComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).duration;
-                    if(powerUpComponent.attackLastAppliedTime==0){
-                        powerUpComponent.originalAttack=attackComponent.getDamages();
-                        attackComponent.setDamage(attackComponent.getDamages()+(int)powerUpComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value);
+                    powerUpUserComponent.attackDuration= powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).duration;
+                    if(powerUpUserComponent.attackLastAppliedTime==0){
+                        powerUpUserComponent.originalAttack=attackComponent.getDamages();
+                        attackComponent.setDamage(attackComponent.getDamages()+(int) powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value);
                     }
-                    powerUpComponent.attackLastAppliedTime=TimeUtils.millis();
+                    powerUpUserComponent.attackLastAppliedTime=TimeUtils.millis();
                     break;
                 case HEALTH_DEFIN:
-                    healthComponent.setMaxHealth(healthComponent.getMaxHealth()+(int)powerUpComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value);
+                    healthComponent.setMaxHealth(healthComponent.getMaxHealth()+(int) powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value);
+                    healthComponent.heal(healthComponent.getMaxHealth()); //Remet le joueur full life
                     break;
 
                 case HEALTH_HEAL:
-                    healthComponent.heal((int)powerUpComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value);
+                    healthComponent.heal((int) powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value);
                     break;
             }
-            PhysicsComponent physicsComponent = powerUpComponent.powerUpNTBA.getComponent(PhysicsComponent.class);
+            PhysicsComponent physicsComponent = powerUpUserComponent.powerUpNTBA.getComponent(PhysicsComponent.class);
             box2DWorld.destroyBody(physicsComponent.body);
-            world.deleteEntity(powerUpComponent.powerUpNTBA);
-            powerUpComponent.powerUpNTBA=null;
+            world.deleteEntity(powerUpUserComponent.powerUpNTBA);
+            powerUpUserComponent.powerUpNTBA=null;
         }
 
-        if((powerUpComponent.getSpeedLastAppliedTime()!=0)&&(TimeUtils.timeSinceMillis(powerUpComponent.getSpeedLastAppliedTime())>powerUpComponent.speedDuration)){
-            movementComponent.maxSpeedInMeterPerSecond= powerUpComponent.getOriginalSpeed();
-            powerUpComponent.setOriginalSpeed(1);
-            powerUpComponent.setSpeedLastAppliedTime(0);
+        //Retrait du bonus de vitesse une fois que la durée du powerUp est passée
+        if((powerUpUserComponent.getSpeedLastAppliedTime()!=0)&&(TimeUtils.timeSinceMillis(powerUpUserComponent.getSpeedLastAppliedTime())> powerUpUserComponent.speedDuration)){
+            movementComponent.maxSpeedInMeterPerSecond= powerUpUserComponent.getOriginalSpeed();
+            powerUpUserComponent.setOriginalSpeed(1);
+            powerUpUserComponent.setSpeedLastAppliedTime(0);
         }
-        if((powerUpComponent.attackLastAppliedTime!=0)&&(TimeUtils.timeSinceMillis(powerUpComponent.attackLastAppliedTime)>powerUpComponent.attackDuration)){
-            attackComponent.setDamage((int)powerUpComponent.originalAttack);
-            powerUpComponent.originalAttack = 1;
-            powerUpComponent.attackLastAppliedTime = 0;
+
+        //Retrait du bonus d'attack une fois que la durée du powerUp est passée
+        if((powerUpUserComponent.attackLastAppliedTime!=0)&&(TimeUtils.timeSinceMillis(powerUpUserComponent.attackLastAppliedTime)> powerUpUserComponent.attackDuration)){
+            attackComponent.setDamage((int) powerUpUserComponent.originalAttack);
+            powerUpUserComponent.originalAttack = 1;
+            powerUpUserComponent.attackLastAppliedTime = 0;
 
         }
     }

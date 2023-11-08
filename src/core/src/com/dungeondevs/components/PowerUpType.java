@@ -1,14 +1,14 @@
 package com.dungeondevs.components;
 
 public enum PowerUpType {
-    SPEED_DEFIN,
-    SPEED_TEMPO,
+    SPEED_DEFIN, //PowerUp de speed défin
+    SPEED_TEMPO, //PowerUp de speed tempo
 
-    ATTACK_DEFIN,
+    ATTACK_DEFIN, //PowerUp d'attack défin
 
-    ATTACK_TEMPO,
+    ATTACK_TEMPO, //PowerUp d'attack tempo
 
-    HEALTH_DEFIN,
+    HEALTH_DEFIN, //PowerUp d'health défin
 
-    HEALTH_HEAL;
+    HEALTH_HEAL; //PowerUp de soin
 }

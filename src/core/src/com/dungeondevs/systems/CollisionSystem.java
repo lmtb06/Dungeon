@@ -4,8 +4,7 @@ import com.artemis.BaseSystem;
 import com.badlogic.gdx.physics.box2d.*;
 import com.dungeondevs.components.ContactDamageComponent;
 import com.dungeondevs.components.HealthComponent;
-import com.dungeondevs.components.PowerUpComponent;
-import com.dungeondevs.components.PowerUpTypeComponent;
+import com.dungeondevs.components.PowerUpUserComponent;
 import com.dungeondevs.utils.FixtureUserData;
 
 public class CollisionSystem extends BaseSystem implements ContactListener {
@@ -42,7 +41,7 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
 
         if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.PowerUp){
             if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
-                fixtureUserDataA.getEntity().getComponent(PowerUpComponent.class).applyPowerUP(fixtureUserDataB.getEntity());
+                fixtureUserDataA.getEntity().getComponent(PowerUpUserComponent.class).applyPowerUP(fixtureUserDataB.getEntity());
             }
         }
 

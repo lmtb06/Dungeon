@@ -25,6 +25,7 @@ public class HealthComponent extends Component {
         this.maxHealth = maxHealth;
     }
 
+    //Fonction soignant le joueur mais à une valeur ne dépassant pas les hpMax
     public void heal(int hp){
         this.health+=hp;
         if(this.health>=this.maxHealth){
