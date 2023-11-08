@@ -1,6 +1,6 @@
 # Interface graphique
 
-- En tant que joueur, je veux voir un écran de mort lorsque je tombe à 0 points de vie.  
+- En tant que joueur, je veux que le jeu affiche un écran de 'Game Over' avec une option de recommencer lorsque les points de vie de mon personnage arrivent à zéro, afin d’avoir un challenge et de comprendre la conséquence de la perte de tous mes points de vie  
 - En tant que joueur, je veux voir mes points de vie restants, afin de jauger le niveau de risque que je peux prendre sans mourir.  
 
 # Personnage
@@ -10,8 +10,9 @@
 - En tant que joueur, je veux attaquer les ennemis qui se trouvent dans une certaine hitbox en appuyant sur une touche spécifique et en fonction de la direction que je vais appuyer (par défaut la hitbox sera vers la direction courante du joueur), afin de pouvoir combattre.
 ## Propriétés
 - En tant que joueur, je veux que le jeu se termine si les points de vie de mon personnage arrivent à zéro, afin d’avoir un challenge.
-- En tant que joueur, je veux que mon personnage soit invincible pendant un court instant, afin de ne pas me retrouver coincé entre plusieurs monstres et mourir sans pouvoir rien faire.
+- En tant que joueur, je veux que mon personnage soit invincible pendant 2 secondes après avoir reçu des dégâts, afin de ne pas me retrouver coincé entre plusieurs monstres et mourir sans pouvoir rien faire.
 - En tant que joueur, je veux que ma vitesse affecte mon déplacement, afin que les power-up puissent me permettre de naviguer plus rapidement dans le niveau.
+- En tant que joueur, je veux que mon personnage se déplace horizontalement, verticalement et en diagonal en fonction des touches (flèche gauche/droite, flèche haut/bas, combinaison composante horizontale et verticale)
 
 # Niveaux
 ## Actions

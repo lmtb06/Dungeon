@@ -76,8 +76,18 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
         // Collision du joueur avec les pièges
         if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
             if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Trap){
+
+                Entity trap = fixtureUserDataB.getEntity();
+                Entity player = fixtureUserDataA.getEntity();
                 //TODO Appliquer les deats
-                System.out.println("piege");
+                if(player.getComponent(InvincibilityComponent.class) == null){
+                    player.getComponent(HealthComponent.class).damage(
+                            trap.getComponent(ContactDamageComponent.class).getDamages()
+                    );
+                    InvincibilityComponent invincibilityComponent = new InvincibilityComponent();
+                    invincibilityComponent.timeRemaining = 2.0f;
+                    player.edit().add(invincibilityComponent);
+                }
                 fixtureUserDataB.getEntity().getComponent(PiegeActifComponent.class).action = false;
             }
         }
@@ -85,11 +95,6 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
         // Collision du joueur avec les téléporteurs
         if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
             if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Teleporteur){
-                //TODO Appliquer les deats
-                System.out.println("teleporteur");
-                System.out.println("se teleporte en x : "+fixtureUserDataB.getEntity().getComponent(InformationTPComponent.class).TPVersLaPositionX);
-                System.out.println("se teleporte en y : "+fixtureUserDataB.getEntity().getComponent(InformationTPComponent.class).TPVersLaPositionY);
-                System.out.println("allo : "+fixtureUserDataA.getEntity().getComponent(TeleportationComponent.class).X);
                 fixtureUserDataA.getEntity().getComponent(TeleportationComponent.class).X = fixtureUserDataB.getEntity().getComponent(InformationTPComponent.class).TPVersLaPositionX;
                 fixtureUserDataA.getEntity().getComponent(TeleportationComponent.class).Y = fixtureUserDataB.getEntity().getComponent(InformationTPComponent.class).TPVersLaPositionY;
                 fixtureUserDataA.getEntity().getComponent(TeleportationComponent.class).doitEtreFait = true;

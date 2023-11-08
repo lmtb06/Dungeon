@@ -211,6 +211,8 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         trapfixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Trap, trap));
                         trapboxShape.dispose();
 
+                        trap.getComponent(ContactDamageComponent.class).setDamages(Integer.parseInt(so.get(i).getProperties().get("damages").toString()));
+
                         trap.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
 
                         trap.getComponent(PiegeActifComponent.class).action = true;
