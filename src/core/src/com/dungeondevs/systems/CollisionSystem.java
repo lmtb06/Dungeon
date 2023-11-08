@@ -2,12 +2,10 @@ package com.dungeondevs.systems;
 
 import com.artemis.BaseSystem;
 import com.artemis.Entity;
-import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.physics.box2d.*;
 import com.dungeondevs.components.*;
 import com.dungeondevs.components.Level.PorteComponent;
 import com.dungeondevs.components.Level.SalleAssocieeComponent;
-import com.dungeondevs.components.PowerUpUserComponent;
 import com.dungeondevs.utils.FixtureUserData;
 
 public class CollisionSystem extends BaseSystem implements ContactListener {
@@ -28,10 +26,19 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
         // Dégâts de contact avec le monstre
         if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Monster){
             if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
-                fixtureUserDataA.getEntity().getComponent(HealthComponent.class).damage(
-                        fixtureUserDataB.getEntity().getComponent(ContactDamageComponent.class).getDamages()
-                );
+                Entity monster = fixtureUserDataB.getEntity();
+                Entity player = fixtureUserDataA.getEntity();
+                // If the player don't have an InvincibilityComponent, he takes damages and activate invicibility frame
+                if(player.getComponent(InvincibilityComponent.class) == null){
+                    player.getComponent(HealthComponent.class).damage(
+                            monster.getComponent(ContactDamageComponent.class).getDamages()
+                    );
+                    InvincibilityComponent invincibilityComponent = new InvincibilityComponent();
+                    invincibilityComponent.timeRemaining = 2.0f;
+                    player.edit().add(invincibilityComponent);
+                }
             }
+
         }
 
         // Dégâts de l'entité d'attaque contre le monstre
@@ -88,7 +95,6 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
                 fixtureUserDataA.getEntity().getComponent(TeleportationComponent.class).doitEtreFait = true;
             }
         }
-
     }
 
     @Override

@@ -70,6 +70,7 @@ namespace com.dungeonsdevs.components {
     $defineAsComponent(SalleActuelleJoueurComponent)
     $defineAsComponent(HealthComponent)
     $defineAsComponent(PlayerCharacterComponent)
+    $defineAsComponent(InvincibilityComponent)
 
     class PhysicsComponent {
         + body : Body
@@ -137,6 +138,10 @@ namespace com.dungeonsdevs.components {
 
     class PlayerCharacterComponent {
         ' Sert juste à identifier les entités qui sont des joueurs
+    }
+
+    class InvincibilityComponent {
+        + timeRemaining : float
     }
 
     $addRelationship(MapStateComponent, MapState, $rightMultiplicity="1", $sign="*--")
@@ -230,6 +235,11 @@ namespace com.dungeonsdevs.systems {
         # process(entity: Entity)
     }
 
+    class InvincibilitySystem {
+        - ComponentMapper<InvincibilityComponent> invincibilityMapper
+        # process(entity: Entity)
+    }
+
     $addRelationship(MovementSystem, StateManagementSystem, $sign="-->", $relationship="uses")
     $addRelationship(MovementSystem, InputComponent, $sign="-->", $relationship="checks")
     $addRelationshipsToClass(MovementSystem, "EntityStateComponent, PhysicsComponent", $rightMultiplicity="*", $sign="-->", $relationship="updates")
@@ -241,6 +251,7 @@ namespace com.dungeonsdevs.systems {
     $addRelationship(HudSystem, HealthComponent, $sign="-->", $rightMultiplicity="1", $relationship="reads")
     $addRelationship(GameOverSystem, HealthComponent, $sign="-->", $rightMultiplicity="1", $relationship="reads")
     $addRelationship(GameOverSystem, DungeonGame, $sign="*--", $rightMultiplicity="1", $relationship="has")
+    $addRelationship(InvincibilitySystem, InvincibilityComponent, $sign="-->", $relationship="updates")
 
     $defineAsSystem(MovementSystem, "EntityProcessingSystem")
     $defineAsSystem(StateManagementSystem, "EntityProcessingSystem")
@@ -250,6 +261,7 @@ namespace com.dungeonsdevs.systems {
     $defineAsSystem(ChangeurDeSalleSystem)
     $defineAsSystem(HudSystem, "BaseEntitySystem")
     $defineAsSystem(GameOverSystem, "EntityProcessingSystem")
+    $defineAsSystem(InvincibilitySystem, "EntityProcessingSystem")
 
 
     Note top of MovementSystem

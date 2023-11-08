@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dungeondevs.DungeonGame;
 import com.dungeondevs.components.*;
@@ -78,6 +77,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
                 .with(new PowerUpSystem(box2dWorld))
                 .with(new TrapExtinctionSystem(box2dWorld))
                 .with(new TeleportationSystem())
+                .with(new InvincibilitySystem())
                 .build();
 
         artemisWorld = new World(setup);
@@ -209,6 +209,10 @@ public class GameScreen implements Screen, DungeonGameScreen {
                 .with(new HealthSystem(box2dWorld))
                 .with(new HudSystem())
                 .with(new GameOverSystem(game))
+                .with(new PowerUpSystem(box2dWorld))
+                .with(new TrapExtinctionSystem(box2dWorld))
+                .with(new TeleportationSystem())
+                .with(new InvincibilitySystem())
                 .build();
 
         artemisWorld = new World(setup);
