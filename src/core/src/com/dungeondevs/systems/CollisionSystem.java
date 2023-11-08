@@ -6,6 +6,8 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.physics.box2d.*;
 import com.dungeondevs.components.ContactDamageComponent;
 import com.dungeondevs.components.HealthComponent;
+import com.dungeondevs.components.Level.PorteComponent;
+import com.dungeondevs.components.Level.SalleAssocieeComponent;
 import com.dungeondevs.utils.FixtureUserData;
 
 public class CollisionSystem extends BaseSystem implements ContactListener {
@@ -35,6 +37,21 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
             if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Monster){
                 fixtureUserDataA.getEntity().getComponent(HealthComponent.class).damage(
                         fixtureUserDataB.getEntity().getComponent(ContactDamageComponent.class).getDamages()
+                );
+            }
+        }
+
+        if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Porte){
+            if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
+                System.out.println("coucou");
+                fixtureUserDataA.getEntity().getComponent(SalleAssocieeComponent.class).idMap = fixtureUserDataB.getEntity().getComponent(PorteComponent.class).idMapVersLaquelleElleMene;
+            }
+        }
+
+        if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Attack){
+            if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Monster){
+                fixtureUserDataB.getEntity().getComponent(HealthComponent.class).damage(
+                        fixtureUserDataA.getEntity().getComponent(ContactDamageComponent.class).getDamages()
                 );
             }
         }
