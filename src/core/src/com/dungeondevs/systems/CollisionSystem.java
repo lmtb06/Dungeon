@@ -42,7 +42,7 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
 
         if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.PowerUp){
             if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
-                fixtureUserDataA.getEntity().getComponent(PowerUpComponent.class).applyPowerUP(fixtureUserDataB.getEntity().getComponent(PowerUpTypeComponent.class));
+                fixtureUserDataA.getEntity().getComponent(PowerUpComponent.class).applyPowerUP(fixtureUserDataB.getEntity());
             }
         }
 

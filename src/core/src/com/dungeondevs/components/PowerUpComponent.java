@@ -1,11 +1,12 @@
 package com.dungeondevs.components;
 
 import com.artemis.Component;
+import com.artemis.Entity;
 import com.dungeondevs.components.PowerUpType;
 
 public class PowerUpComponent extends Component{
 
-    public PowerUpTypeComponent powerUpNTBA = null;
+    public Entity powerUpNTBA = null;
     public long speedLastAppliedTime = 0;
 
     public long speedDuration = 0;
@@ -47,8 +48,8 @@ public class PowerUpComponent extends Component{
         this.originalSpeed = originalSpeed;
     }
 
-    public void applyPowerUP(PowerUpTypeComponent powerUpTypeComponent){
-        this.powerUpNTBA = powerUpTypeComponent;
+    public void applyPowerUP(Entity PowerUp){
+        this.powerUpNTBA = PowerUp;
     }
 
 }
