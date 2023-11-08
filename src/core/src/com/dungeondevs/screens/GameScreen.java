@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dungeondevs.DungeonGame;
@@ -70,7 +71,6 @@ public class GameScreen implements Screen, DungeonGameScreen {
                 .with(new AttackSystem(box2dWorld))
                 .with(new AttackEntitySystem(box2dWorld))
                 .with(new MapRendererSystem())
-                .with(new ChangeurDeSalleSystem())
                 .with(new RoomIntializerSystem(box2dWorld))
                 .with(new HealthSystem(box2dWorld))
                 .with(new HudSystem())
