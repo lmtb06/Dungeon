@@ -1,0 +1,13 @@
+@startuml
+
+actor Joueur as J
+participant "CollisionSystem" as CS
+participant "AttackComponent" as AC
+
+
+J -> CS: se deplace sur une arme
+CS -> AC: change la puissance de l'attaque
+CS -> AC: change le body
+
+
+@enduml

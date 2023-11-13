@@ -1,0 +1,29 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package components {
+    class directionComponent {
+
+        - direction : String
+
+    }
+}
+
+
+package systems {
+
+    class AttackSystem{
+        # process (Entity e)
+    }
+
+
+}
+
+package com.artemis {
+    class EntityProcessingSystem
+}
+
+AttackSystem --> directionComponent : "uses >"
+AttackSystem -up-|> EntityProcessingSystem
+
+@enduml

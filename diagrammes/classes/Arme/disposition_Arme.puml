@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package components {
+    class ArmeComponent {
+
+        - type : String
+
+    }
+    class PhysicsComponent {
+
+    }
+}
+
+
+package systems {
+
+    class RoomInitializer{
+        # process (Entity e)
+    }
+
+
+}
+
+package com.artemis {
+    class EntityProcessingSystem
+}
+
+RoomInitializer --> ArmeComponent : "uses >"
+RoomInitializer --> PhysicsComponent : "uses >"
+RoomInitializer -up-|> EntityProcessingSystem
+
+@enduml
