@@ -17,6 +17,11 @@ package components {
          + SpriteComponent (String textureFile)
          + getSprite () : Sprite
     }
+
+    class RoomRenderComponent {
+        - fileName : string
+        + RoomRenderComponent (String fileName)
+    }
 }
 
 
@@ -37,16 +42,23 @@ package systems {
         # process (Entity e)
     }
 
+    class WorldRendererSystem {
+        # processSystem()
+    }
+
 
 }
 
 package com.artemis {
     class EntityProcessingSystem
+    class BaseSystem
 }
 
 EntityRenderSystem --> AnimationListComponent : "uses >"
 EntityRenderSystem --> SpriteComponent : "uses >"
+WorldRendererSystem --> RoomRenderComponent : "uses >"
 AnimationListComponent -->"*" AnimationData
 EntityRenderSystem -up-|> EntityProcessingSystem
+WorldRendererSystem -up-|> BaseSystem
 
 @enduml
