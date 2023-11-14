@@ -54,7 +54,7 @@ public class AttackSystem extends EntityProcessingSystem {
 
             // Création du body def
             BodyDef attackBodyDef = new BodyDef();
-            attackBodyDef.type = BodyDef.BodyType.StaticBody;
+            attackBodyDef.type = BodyDef.BodyType.DynamicBody;
             Vector2 playerPosition = physicsComponent.body.getPosition();
             attackBodyDef.position.set(playerPosition.x + offset, playerPosition.y); // On récupère la position du joueur et on place l'attaque avec un décalage
             Body attackBody = box2dWorld.createBody(attackBodyDef);
