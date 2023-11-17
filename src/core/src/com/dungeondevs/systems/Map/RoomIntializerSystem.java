@@ -299,6 +299,9 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
             salleActuelle = joueur.getComponent(SalleAssocieeComponent.class).idMap;
 
             }
+            else{
+                e.getComponent(LoadMapComponent.class).loaded = false;
+            }
             }
     }
 

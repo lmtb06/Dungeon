@@ -25,6 +25,7 @@ public class GameArchetypes {
             .add(MovementComponent.class);
 
     public static final ArchetypeBuilder MAP_ARCHETYPE = new ArchetypeBuilder()
+            .add(RoomRendererComponent.class)
             .add(LoadMapComponent.class);
 
 

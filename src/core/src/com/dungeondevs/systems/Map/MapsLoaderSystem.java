@@ -5,6 +5,7 @@ import com.artemis.EntitySystem;
 import com.artemis.annotations.All;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.dungeondevs.components.Maps.LoadMapComponent;
+import com.dungeondevs.components.rendering.RoomRendererComponent;
 
 /**
  * Classe s'occupant de charger tous les fichiers de maps existantes dans les assets. Elle n'est pour le moment pas complète TODO
@@ -33,6 +34,7 @@ public class MapsLoaderSystem extends EntitySystem {
                     m.getComponent(LoadMapComponent.class).idmap = idMapCourant;
                     m.getComponent(LoadMapComponent.class).loaded = false;
                     m.getComponent(LoadMapComponent.class).map = loader.load(m.getComponent(LoadMapComponent.class).lienAsset);
+                    m.getComponent(RoomRendererComponent.class).setFileName("maps/test2.tmx");
                     System.out.println("salut : "+m.getComponent(LoadMapComponent.class).map);
                 }
                 if (idMapCourant == 1){
@@ -40,6 +42,7 @@ public class MapsLoaderSystem extends EntitySystem {
                     m.getComponent(LoadMapComponent.class).idmap = idMapCourant;
                     m.getComponent(LoadMapComponent.class).loaded = false;
                     m.getComponent(LoadMapComponent.class).map = loader.load(m.getComponent(LoadMapComponent.class).lienAsset);
+                    m.getComponent(RoomRendererComponent.class).setFileName("maps/test3.tmx");
                     System.out.println("salut : "+m.getComponent(LoadMapComponent.class).map);
                 }
                 idMapCourant ++;

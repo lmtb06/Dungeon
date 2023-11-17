@@ -16,6 +16,9 @@ import com.dungeondevs.systems.*;
 import com.dungeondevs.systems.Map.MapRendererSystem;
 import com.dungeondevs.systems.Map.MapsLoaderSystem;
 import com.dungeondevs.systems.Map.RoomIntializerSystem;
+import com.dungeondevs.systems.rendering.EntityRenderSystem;
+import com.dungeondevs.systems.rendering.WorldRenderSystem;
+
 import com.dungeondevs.utils.Constants;
 import com.dungeondevs.utils.FixtureUserData;
 import com.dungeondevs.utils.GameArchetypes;
@@ -45,7 +48,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
         //Create a default box 1meter tall and 0.3 meter large and a mass of 10 kg for the box2d world
         BodyDef playerBodyDef = new BodyDef();
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
-        playerBodyDef.position.set(0, 0);
+        playerBodyDef.position.set(2f, 2f);
         playerBodyDef.fixedRotation = true;
         Body playerBody = box2dWorld.createBody(playerBodyDef);
 
@@ -79,6 +82,8 @@ public class GameScreen implements Screen, DungeonGameScreen {
                 .with(new TrapExtinctionSystem(box2dWorld))
                 .with(new TeleportationSystem())
                 .with(new HudSystem())
+                .with(new WorldRenderSystem(worldViewport))
+                //.with(new EntityRenderSystem())
                 .build();
 
         artemisWorld = new World(setup);
@@ -130,6 +135,10 @@ public class GameScreen implements Screen, DungeonGameScreen {
         // Mise à jour du monde Artemis
         artemisWorld.setDelta(delta);
         artemisWorld.process();
+
+        // rendu debug du monde box2d
+        debugRenderer.render(box2dWorld, camera.combined);
+
     }
 
     @Override
@@ -181,7 +190,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
         //Create a default box 1meter tall and 0.3 meter large and a mass of 10 kg for the box2d world
         BodyDef playerBodyDef = new BodyDef();
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
-        playerBodyDef.position.set(0, 0);
+        playerBodyDef.position.set(2, 2);
         playerBodyDef.fixedRotation = true;
         Body playerBody = box2dWorld.createBody(playerBodyDef);
 
@@ -215,6 +224,8 @@ public class GameScreen implements Screen, DungeonGameScreen {
                 .with(new TrapExtinctionSystem(box2dWorld))
                 .with(new TeleportationSystem())
                 .with(new InvincibilitySystem())
+                .with(new WorldRenderSystem(worldViewport))
+                //.with(new EntityRenderSystem())
                 .build();
 
         artemisWorld = new World(setup);
