@@ -29,7 +29,7 @@ public class MovementSystem extends EntityProcessingSystem {
         InputComponent inputComponent = inputMapper.get(e);
         PhysicsComponent physicsComponent = physicsMapper.get(e);
         MovementComponent movementComponent = movementSpecsMapper.get(e);
-        Vector2 movementVector = calculateMovementVector(inputComponent);
+        Vector2 movementVector = calculateMovementVector(inputComponent, e);
         boolean shouldMove = !movementVector.isZero();
 
         switch (stateComponent.state) {
@@ -58,12 +58,24 @@ public class MovementSystem extends EntityProcessingSystem {
         }
     }
 
-    private Vector2 calculateMovementVector(InputComponent input) {
+    private Vector2 calculateMovementVector(InputComponent input, Entity e) {
         Vector2 vector = new Vector2();
-        if (input.up) vector.y += 1;
-        if (input.down) vector.y -= 1;
-        if (input.left) vector.x -= 1;
-        if (input.right) vector.x += 1;
+        if (input.up){
+            vector.y += 1;
+            e.getComponent(DirectionComponent.class).direction = "haut";
+        }
+        if (input.down){
+            vector.y -= 1;
+            e.getComponent(DirectionComponent.class).direction = "bas";
+        }
+        if (input.left){
+            vector.x -= 1;
+            e.getComponent(DirectionComponent.class).direction = "gauche";
+        }
+        if (input.right){
+            vector.x += 1;
+            e.getComponent(DirectionComponent.class).direction = "droite";
+        }
         return vector;
     }
 

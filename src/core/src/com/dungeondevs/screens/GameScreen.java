@@ -97,6 +97,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
         player.getComponent(MovementComponent.class).maxSpeedInMeterPerSecond = Constants.PLAYER_CHAR_MAX_VELOCITY;
         player.getComponent(MovementComponent.class).decelerationTimeInSeconds = Constants.PLAYER_CHAR_DECELERATION_TIME;
         player.getComponent(SalleAssocieeComponent.class).idMap = 0;
+        player.getComponent(DirectionComponent.class).direction = "droite";
 
         Archetype mapArchetype = GameArchetypes.MAP_ARCHETYPE
                 .build(artemisWorld);
@@ -107,6 +108,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
 
         //artemisWorld.getSystem(ChangeurDeSalleSystem.class).setJoueur(player);
         artemisWorld.getSystem(RoomIntializerSystem.class).setJoueur(player);
+        artemisWorld.getSystem(AttackEntitySystem.class).setJoueur(player);
     }
 
     @Override

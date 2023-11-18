@@ -22,7 +22,8 @@ public class GameArchetypes {
             .add(MovementComponent.class)
             .add(PlayerCharacterComponent.class)
             .add(TeleportationComponent.class)
-            .add(MovementComponent.class);
+            .add(MovementComponent.class)
+            .add(DirectionComponent.class);
 
     public static final ArchetypeBuilder MAP_ARCHETYPE = new ArchetypeBuilder()
             .add(LoadMapComponent.class);
