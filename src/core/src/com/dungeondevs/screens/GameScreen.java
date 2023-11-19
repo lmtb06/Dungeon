@@ -137,7 +137,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
         artemisWorld.process();
 
         // rendu debug du monde box2d
-        //debugRenderer.render(box2dWorld, camera.combined);
+        debugRenderer.render(box2dWorld, camera.combined);
 
     }
 

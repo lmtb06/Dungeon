@@ -134,7 +134,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                             Body playerBody = box2dworld.createBody(playerBodyDef);
 
                             PolygonShape boxShape = new PolygonShape();
-                            boxShape.setAsBox(0.25f, 0.25f);
+                            boxShape.setAsBox(0.2f, 0.2f);
 
                             FixtureDef boxFixtureDef = new FixtureDef();
                             boxFixtureDef.shape = boxShape;
@@ -249,8 +249,8 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                             //Body Teleporteur
                             BodyDef teleporteurBodyDef = new BodyDef();
                             teleporteurBodyDef.type = BodyDef.BodyType.StaticBody;
-                            Float coordonneeX = Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX;
-                            Float coordonneeY = Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY;
+                            float coordonneeX = Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX;
+                            float coordonneeY = Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY;
                             teleporteurBodyDef.position.set(coordonneeX, coordonneeY);
                             Body teleporteurBody = box2dworld.createBody(teleporteurBodyDef);
 
