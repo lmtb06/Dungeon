@@ -25,7 +25,7 @@ public class AnimationData {
     }
 
     public AnimationData (int rows, int columns, String textureFileName) {
-        new AnimationData(rows, columns, textureFileName, 0.025f);
+        this(rows, columns, textureFileName, 0.025f);
     }
 
     public Animation<TextureRegion> getAnimation() {

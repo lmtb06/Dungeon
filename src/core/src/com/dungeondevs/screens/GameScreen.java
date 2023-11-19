@@ -103,9 +103,9 @@ public class GameScreen implements Screen, DungeonGameScreen {
         player.getComponent(MovementComponent.class).maxSpeedInMeterPerSecond = Constants.PLAYER_CHAR_MAX_VELOCITY;
         player.getComponent(MovementComponent.class).decelerationTimeInSeconds = Constants.PLAYER_CHAR_DECELERATION_TIME;
         player.getComponent(SalleAssocieeComponent.class).idMap = 0;
-        player.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 2, "characterAndTileset/player_idle.png", 0.5f));
+        player.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 4, "characterAndTileset/player_idle.png", 0.5f));
         player.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 4, "characterAndTileset/player_walk.png", 0.5f));
-        player.getComponent(AnimationListComponent.class).setCurrentAnimation(1);
+        player.getComponent(AnimationListComponent.class).setCurrentAnimation(0);
 
         Archetype mapArchetype = GameArchetypes.MAP_ARCHETYPE
                 .build(artemisWorld);
@@ -137,7 +137,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
         artemisWorld.process();
 
         // rendu debug du monde box2d
-        debugRenderer.render(box2dWorld, camera.combined);
+        //debugRenderer.render(box2dWorld, camera.combined);
 
     }
 
