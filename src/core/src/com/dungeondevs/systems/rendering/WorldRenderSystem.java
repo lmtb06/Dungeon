@@ -39,10 +39,10 @@ public class WorldRenderSystem extends EntityProcessingSystem {
         //map.getLayers().remove(map.getLayers().get("collision"));
         this.renderer = new OrthogonalTiledMapRenderer(map, unitScale);
 
-
         OrthographicCamera oc = (OrthographicCamera) viewport.getCamera();
         oc.position.set(mapProperties.get("width", Integer.class)/4f, mapProperties.get("height", Integer.class)/4f, 0);
         //oc.update();
+        oc.zoom = 0.75f;
         renderer.setView(oc);
         renderer.render();
 

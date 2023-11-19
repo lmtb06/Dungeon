@@ -12,13 +12,13 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dungeondevs.DungeonGame;
 import com.dungeondevs.components.*;
 import com.dungeondevs.components.Level.SalleAssocieeComponent;
+import com.dungeondevs.components.rendering.AnimationListComponent;
 import com.dungeondevs.systems.*;
-import com.dungeondevs.systems.Map.MapRendererSystem;
 import com.dungeondevs.systems.Map.MapsLoaderSystem;
 import com.dungeondevs.systems.Map.RoomIntializerSystem;
 import com.dungeondevs.systems.rendering.EntityRenderSystem;
 import com.dungeondevs.systems.rendering.WorldRenderSystem;
-
+import com.dungeondevs.utils.AnimationData;
 import com.dungeondevs.utils.Constants;
 import com.dungeondevs.utils.FixtureUserData;
 import com.dungeondevs.utils.GameArchetypes;
@@ -34,6 +34,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
     public GameScreen(DungeonGame game) {
         this.game = game;
         this.worldViewport = new ExtendViewport(10, 10);
+
         box2dWorld = new com.badlogic.gdx.physics.box2d.World(new Vector2(0, 0), true);
         debugRenderer = new Box2DDebugRenderer();
 
@@ -67,7 +68,6 @@ public class GameScreen implements Screen, DungeonGameScreen {
         WorldConfiguration setup = new WorldConfigurationBuilder()
                 .with(new MapsLoaderSystem())
                 .with(new RoomIntializerSystem(box2dWorld))
-                .with(new MapRendererSystem())
                 .with(new PhysicsSystem(box2dWorld, tempsParFrame))
                 .with(new InputSystem())
                 .with(new StateManagementSystem())
@@ -83,7 +83,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
                 .with(new TeleportationSystem())
                 .with(new HudSystem())
                 .with(new WorldRenderSystem(worldViewport))
-                //.with(new EntityRenderSystem())
+                .with(new EntityRenderSystem(worldViewport))
                 .build();
 
         artemisWorld = new World(setup);
@@ -103,6 +103,9 @@ public class GameScreen implements Screen, DungeonGameScreen {
         player.getComponent(MovementComponent.class).maxSpeedInMeterPerSecond = Constants.PLAYER_CHAR_MAX_VELOCITY;
         player.getComponent(MovementComponent.class).decelerationTimeInSeconds = Constants.PLAYER_CHAR_DECELERATION_TIME;
         player.getComponent(SalleAssocieeComponent.class).idMap = 0;
+        player.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 2, "characterAndTileset/player_idle.png", 0.5f));
+        player.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 4, "characterAndTileset/player_walk.png", 0.5f));
+        player.getComponent(AnimationListComponent.class).setCurrentAnimation(1);
 
         Archetype mapArchetype = GameArchetypes.MAP_ARCHETYPE
                 .build(artemisWorld);
@@ -123,21 +126,18 @@ public class GameScreen implements Screen, DungeonGameScreen {
     @Override
     public void render(float delta) {
         // Wipe the screen clear
-        ScreenUtils.clear(0, 0, 0.2f, 1);
+        ScreenUtils.clear(0.145f, 0.075f, 0.102f, 1);
 
         // Mise à jour de la caméra
         Camera camera = worldViewport.getCamera();
         camera.update();
-
-        // rendu debug du monde box2d
-        debugRenderer.render(box2dWorld, camera.combined);
 
         // Mise à jour du monde Artemis
         artemisWorld.setDelta(delta);
         artemisWorld.process();
 
         // rendu debug du monde box2d
-        debugRenderer.render(box2dWorld, camera.combined);
+        //debugRenderer.render(box2dWorld, camera.combined);
 
     }
 
@@ -215,7 +215,6 @@ public class GameScreen implements Screen, DungeonGameScreen {
                 .with(new CollisionSystem(box2dWorld))
                 .with(new AttackSystem(box2dWorld))
                 .with(new AttackEntitySystem(box2dWorld))
-                .with(new MapRendererSystem())
                 .with(new RoomIntializerSystem(box2dWorld))
                 .with(new HealthSystem(box2dWorld))
                 .with(new HudSystem())
@@ -225,7 +224,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
                 .with(new TeleportationSystem())
                 .with(new InvincibilitySystem())
                 .with(new WorldRenderSystem(worldViewport))
-                //.with(new EntityRenderSystem())
+                .with(new EntityRenderSystem(worldViewport))
                 .build();
 
         artemisWorld = new World(setup);
@@ -245,6 +244,8 @@ public class GameScreen implements Screen, DungeonGameScreen {
         player.getComponent(MovementComponent.class).maxSpeedInMeterPerSecond = Constants.PLAYER_CHAR_MAX_VELOCITY;
         player.getComponent(MovementComponent.class).decelerationTimeInSeconds = Constants.PLAYER_CHAR_DECELERATION_TIME;
         player.getComponent(SalleAssocieeComponent.class).idMap = 0;
+        player.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 2, "characterAndTileset/player_idle.png", 0.5f));
+        player.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 4, "characterAndTileset/player_walk.png", 0.5f));
 
         Archetype mapArchetype = GameArchetypes.MAP_ARCHETYPE
                 .build(artemisWorld);
