@@ -1,0 +1,64 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package components {
+    class AnimationListComponent {
+
+        - currentAnimation : int
+        - animations : List<AnimationData>
+
+        + addAnimationData (AnimationData animationData) : void
+        + getCurrentAnimationData () : AnimationData
+        + setCurrentAnimation (int animation) : void
+
+    }
+    class SpriteComponent {
+        - sprite : Sprite
+         + SpriteComponent (String textureFile)
+         + getSprite () : Sprite
+    }
+
+    class RoomRenderComponent {
+        - fileName : string
+        + RoomRenderComponent (String fileName)
+    }
+}
+
+
+package utils{
+    class AnimationData {
+        - columns : int
+        - rows : int
+        - animation : Animation<TextureRegion>
+        + AnimationData (int columns, int rows, String textureFile) : void
+        + getAnimation() : Animation<TextureRegion>
+    }
+}
+
+package systems {
+
+    class EntityRenderSystem{
+        - batch : SpriteBatch
+        # process (Entity e)
+    }
+
+    class WorldRendererSystem {
+        # processSystem()
+    }
+
+
+}
+
+package com.artemis {
+    class EntityProcessingSystem
+    class BaseSystem
+}
+
+EntityRenderSystem --> AnimationListComponent : "uses >"
+EntityRenderSystem --> SpriteComponent : "uses >"
+WorldRendererSystem --> RoomRenderComponent : "uses >"
+AnimationListComponent -->"*" AnimationData
+EntityRenderSystem -up-|> EntityProcessingSystem
+WorldRendererSystem -up-|> BaseSystem
+
+@enduml

@@ -117,7 +117,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
 
                         //Body Monstre
                         BodyDef playerBodyDef = new BodyDef();
-                        playerBodyDef.type = BodyDef.BodyType.DynamicBody;
+                        playerBodyDef.type = BodyDef.BodyType.KinematicBody;
                         playerBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
                         Body playerBody = box2dworld.createBody(playerBodyDef);
 

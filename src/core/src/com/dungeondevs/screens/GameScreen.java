@@ -46,6 +46,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
         BodyDef playerBodyDef = new BodyDef();
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
         playerBodyDef.position.set(0, 0);
+        playerBodyDef.fixedRotation = true;
         Body playerBody = box2dWorld.createBody(playerBodyDef);
 
         PolygonShape boxShape = new PolygonShape();
@@ -183,6 +184,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
         BodyDef playerBodyDef = new BodyDef();
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
         playerBodyDef.position.set(0, 0);
+        playerBodyDef.fixedRotation = true;
         Body playerBody = box2dWorld.createBody(playerBodyDef);
 
         PolygonShape boxShape = new PolygonShape();
