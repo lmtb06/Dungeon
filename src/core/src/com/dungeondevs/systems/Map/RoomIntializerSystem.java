@@ -104,6 +104,9 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                 Archetype powerUpArchetype = GameArchetypes.POWER_UP_ARCHETYPE
                         .build(getWorld());
 
+                Archetype armeArchetype = GameArchetypes.ARME_ARCHETYPE
+                        .build(getWorld());
+
 
             for (int i = 0; i < so.getCount(); i++) {
                 System.out.println("siu:" +Float.parseFloat(so.get(i).getProperties().get("x spawn").toString()));
@@ -257,6 +260,33 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
 
                         listeTpSalle.add(teleporteur);
 
+                        break;
+                    case "arme":
+                        Entity arme = getWorld().createEntity(armeArchetype);
+
+                        //Body trap
+                        BodyDef armeBodyDef = new BodyDef();
+                        armeBodyDef.type = BodyDef.BodyType.StaticBody;
+                        armeBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
+                        Body armeBody = box2dworld.createBody(armeBodyDef);
+
+                        PolygonShape armeboxShape = new PolygonShape();
+                        armeboxShape.setAsBox(0.2f, 0.2f);
+
+                        FixtureDef armeboxFixtureDef = new FixtureDef();
+                        armeboxFixtureDef.shape = armeboxShape;
+                        armeboxFixtureDef.density = 1;
+
+                        Fixture armefixture = armeBody.createFixture(armeboxFixtureDef);
+                        armefixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Arme, arme));
+                        armeboxShape.dispose();
+
+                        arme.getComponent(ArmeComponent.class).nomArme = so.get(i).getProperties().get("type").toString();
+
+                        arme.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
+
+
+                        arme.getComponent(PhysicsComponent.class).body = armeBody;
                         break;
                 }
 

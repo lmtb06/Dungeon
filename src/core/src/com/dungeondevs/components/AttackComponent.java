@@ -4,6 +4,7 @@ import com.artemis.Component;
 
 public class AttackComponent extends Component {
 
+    public String arme = "epee";
     private int damages = 4;
     private long attackDelay = 500;
 

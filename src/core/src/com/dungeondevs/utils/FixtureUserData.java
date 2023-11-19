@@ -7,7 +7,7 @@ public class FixtureUserData {
     private EntityTypes entityType;
     private Entity entity;
 
-    public enum EntityTypes { Monster, Player, Attack, Porte, PowerUp, Trap, Teleporteur};
+    public enum EntityTypes { Monster, Player, Attack, Porte, PowerUp, Trap, Teleporteur, Arme};
 
     public FixtureUserData(EntityTypes entityType, Entity entity) {
         this.entityType = entityType;

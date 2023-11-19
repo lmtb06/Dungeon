@@ -6,6 +6,7 @@ import com.dungeondevs.components.Level.PorteComponent;
 import com.dungeondevs.components.Level.SalleAssocieeComponent;
 import com.dungeondevs.components.Maps.ActiveEntity;
 import com.dungeondevs.components.Maps.LoadMapComponent;
+import com.dungeondevs.components.ArmeComponent;
 
 public class GameArchetypes {
     public static final ArchetypeBuilder PLAYER_CHARACTER_ARCHETYPE = new ArchetypeBuilder()
@@ -73,4 +74,10 @@ public class GameArchetypes {
             .add(SalleAssocieeComponent.class)
             .add(ActiveEntity.class)
             .add(PowerUpTypeComponent.class);
+
+    public static final ArchetypeBuilder ARME_ARCHETYPE = new ArchetypeBuilder()
+            .add(PhysicsComponent.class)
+            .add(SalleAssocieeComponent.class)
+            .add(ActiveEntity.class)
+            .add(ArmeComponent.class);
 }

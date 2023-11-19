@@ -60,7 +60,30 @@ public class AttackSystem extends EntityProcessingSystem {
             Body attackBody = box2dWorld.createBody(attackBodyDef);
 
             PolygonShape boxShape = new PolygonShape();
-            boxShape.setAsBox(0.2f, 0.2f);
+            float longueurAxeX = 0.1f;
+            float longueurAxeY = 0.1f;
+
+            System.out.println(e.getComponent(AttackComponent.class).arme + " testé");
+
+            /** On change la hitbox et les caractéristiques de l'attaque en fonction des armes ici **/
+            if (e.getComponent(AttackComponent.class).arme.equals("epee")){
+                longueurAxeX = 0.2f;
+                longueurAxeY = 0.2f;
+            } else if (e.getComponent(AttackComponent.class).arme.equals("couteau")) {
+                longueurAxeX = 0.1f;
+                longueurAxeY = 0.1f;
+            } else if (e.getComponent(AttackComponent.class).arme.equals("lance")) {
+                if (e.getComponent(DirectionComponent.class).direction.equals("haut") || e.getComponent(DirectionComponent.class).direction.equals("bas")){
+                    longueurAxeX = 0.1f;
+                    longueurAxeY = 0.3f;
+                }else {
+                    longueurAxeX = 0.3f;
+                    longueurAxeY = 0.1f;
+                }
+
+            }
+
+            boxShape.setAsBox(longueurAxeX, longueurAxeY);
 
             FixtureDef boxFixtureDef = new FixtureDef();
             boxFixtureDef.shape = boxShape;
