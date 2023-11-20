@@ -46,6 +46,7 @@ public class GameArchetypes {
             .add(SalleAssocieeComponent.class)
             .add(ContactDamageComponent.class)
             .add(HealthComponent.class)
+            .add(MonsterMovementComponent.class)
             .add(ActiveEntity.class);
 
     public static final ArchetypeBuilder ATTACK_ENTITY_ARCHETYPE = new ArchetypeBuilder()

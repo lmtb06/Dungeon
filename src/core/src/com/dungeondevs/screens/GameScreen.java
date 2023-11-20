@@ -78,6 +78,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
                 .with(new TrapExtinctionSystem(box2dWorld))
                 .with(new TeleportationSystem())
                 .with(new HudSystem())
+                .with(new MonsterMovementSystem())
                 .build();
 
         artemisWorld = new World(setup);

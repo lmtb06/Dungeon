@@ -124,6 +124,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         FixtureDef boxFixtureDef = new FixtureDef();
                         boxFixtureDef.shape = boxShape;
                         boxFixtureDef.density = 1;
+                        boxFixtureDef.isSensor=true;
 
                         Fixture fixture = playerBody.createFixture(boxFixtureDef);
                         fixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Monster, monstre));
@@ -133,6 +134,8 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         monstre.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
                         monstre.getComponent(ActiveEntity.class).active = false;
                         monstre.getComponent(PhysicsComponent.class).body = playerBody;
+                        monstre.getComponent(MonsterMovementComponent.class).setMovementType(MonsterMovementType.MOVE_TOWARD_PLAYER_IGNORE_COLLISION);
+                        monstre.getComponent(MonsterMovementComponent.class).player=joueur;
 
                         break;
                     case "powerUps":
