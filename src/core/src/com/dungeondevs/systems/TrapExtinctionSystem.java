@@ -7,6 +7,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.dungeondevs.components.PhysicsComponent;
 import com.dungeondevs.components.ActifSalleActuelleComponent;
 
+/**
+ * System qui va boucler sur les pieges, si ils sont désactivés (quand quelqu'un marche dessus), le body sera supprimé du world
+ */
 @All(ActifSalleActuelleComponent.class)
 public class TrapExtinctionSystem extends EntityProcessingSystem {
     /**

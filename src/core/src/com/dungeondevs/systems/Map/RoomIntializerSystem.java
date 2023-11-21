@@ -18,15 +18,30 @@ import com.dungeondevs.utils.GameArchetypes;
 
 import java.util.ArrayList;
 
+/**
+ * System d'initialiseur de salle. Le systeme va lire la tiledMap dans laquelle se trouve le joueur et afficher les différentes entités de la salle
+ */
 @All({LoadMapComponent.class})
 public class RoomIntializerSystem extends EntityProcessingSystem {
 
+    /**
+     * attribut désignant le world dans lequel iront les bodys des différentes nouvelles entités
+     */
     private World box2dworld;
 
+    /**
+     * attribut ayant pour rôle de désigner la salle actuelle, si cette dernière change, les entités seront supprimés et remplacées par celles de la nouvelle salle
+     */
     public int salleActuelle = -1;
 
+    /**
+     * Le joueur, on en a besoin pour récupérer la salle dans laquelle il se trouve
+     */
     public Entity joueur;
 
+    /**
+     * liste ayant pour but de stocker les différents bodys à supprimer du world au moment du changement de salle.
+     */
     public Array<Body> listeEntiteADesactiver;
 
     public RoomIntializerSystem(World world) {
@@ -37,12 +52,21 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
     @Override
     protected void process(Entity e) {
 
-        //System.out.println(joueur.getComponent(SalleAssocieeComponent.class).idMap != salleActuelle);
+        /**
+         * On vérifie si le joueur a traversé une porte, si c'est le cas, son idmap a changé et sera différent de la salle actuelle
+         */
         if (joueur!=null && joueur.getComponent(SalleAssocieeComponent.class).idMap != salleActuelle ){
+            /**
+             * Comme notre systeme boucle sur toutes les maps
+             * On va ici s'intéresser uniquement à la map dans laquelle se trouve le joueur en la désignant grace à un if
+             */
             if (joueur.getComponent(SalleAssocieeComponent.class).idMap == e.getComponent(LoadMapComponent.class).idmap){
 
             LoadMapComponent lmc = e.getComponent(LoadMapComponent.class);
 
+                /**
+                 * Liste qui va stocker les différents téléporteurs pour pouvoir les liés après leurs créations
+                 */
             ArrayList<Entity> listeTpSalle = new ArrayList();
 
                 this.box2dworld.getBodies(listeEntiteADesactiver);
