@@ -25,7 +25,7 @@ public class GameArchetypes {
             .add(PlayerCharacterComponent.class)
             .add(TeleportationComponent.class)
             .add(MovementComponent.class)
-            .add(DirectionComponent.class);
+            .add(DirectionComponent.class)
             .add(AnimationListComponent.class)
             .add(MovementComponent.class);
 
@@ -63,7 +63,6 @@ public class GameArchetypes {
             .add(ContactDamageComponent.class)
             .add(SalleAssocieeComponent.class)
             .add(ActifSalleActuelleComponent.class)
-            .add(RenderingComponent.class)
             .add(SpriteComponent.class);
 
     public static final ArchetypeBuilder TELEPORTEUR_ENTITY_ARCHETYPE = new ArchetypeBuilder()

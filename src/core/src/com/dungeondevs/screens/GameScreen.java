@@ -133,12 +133,14 @@ public class GameScreen implements Screen, DungeonGameScreen {
         Camera camera = worldViewport.getCamera();
         camera.update();
 
-        // rendu debug du monde box2d
-        debugRenderer.render(box2dWorld, camera.combined);
-
         // Mise à jour du monde Artemis
         artemisWorld.setDelta(delta);
         artemisWorld.process();
+
+        // rendu debug du monde box2d
+        debugRenderer.render(box2dWorld, camera.combined);
+
+
     }
 
     @Override

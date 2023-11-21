@@ -44,11 +44,11 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
      */
     public Entity joueur;
 
-    public Array<Entity> listeEntiteADesactiver;
     /**
      * liste ayant pour but de stocker les différents bodys à supprimer du world au moment du changement de salle.
      */
-    public Array<Body> listeEntiteADesactiver;
+    public Array<Entity> listeEntiteADesactiver;
+
 
     public RoomIntializerSystem(World world) {
         listeEntiteADesactiver = new Array<>();
@@ -78,7 +78,6 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                  * Liste qui va stocker les différents téléporteurs pour pouvoir les liés après leurs créations
                  */
             ArrayList<Entity> listeTpSalle = new ArrayList();
-                ArrayList<Entity> listeTpSalle = new ArrayList();
 
                 //this.box2dworld.getBodies(listeEntiteADesactiver);
 
@@ -313,6 +312,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         break;
                     case "arme":
                         Entity arme = getWorld().createEntity(armeArchetype);
+                        listeEntiteADesactiver.add(arme);
 
                         //Body trap
                         BodyDef armeBodyDef = new BodyDef();
