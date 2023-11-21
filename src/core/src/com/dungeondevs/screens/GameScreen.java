@@ -68,6 +68,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
         WorldConfiguration setup = new WorldConfigurationBuilder()
                 .with(new MapsLoaderSystem())
                 .with(new RoomIntializerSystem(box2dWorld))
+                .with(new MapRendererSystem())
                 .with(new PhysicsSystem(box2dWorld, tempsParFrame))
                 .with(new InputSystem())
                 .with(new StateManagementSystem())
@@ -84,6 +85,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
                 .with(new HudSystem())
                 .with(new WorldRenderSystem(worldViewport))
                 .with(new EntityRenderSystem(worldViewport))
+                .with(new MonsterMovementSystem())
                 .build();
 
         artemisWorld = new World(setup);
@@ -192,8 +194,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
         //Create a default box 1meter tall and 0.3 meter large and a mass of 10 kg for the box2d world
         BodyDef playerBodyDef = new BodyDef();
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
-        playerBodyDef.position.set(2, 2);
-        playerBodyDef.fixedRotation = true;
+        playerBodyDef.position.set(0, 0);
         Body playerBody = box2dWorld.createBody(playerBodyDef);
 
         PolygonShape boxShape = new PolygonShape();

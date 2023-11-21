@@ -31,7 +31,6 @@ public class MovementSystem extends EntityProcessingSystem {
         MovementComponent movementComponent = movementSpecsMapper.get(e);
         Vector2 movementVector = calculateMovementVector(inputComponent, e);
         boolean shouldMove = !movementVector.isZero();
-
         switch (stateComponent.state) {
             case IDLE:
                 if (shouldMove) {
