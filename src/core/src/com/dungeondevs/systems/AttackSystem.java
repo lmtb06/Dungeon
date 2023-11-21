@@ -48,7 +48,6 @@ public class AttackSystem extends EntityProcessingSystem {
         if(inputComponent.space && elapsedTime > attackComponent.getAttackDelay()){
 
             PhysicsComponent physicsComponent = e.getComponent(PhysicsComponent.class);
-            int dmg = attackComponent.getDamages();
             float offset = .5f;
             lastAttack = TimeUtils.millis();
 
@@ -62,26 +61,35 @@ public class AttackSystem extends EntityProcessingSystem {
             PolygonShape boxShape = new PolygonShape();
             float longueurAxeX = 0.1f;
             float longueurAxeY = 0.1f;
+            int damageArme = 0;
 
-            System.out.println(e.getComponent(AttackComponent.class).arme + " testé");
 
             /** On change la hitbox et les caractéristiques de l'attaque en fonction des armes ici **/
             if (e.getComponent(AttackComponent.class).arme.equals("epee")){
+                damageArme = 4;
+                e.getComponent(AttackComponent.class).setAttackDelay(500);
                 longueurAxeX = 0.2f;
                 longueurAxeY = 0.2f;
             } else if (e.getComponent(AttackComponent.class).arme.equals("couteau")) {
+                damageArme = 2;
+                e.getComponent(AttackComponent.class).setAttackDelay(300);
                 longueurAxeX = 0.1f;
                 longueurAxeY = 0.1f;
             } else if (e.getComponent(AttackComponent.class).arme.equals("lance")) {
-                if (e.getComponent(DirectionComponent.class).direction.equals("haut") || e.getComponent(DirectionComponent.class).direction.equals("bas")){
-                    longueurAxeX = 0.1f;
-                    longueurAxeY = 0.3f;
-                }else {
-                    longueurAxeX = 0.3f;
-                    longueurAxeY = 0.1f;
-                }
-
+                damageArme = 8;
+                e.getComponent(AttackComponent.class).setAttackDelay(1500);
+                longueurAxeX = 0.3f;
+                longueurAxeY = 0.1f;
             }
+
+            /** on inverse l'axe x et y si l'attaque est orientée vers le haut **/
+            if (e.getComponent(DirectionComponent.class).direction.equals("haut") || e.getComponent(DirectionComponent.class).direction.equals("bas")){
+                float tmp = longueurAxeX;
+                longueurAxeX = longueurAxeY;
+                longueurAxeY = tmp;
+            }
+
+            //e.getComponent(ContactDamageComponent.class).setDamages(damageArme);
 
             boxShape.setAsBox(longueurAxeX, longueurAxeY);
 
@@ -95,7 +103,6 @@ public class AttackSystem extends EntityProcessingSystem {
 
             Archetype attackArchetype = GameArchetypes.ATTACK_ENTITY_ARCHETYPE
                     .build(world);
-
             Entity attack = world.createEntity(attackArchetype);
             fixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Attack, attack));
             attack.getComponent(PhysicsComponent.class).body = attackBody;
@@ -103,6 +110,7 @@ public class AttackSystem extends EntityProcessingSystem {
             attack.getComponent(AttackEntityComponent.class).autoDestroyTime = 100;
             attack.getComponent(AttackEntityComponent.class).boundBody = physicsComponent.body;
             attack.getComponent(AttackEntityComponent.class).offset = offset;
+            attack.getComponent(ContactDamageComponent.class).setDamages(damageArme);
         }
     }
 }

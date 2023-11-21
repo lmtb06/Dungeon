@@ -4,7 +4,6 @@ import com.artemis.Entity;
 import com.artemis.annotations.All;
 import com.artemis.systems.EntityProcessingSystem;
 import com.dungeondevs.components.PhysicsComponent;
-import com.dungeondevs.components.PiegeActifComponent;
 import com.dungeondevs.components.TeleportationComponent;
 
 @All(TeleportationComponent.class)

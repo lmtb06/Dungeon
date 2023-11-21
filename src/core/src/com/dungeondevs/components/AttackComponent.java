@@ -5,7 +5,7 @@ import com.artemis.Component;
 public class AttackComponent extends Component {
 
     public String arme = "epee";
-    private int damages = 4;
+    private int damages = 0;
     private long attackDelay = 500;
 
     public int getDamages() {
@@ -16,5 +16,9 @@ public class AttackComponent extends Component {
 
     public long getAttackDelay() {
         return attackDelay;
+    }
+
+    public void setAttackDelay(long attackDelay) {
+        this.attackDelay = attackDelay;
     }
 }

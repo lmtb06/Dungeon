@@ -218,7 +218,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
 
                         trap.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
 
-                        trap.getComponent(PiegeActifComponent.class).action = true;
+                        trap.getComponent(ActifSalleActuelleComponent.class).action = true;
 
                         trap.getComponent(PhysicsComponent.class).body = trapBody;
                         break;
@@ -284,7 +284,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         arme.getComponent(ArmeComponent.class).nomArme = so.get(i).getProperties().get("type").toString();
 
                         arme.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
-
+                        arme.getComponent(ActifSalleActuelleComponent.class).action = true;
 
                         arme.getComponent(PhysicsComponent.class).body = armeBody;
                         break;

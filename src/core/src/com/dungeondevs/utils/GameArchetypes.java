@@ -60,7 +60,7 @@ public class GameArchetypes {
             .add(PhysicsComponent.class)
             .add(ContactDamageComponent.class)
             .add(SalleAssocieeComponent.class)
-            .add(PiegeActifComponent.class)
+            .add(ActifSalleActuelleComponent.class)
             .add(RenderingComponent.class);
 
     public static final ArchetypeBuilder TELEPORTEUR_ENTITY_ARCHETYPE = new ArchetypeBuilder()
@@ -79,5 +79,6 @@ public class GameArchetypes {
             .add(PhysicsComponent.class)
             .add(SalleAssocieeComponent.class)
             .add(ActiveEntity.class)
+            .add(ActifSalleActuelleComponent.class)
             .add(ArmeComponent.class);
 }

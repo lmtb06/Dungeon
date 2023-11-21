@@ -88,7 +88,7 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
                     invincibilityComponent.timeRemaining = 2.0f;
                     player.edit().add(invincibilityComponent);
                 }
-                fixtureUserDataB.getEntity().getComponent(PiegeActifComponent.class).action = false;
+                fixtureUserDataB.getEntity().getComponent(ActifSalleActuelleComponent.class).action = false;
             }
         }
 
@@ -101,11 +101,11 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
             }
         }
 
-        // Collision du joueur avec la porte
+        // Collision du joueur avec une arme
         if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Arme){
             if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
                 fixtureUserDataA.getEntity().getComponent(AttackComponent.class).arme = fixtureUserDataB.getEntity().getComponent(ArmeComponent.class).nomArme;
-                System.out.println(fixtureUserDataA.getEntity().getComponent(AttackComponent.class).arme);
+                fixtureUserDataB.getEntity().getComponent(ActifSalleActuelleComponent.class).action = false;
             }
         }
     }
