@@ -70,7 +70,7 @@
     <property name="y spawn" value="3"/>
    </properties>
   </object>
-  <object id="10" x="31.9249" y="15.2783" width="16.3199" height="15.9935">
+  <object id="10" x="17.0547" y="15.6016" width="16.3199" height="15.9935">
    <properties>
     <property name="categorie" value="arme"/>
     <property name="type" value="couteau"/>

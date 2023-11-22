@@ -68,7 +68,6 @@ public class GameScreen implements Screen, DungeonGameScreen {
         WorldConfiguration setup = new WorldConfigurationBuilder()
                 .with(new MapsLoaderSystem())
                 .with(new RoomIntializerSystem(box2dWorld))
-                .with(new MapRendererSystem())
                 .with(new PhysicsSystem(box2dWorld, tempsParFrame))
                 .with(new InputSystem())
                 .with(new StateManagementSystem())

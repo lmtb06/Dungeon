@@ -37,8 +37,6 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
      */
     public int salleActuelle = -1;
 
-    private LoadMapComponent mapChargeeActuelle;
-
     /**
      * Le joueur, on en a besoin pour récupérer la salle dans laquelle il se trouve
      */
@@ -48,6 +46,8 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
      * liste ayant pour but de stocker les différents bodys à supprimer du world au moment du changement de salle.
      */
     public Array<Entity> listeEntiteADesactiver;
+
+    private LoadMapComponent mapChargeeActuelle;
 
 
     public RoomIntializerSystem(World world) {
@@ -77,7 +77,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                 /**
                  * Liste qui va stocker les différents téléporteurs pour pouvoir les liés après leurs créations
                  */
-            ArrayList<Entity> listeTpSalle = new ArrayList();
+                ArrayList<Entity> listeTpSalle = new ArrayList();
 
                 //this.box2dworld.getBodies(listeEntiteADesactiver);
 
@@ -92,96 +92,97 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
 
 
 
-                float facteurCase = 0.5f;
+            int tailleCase = 16;
 
-                float decalageX = facteurCase*-0.5f;
-                float decalageY = facteurCase*-0.5f;
-                float facteur = 0.5f;
+            float facteurCase = 0.5f;
 
-                float facteurX = 0.5f;
-                float facteurY = 0.5f;
-                //collision
-                TiledMapTileLayer layerCollision = (TiledMapTileLayer) lmc.map.getLayers().get(1);
-                //System.out.println("layer collision : " + layerCollision.);
+            float decalageX = facteurCase*-0.5f;
+            float decalageY = facteurCase*-0.5f;
+            float facteur = 0.5f;
 
-                Archetype murArchetype = GameArchetypes.MUR_ARCHETYPE
-                        .build(getWorld());
+            float facteurX = 0.5f;
+            float facteurY = 0.5f;
+            //collision
+            TiledMapTileLayer layerCollision = (TiledMapTileLayer) lmc.map.getLayers().get(1);
+            //System.out.println("layer collision : " + layerCollision.);
 
-                for (int i = 0; i < layerCollision.getWidth(); i++) {
-                    for (int j = 0; j < layerCollision.getHeight(); j++) {
-                        if (layerCollision.getCell(i,j) != null){
-                            Entity mur = getWorld().createEntity(murArchetype);
-                            listeEntiteADesactiver.add(mur);
-                            BodyDef bodyDef = new BodyDef();
-                            mur.getComponent(PhysicsComponent.class).body = createBoundary((i*facteurX) - decalageX, (j*facteurY) - decalageY, facteur,facteur, bodyDef);
-                            mur.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
-                            mur.getComponent(ActiveEntity.class).active = false;
-                        }
+            Archetype murArchetype = GameArchetypes.MUR_ARCHETYPE
+                    .build(getWorld());
+
+            for (int i = 0; i < layerCollision.getWidth(); i++) {
+                for (int j = 0; j < layerCollision.getHeight(); j++) {
+                    if (layerCollision.getCell(i,j) != null){
+                        Entity mur = getWorld().createEntity(murArchetype);
+                        listeEntiteADesactiver.add(mur);
+                        BodyDef bodyDef = new BodyDef();
+                        mur.getComponent(PhysicsComponent.class).body = createBoundary((i*facteurX) - decalageX, (j*facteurY) - decalageY, facteur,facteur, bodyDef);
+                        mur.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
+                        mur.getComponent(ActiveEntity.class).active = false;
                     }
                 }
+            }
 
 
 
 
-                // objet entities
-                MapObjects so = lmc.map.getLayers().get(2).getObjects();
+            // objet entities
+            MapObjects so = lmc.map.getLayers().get(2).getObjects();
 
-                float facteurEntity = 0.6f;
+            float facteurEntity = 0.6f;
 
-                Archetype monsterArchetype = GameArchetypes.MONSTRE_ARCHETYPE
-                        .build(getWorld());
+            Archetype monsterArchetype = GameArchetypes.MONSTRE_ARCHETYPE
+                    .build(getWorld());
 
-                Archetype porteArchetype = GameArchetypes.PORTE_ARCHETYPE
-                        .build(getWorld());
+            Archetype porteArchetype = GameArchetypes.PORTE_ARCHETYPE
+                    .build(getWorld());
 
-                Archetype trapArchetype = GameArchetypes.TRAP_ENTITY_ARCHETYPE
-                        .build(getWorld());
+            Archetype trapArchetype = GameArchetypes.TRAP_ENTITY_ARCHETYPE
+                    .build(getWorld());
 
-                Archetype teleporteurArchetype = GameArchetypes.TELEPORTEUR_ENTITY_ARCHETYPE
-                        .build(getWorld());
+            Archetype teleporteurArchetype = GameArchetypes.TELEPORTEUR_ENTITY_ARCHETYPE
+                    .build(getWorld());
 
-                Archetype powerUpArchetype = GameArchetypes.POWER_UP_ARCHETYPE
-                        .build(getWorld());
+            Archetype powerUpArchetype = GameArchetypes.POWER_UP_ARCHETYPE
+                    .build(getWorld());
 
-                Archetype armeArchetype = GameArchetypes.ARME_ARCHETYPE
-                        .build(getWorld());
+            Archetype armeArchetype = GameArchetypes.ARME_ARCHETYPE
+                    .build(getWorld());
 
 
-                for (int i = 0; i < so.getCount(); i++) {
-                    System.out.println("siu:" +Float.parseFloat(so.get(i).getProperties().get("x spawn").toString()));
+            for (int i = 0; i < so.getCount(); i++) {
+                System.out.println("siu:" +Float.parseFloat(so.get(i).getProperties().get("x spawn").toString()));
 
-                    switch (so.get(i).getProperties().get("categorie").toString()){
-                        case "monstre":
-                            Entity monstre = getWorld().createEntity(monsterArchetype);
-                            listeEntiteADesactiver.add(monstre);
+                switch (so.get(i).getProperties().get("categorie").toString()){
+                    case "monstre":
+                        Entity monstre = getWorld().createEntity(monsterArchetype);
+                        listeEntiteADesactiver.add(monstre);
 
-                            //Body Monstre
-                            BodyDef playerBodyDef = new BodyDef();
-                            playerBodyDef.type = BodyDef.BodyType.KinematicBody;
-                            playerBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
-                            Body playerBody = box2dworld.createBody(playerBodyDef);
+                        //Body Monstre
+                        BodyDef playerBodyDef = new BodyDef();
+                        playerBodyDef.type = BodyDef.BodyType.KinematicBody;
+                        playerBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
+                        Body playerBody = box2dworld.createBody(playerBodyDef);
 
-                            PolygonShape boxShape = new PolygonShape();
-                            boxShape.setAsBox(0.2f, 0.2f);
+                        PolygonShape boxShape = new PolygonShape();
+                        boxShape.setAsBox(0.2f, 0.2f);
 
-                            FixtureDef boxFixtureDef = new FixtureDef();
-                            boxFixtureDef.shape = boxShape;
-                            boxFixtureDef.density = 1;
                         FixtureDef boxFixtureDef = new FixtureDef();
+                        boxFixtureDef.shape = boxShape;
+                        boxFixtureDef.density = 1;
                         boxFixtureDef.shape = boxShape;
                         boxFixtureDef.density = 1;
                         boxFixtureDef.isSensor=true;
 
-                            Fixture fixture = playerBody.createFixture(boxFixtureDef);
-                            fixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Monster, monstre));
-                            boxShape.dispose();
+                        Fixture fixture = playerBody.createFixture(boxFixtureDef);
+                        fixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Monster, monstre));
+                        boxShape.dispose();
 
-                            //Composant relatif à la salle dans laquelle il se trouve
-                            monstre.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
-                            monstre.getComponent(ActiveEntity.class).active = false;
-                            monstre.getComponent(PhysicsComponent.class).body = playerBody;
-                            monstre.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 4, "./skeleton_idle.png", 0.5f));
-                            monstre.getComponent(AnimationListComponent.class).setCurrentAnimation(0);
+                        //Composant relatif à la salle dans laquelle il se trouve
+                        monstre.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
+                        monstre.getComponent(ActiveEntity.class).active = false;
+                        monstre.getComponent(PhysicsComponent.class).body = playerBody;
+                        monstre.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 4, "./skeleton_idle.png", 0.5f));
+                        monstre.getComponent(AnimationListComponent.class).setCurrentAnimation(0);
                         //Composant relatif à la salle dans laquelle il se trouve
                         monstre.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
                         monstre.getComponent(ActiveEntity.class).active = false;
@@ -189,135 +190,135 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         monstre.getComponent(MonsterMovementComponent.class).setMovementType(MonsterMovementType.MOVE_TOWARD_PLAYER_IGNORE_COLLISION);
                         monstre.getComponent(MonsterMovementComponent.class).player=joueur;
 
-                            break;
-                        case "powerUps":
-                            Entity powerUp = getWorld().createEntity(powerUpArchetype);
-                            listeEntiteADesactiver.add(powerUp);
+                        break;
+                    case "powerUps":
+                        Entity powerUp = getWorld().createEntity(powerUpArchetype);
+                        listeEntiteADesactiver.add(powerUp);
 
-                            BodyDef powerUpBodyDef = new BodyDef();
-                            powerUpBodyDef.type = BodyDef.BodyType.DynamicBody;
-                            powerUpBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
-                            Body powerUpBody = box2dworld.createBody(powerUpBodyDef);
+                        BodyDef powerUpBodyDef = new BodyDef();
+                        powerUpBodyDef.type = BodyDef.BodyType.DynamicBody;
+                        powerUpBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
+                        Body powerUpBody = box2dworld.createBody(powerUpBodyDef);
 
-                            PolygonShape boxShapePowerUp = new PolygonShape();
-                            boxShapePowerUp.setAsBox(0.2f, 0.2f);
+                        PolygonShape boxShapePowerUp = new PolygonShape();
+                        boxShapePowerUp.setAsBox(0.2f, 0.2f);
 
-                            FixtureDef boxFixtureDefPowerUp = new FixtureDef();
-                            boxFixtureDefPowerUp.shape = boxShapePowerUp;
-                            boxFixtureDefPowerUp.density = 1;
-                            boxFixtureDefPowerUp.isSensor = true;
+                        FixtureDef boxFixtureDefPowerUp = new FixtureDef();
+                        boxFixtureDefPowerUp.shape = boxShapePowerUp;
+                        boxFixtureDefPowerUp.density = 1;
+                        boxFixtureDefPowerUp.isSensor = true;
 
-                            Fixture fixturePowerUp = powerUpBody.createFixture(boxFixtureDefPowerUp);
-                            fixturePowerUp.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.PowerUp, powerUp));
-                            boxShapePowerUp.dispose();
+                        Fixture fixturePowerUp = powerUpBody.createFixture(boxFixtureDefPowerUp);
+                        fixturePowerUp.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.PowerUp, powerUp));
+                        boxShapePowerUp.dispose();
 
-                            //Composant relatif à la salle dans laquelle il se trouve
-                            powerUp.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
-                            powerUp.getComponent(ActiveEntity.class).active = false;
-                            powerUp.getComponent(PhysicsComponent.class).body = powerUpBody;
-                            powerUp.getComponent(PowerUpTypeComponent.class).powerUpType= PowerUpType.SPEED_TEMPO;
-                            powerUp.getComponent(PowerUpTypeComponent.class).duration=3000;
-                            powerUp.getComponent(PowerUpTypeComponent.class).value=3f;
-                            powerUp.getComponent(SpriteComponent.class).setSprite("./powerup_speed.png");
-                            break;
+                        //Composant relatif à la salle dans laquelle il se trouve
+                        powerUp.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
+                        powerUp.getComponent(ActiveEntity.class).active = false;
+                        powerUp.getComponent(PhysicsComponent.class).body = powerUpBody;
+                        powerUp.getComponent(PowerUpTypeComponent.class).powerUpType= PowerUpType.SPEED_TEMPO;
+                        powerUp.getComponent(PowerUpTypeComponent.class).duration=3000;
+                        powerUp.getComponent(PowerUpTypeComponent.class).value=3f;
+                        powerUp.getComponent(SpriteComponent.class).setSprite("./powerup_speed.png");
+                        break;
 
-                        case "porte":
-                            Entity porte = getWorld().createEntity(porteArchetype);
-                            listeEntiteADesactiver.add(porte);
+                    case "porte":
+                        Entity porte = getWorld().createEntity(porteArchetype);
+                        listeEntiteADesactiver.add(porte);
 
-                            //Body porte
-                            BodyDef porteBodyDef = new BodyDef();
-                            porteBodyDef.type = BodyDef.BodyType.StaticBody;
-                            porteBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
-                            Body porteBody = box2dworld.createBody(porteBodyDef);
+                        //Body porte
+                        BodyDef porteBodyDef = new BodyDef();
+                        porteBodyDef.type = BodyDef.BodyType.StaticBody;
+                        porteBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
+                        Body porteBody = box2dworld.createBody(porteBodyDef);
 
-                            PolygonShape porteboxShape = new PolygonShape();
-                            porteboxShape.setAsBox(0.2f, 0.2f);
+                        PolygonShape porteboxShape = new PolygonShape();
+                        porteboxShape.setAsBox(0.2f, 0.2f);
 
-                            FixtureDef porteboxFixtureDef = new FixtureDef();
-                            porteboxFixtureDef.shape = porteboxShape;
-                            porteboxFixtureDef.density = 1;
+                        FixtureDef porteboxFixtureDef = new FixtureDef();
+                        porteboxFixtureDef.shape = porteboxShape;
+                        porteboxFixtureDef.density = 1;
 
-                            Fixture portefixture = porteBody.createFixture(porteboxFixtureDef);
-                            portefixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Porte, porte));
-                            porteboxShape.dispose();
+                        Fixture portefixture = porteBody.createFixture(porteboxFixtureDef);
+                        portefixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Porte, porte));
+                        porteboxShape.dispose();
 
-                            porte.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
-                            porte.getComponent(PorteComponent.class).idMapDansLaquelleElleSeTrouve = lmc.idmap;
-                            porte.getComponent(PorteComponent.class).idMapVersLaquelleElleMene = Integer.parseInt(so.get(i).getProperties().get("versSalle").toString());
+                        porte.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
+                        porte.getComponent(PorteComponent.class).idMapDansLaquelleElleSeTrouve = lmc.idmap;
+                        porte.getComponent(PorteComponent.class).idMapVersLaquelleElleMene = Integer.parseInt(so.get(i).getProperties().get("versSalle").toString());
 
-                            porte.getComponent(PhysicsComponent.class).body = porteBody;
-                            break;
+                        porte.getComponent(PhysicsComponent.class).body = porteBody;
+                        break;
 
-                        case "piege":
-                            Entity trap = getWorld().createEntity(trapArchetype);
-                            listeEntiteADesactiver.add(trap);
+                    case "piege":
+                        Entity trap = getWorld().createEntity(trapArchetype);
+                        listeEntiteADesactiver.add(trap);
 
-                            //Body trap
-                            BodyDef trapBodyDef = new BodyDef();
-                            trapBodyDef.type = BodyDef.BodyType.StaticBody;
-                            trapBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
-                            Body trapBody = box2dworld.createBody(trapBodyDef);
+                        //Body trap
+                        BodyDef trapBodyDef = new BodyDef();
+                        trapBodyDef.type = BodyDef.BodyType.StaticBody;
+                        trapBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
+                        Body trapBody = box2dworld.createBody(trapBodyDef);
 
-                            PolygonShape trapboxShape = new PolygonShape();
-                            trapboxShape.setAsBox(0.2f, 0.2f);
+                        PolygonShape trapboxShape = new PolygonShape();
+                        trapboxShape.setAsBox(0.2f, 0.2f);
 
-                            FixtureDef trapboxFixtureDef = new FixtureDef();
-                            trapboxFixtureDef.shape = trapboxShape;
-                            trapboxFixtureDef.density = 1;
+                        FixtureDef trapboxFixtureDef = new FixtureDef();
+                        trapboxFixtureDef.shape = trapboxShape;
+                        trapboxFixtureDef.density = 1;
 
-                            Fixture trapfixture = trapBody.createFixture(trapboxFixtureDef);
-                            trapfixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Trap, trap));
-                            trapboxShape.dispose();
+                        Fixture trapfixture = trapBody.createFixture(trapboxFixtureDef);
+                        trapfixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Trap, trap));
+                        trapboxShape.dispose();
 
-                            trap.getComponent(ContactDamageComponent.class).setDamages(Integer.parseInt(so.get(i).getProperties().get("damages").toString()));
+                        trap.getComponent(ContactDamageComponent.class).setDamages(Integer.parseInt(so.get(i).getProperties().get("damages").toString()));
 
-                            trap.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
+                        trap.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
 
                         trap.getComponent(ActifSalleActuelleComponent.class).action = true;
 
-                            trap.getComponent(PhysicsComponent.class).body = trapBody;
-                            trap.getComponent(SpriteComponent.class).setSprite("./trap_pikes.png");
-                            break;
+                        trap.getComponent(PhysicsComponent.class).body = trapBody;
+                        trap.getComponent(SpriteComponent.class).setSprite("./trap_pikes.png");
+                        break;
 
-                        case "teleporteur":
-                            Entity teleporteur = getWorld().createEntity(teleporteurArchetype);
-                            listeEntiteADesactiver.add(teleporteur);
+                    case "teleporteur":
+                        Entity teleporteur = getWorld().createEntity(teleporteurArchetype);
+                        listeEntiteADesactiver.add(teleporteur);
 
-                            //Body Teleporteur
-                            BodyDef teleporteurBodyDef = new BodyDef();
-                            teleporteurBodyDef.type = BodyDef.BodyType.StaticBody;
-                            float coordonneeX = Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX;
-                            float coordonneeY = Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY;
-                            teleporteurBodyDef.position.set(coordonneeX, coordonneeY);
-                            Body teleporteurBody = box2dworld.createBody(teleporteurBodyDef);
+                        //Body Teleporteur
+                        BodyDef teleporteurBodyDef = new BodyDef();
+                        teleporteurBodyDef.type = BodyDef.BodyType.StaticBody;
+                        float coordonneeX = Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX;
+                        float coordonneeY = Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY;
+                        teleporteurBodyDef.position.set(coordonneeX, coordonneeY);
+                        Body teleporteurBody = box2dworld.createBody(teleporteurBodyDef);
 
-                            PolygonShape teleporteurboxShape = new PolygonShape();
-                            teleporteurboxShape.setAsBox(0.2f, 0.2f);
+                        PolygonShape teleporteurboxShape = new PolygonShape();
+                        teleporteurboxShape.setAsBox(0.2f, 0.2f);
 
-                            FixtureDef teleporteurboxFixtureDef = new FixtureDef();
-                            teleporteurboxFixtureDef.shape = teleporteurboxShape;
-                            teleporteurboxFixtureDef.density = 1;
+                        FixtureDef teleporteurboxFixtureDef = new FixtureDef();
+                        teleporteurboxFixtureDef.shape = teleporteurboxShape;
+                        teleporteurboxFixtureDef.density = 1;
 
-                            Fixture teleporteurfixture = teleporteurBody.createFixture(teleporteurboxFixtureDef);
-                            teleporteurfixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Teleporteur, teleporteur));
-                            teleporteurboxShape.dispose();
+                        Fixture teleporteurfixture = teleporteurBody.createFixture(teleporteurboxFixtureDef);
+                        teleporteurfixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Teleporteur, teleporteur));
+                        teleporteurboxShape.dispose();
 
-                            //idmap du teleporteur
-                            teleporteur.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
+                        //idmap du teleporteur
+                        teleporteur.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
 
-                            //information tp component
-                            teleporteur.getComponent(InformationTPComponent.class).idTeleporteurAssocie = Integer.parseInt(so.get(i).getProperties().get("TPRelie").toString());
-                            teleporteur.getComponent(InformationTPComponent.class).idTeleporteur = Integer.parseInt(so.get(i).getProperties().get("IDTP").toString());
-                            teleporteur.getComponent(InformationTPComponent.class).coordonneeX = coordonneeX;
-                            teleporteur.getComponent(InformationTPComponent.class).coordonneeY = coordonneeY;
-                            teleporteur.getComponent(InformationTPComponent.class).directionDeSortie = so.get(i).getProperties().get("directionSortie").toString();
-                            teleporteur.getComponent(SpriteComponent.class).setSprite("./test.png");
+                        //information tp component
+                        teleporteur.getComponent(InformationTPComponent.class).idTeleporteurAssocie = Integer.parseInt(so.get(i).getProperties().get("TPRelie").toString());
+                        teleporteur.getComponent(InformationTPComponent.class).idTeleporteur = Integer.parseInt(so.get(i).getProperties().get("IDTP").toString());
+                        teleporteur.getComponent(InformationTPComponent.class).coordonneeX = coordonneeX;
+                        teleporteur.getComponent(InformationTPComponent.class).coordonneeY = coordonneeY;
+                        teleporteur.getComponent(InformationTPComponent.class).directionDeSortie = so.get(i).getProperties().get("directionSortie").toString();
+                        teleporteur.getComponent(SpriteComponent.class).setSprite("./test.png");
 
 
-                            teleporteur.getComponent(PhysicsComponent.class).body = teleporteurBody;
+                        teleporteur.getComponent(PhysicsComponent.class).body = teleporteurBody;
 
-                            listeTpSalle.add(teleporteur);
+                        listeTpSalle.add(teleporteur);
 
                         break;
                     case "arme":
@@ -327,7 +328,9 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         //Body trap
                         BodyDef armeBodyDef = new BodyDef();
                         armeBodyDef.type = BodyDef.BodyType.StaticBody;
-                        armeBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
+
+                        System.out.println( Math.round( (float) so.get(i).getProperties().get("x")/16));
+                        armeBodyDef.position.set((float) so.get(i).getProperties().get("x")/16*facteurX - decalageX, Math.round( (float) so.get(i).getProperties().get("y")/16)*facteurY - decalageY);
                         Body armeBody = box2dworld.createBody(armeBodyDef);
 
                         PolygonShape armeboxShape = new PolygonShape();
@@ -352,45 +355,45 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
 
 
 
-                }
+            }
 
-                //lier les teleporteurs entre eux
-                for (Entity tps: listeTpSalle) {
-                    //System.out.println(tps.getComponent(InformationTPComponent.class).);
-                    for (Entity tpsTmp: listeTpSalle) {
-                        if (tps.getComponent(InformationTPComponent.class).idTeleporteurAssocie == tpsTmp.getComponent(InformationTPComponent.class).idTeleporteur){
-                            Float decalageTpX = 0.0f;
-                            Float decalageTpY = 0.0f;
-                            switch (tps.getComponent(InformationTPComponent.class).directionDeSortie){
-                                case "droite" :
-                                    decalageTpX = facteurCase;
-                                    break;
-                                case "gauche" :
-                                    decalageTpX = -facteurCase;
-                                    break;
-                                case "haut" :
-                                    decalageTpY = facteurCase;
-                                    break;
-                                case "bas" :
-                                    decalageTpY = -facteurCase;
-                                    break;
-                            }
-                            System.out.println();
-
-                            tps.getComponent(InformationTPComponent.class).TPVersLaPositionX = tpsTmp.getComponent(InformationTPComponent.class).coordonneeX + decalageTpX;
-                            tps.getComponent(InformationTPComponent.class).TPVersLaPositionY = tpsTmp.getComponent(InformationTPComponent.class).coordonneeY + decalageTpY;
+            //lier les teleporteurs entre eux
+            for (Entity tps: listeTpSalle) {
+                //System.out.println(tps.getComponent(InformationTPComponent.class).);
+                for (Entity tpsTmp: listeTpSalle) {
+                    if (tps.getComponent(InformationTPComponent.class).idTeleporteurAssocie == tpsTmp.getComponent(InformationTPComponent.class).idTeleporteur){
+                        Float decalageTpX = 0.0f;
+                        Float decalageTpY = 0.0f;
+                        switch (tps.getComponent(InformationTPComponent.class).directionDeSortie){
+                            case "droite" :
+                                decalageTpX = facteurCase;
+                                break;
+                            case "gauche" :
+                                decalageTpX = -facteurCase;
+                                break;
+                            case "haut" :
+                                decalageTpY = facteurCase;
+                                break;
+                            case "bas" :
+                                decalageTpY = -facteurCase;
+                                break;
                         }
+                        System.out.println();
+
+                        tps.getComponent(InformationTPComponent.class).TPVersLaPositionX = tpsTmp.getComponent(InformationTPComponent.class).coordonneeX + decalageTpX;
+                        tps.getComponent(InformationTPComponent.class).TPVersLaPositionY = tpsTmp.getComponent(InformationTPComponent.class).coordonneeY + decalageTpY;
                     }
                 }
-
-
-
-                e.getComponent(LoadMapComponent.class).loaded = true;
-                salleActuelle = joueur.getComponent(SalleAssocieeComponent.class).idMap;
-                mapChargeeActuelle = lmc;
             }
+
+
+
+            e.getComponent(LoadMapComponent.class).loaded = true;
+            salleActuelle = joueur.getComponent(SalleAssocieeComponent.class).idMap;
+            mapChargeeActuelle = lmc;
         }
     }
+}
 
     private Body createBoundary(float x, float y, float width, float height, BodyDef bdf) {
 
