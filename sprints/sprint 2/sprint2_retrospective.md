@@ -1,6 +1,6 @@
 
 
-## Sprint 1 rétrospective :
+## Sprint 2 rétrospective :
 
 
 - **Positif  :**
