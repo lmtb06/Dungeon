@@ -14,7 +14,7 @@ package components {
     }
     class SpriteComponent {
         - sprite : Sprite
-         + SpriteComponent (String textureFile)
+         + setSprite (String textureFile)
          + getSprite () : Sprite
     }
 
@@ -27,11 +27,13 @@ package components {
 
 package utils{
     class AnimationData {
-        - columns : int
-        - rows : int
         - animation : Animation<TextureRegion>
-        + AnimationData (int columns, int rows, String textureFile) : void
+        - stateTime : float
+        + AnimationData (int columns, int rows, String textureFile)
+        + AnimationData (int columns, int rows, String textureFile, float frameDuration)
         + getAnimation() : Animation<TextureRegion>
+        + getStateTime () : float
+        + addToStateTime (float time)
     }
 }
 
@@ -39,11 +41,16 @@ package systems {
 
     class EntityRenderSystem{
         - batch : SpriteBatch
+        - viewport : Viewport
+        + EntityRenderSystem(Viewport viewport)
         # process (Entity e)
     }
 
     class WorldRendererSystem {
-        # processSystem()
+        - renderer : OrthogonalTiledMapRenderer
+        - viewport : Viewport
+        + WorldRenderSystem(Viewport viewport)
+        # process(Entity e)
     }
 
 
