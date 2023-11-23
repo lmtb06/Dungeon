@@ -1,6 +1,6 @@
 # Interface graphique
-- En tant que joueur, je veux avoir des icônes dédiées pour savoir quelle arme j'ai en ma possession
-- En tant que joueur, je veux avoir un retour visuel rapide du temps qu'il me reste pour les différents power ups.
+- **implémenté** En tant que joueur, je veux avoir des icônes dédiées pour savoir quelle arme j'ai en ma possession
+- **implémenté** En tant que joueur, je veux avoir un retour visuel rapide du temps qu'il me reste pour les différents power ups.
 - En tant que joueur, je veux avoir un écran de fin lorsque je quitte le dernier étage
 - En tant que joueur, je veux avoir une minimap qui met en évidence la salle où je suis, afin de pouvoir me situer dans l'étage.
 - **implémenté** En tant que joueur, je veux avoir un rendu graphique du jeu.
