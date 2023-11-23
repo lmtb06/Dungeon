@@ -13,21 +13,42 @@ import com.dungeondevs.components.Level.PorteComponent;
 import com.dungeondevs.components.Level.SalleAssocieeComponent;
 import com.dungeondevs.components.Maps.ActiveEntity;
 import com.dungeondevs.components.Maps.LoadMapComponent;
+import com.dungeondevs.components.rendering.AnimationListComponent;
+import com.dungeondevs.components.rendering.SpriteComponent;
+import com.dungeondevs.utils.AnimationData;
 import com.dungeondevs.utils.FixtureUserData;
 import com.dungeondevs.utils.GameArchetypes;
 
 import java.util.ArrayList;
 
+/**
+ * System d'initialiseur de salle. Le systeme va lire la tiledMap dans laquelle se trouve le joueur et afficher les différentes entités de la salle
+ */
 @All({LoadMapComponent.class})
 public class RoomIntializerSystem extends EntityProcessingSystem {
 
+    /**
+     * attribut désignant le world dans lequel iront les bodys des différentes nouvelles entités
+     */
     private World box2dworld;
 
+    /**
+     * attribut ayant pour rôle de désigner la salle actuelle, si cette dernière change, les entités seront supprimés et remplacées par celles de la nouvelle salle
+     */
     public int salleActuelle = -1;
 
+    /**
+     * Le joueur, on en a besoin pour récupérer la salle dans laquelle il se trouve
+     */
     public Entity joueur;
 
-    public Array<Body> listeEntiteADesactiver;
+    /**
+     * liste ayant pour but de stocker les différents bodys à supprimer du world au moment du changement de salle.
+     */
+    public Array<Entity> listeEntiteADesactiver;
+
+    private LoadMapComponent mapChargeeActuelle;
+
 
     public RoomIntializerSystem(World world) {
         listeEntiteADesactiver = new Array<>();
@@ -37,27 +58,46 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
     @Override
     protected void process(Entity e) {
 
-        //System.out.println(joueur.getComponent(SalleAssocieeComponent.class).idMap != salleActuelle);
+        /**
+         * On vérifie si le joueur a traversé une porte, si c'est le cas, son idmap a changé et sera différent de la salle actuelle
+         */
         if (joueur!=null && joueur.getComponent(SalleAssocieeComponent.class).idMap != salleActuelle ){
+
+            if(mapChargeeActuelle != null)
+                mapChargeeActuelle.loaded = false;
+
+            /**
+             * Comme notre systeme boucle sur toutes les maps
+             * On va ici s'intéresser uniquement à la map dans laquelle se trouve le joueur en la désignant grace à un if
+             */
             if (joueur.getComponent(SalleAssocieeComponent.class).idMap == e.getComponent(LoadMapComponent.class).idmap){
 
-            LoadMapComponent lmc = e.getComponent(LoadMapComponent.class);
+                LoadMapComponent lmc = e.getComponent(LoadMapComponent.class);
 
-            ArrayList<Entity> listeTpSalle = new ArrayList();
+                /**
+                 * Liste qui va stocker les différents téléporteurs pour pouvoir les liés après leurs créations
+                 */
+                ArrayList<Entity> listeTpSalle = new ArrayList();
 
-                this.box2dworld.getBodies(listeEntiteADesactiver);
+                //this.box2dworld.getBodies(listeEntiteADesactiver);
 
-            for (Body entitsBody: listeEntiteADesactiver) {
-                if (joueur.getComponent(PhysicsComponent.class).body != entitsBody){
-                    this.box2dworld.destroyBody(entitsBody);
+                for (Entity entitsBody: listeEntiteADesactiver) {
+                    PhysicsComponent physics = entitsBody.getComponent(PhysicsComponent.class);
+                    if (physics != null && joueur.getComponent(PhysicsComponent.class).body != physics.body){
+                        this.box2dworld.destroyBody(physics.body);
+                        getWorld().deleteEntity(entitsBody);
+                    }
                 }
+                listeEntiteADesactiver.clear();
 
-            }
+
+
+            int tailleCase = 16;
 
             float facteurCase = 0.5f;
 
-            float decalageX = facteurCase*4;
-                float decalageY = facteurCase*2;
+            float decalageX = facteurCase*-0.5f;
+            float decalageY = facteurCase*-0.5f;
             float facteur = 0.5f;
 
             float facteurX = 0.5f;
@@ -73,6 +113,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                 for (int j = 0; j < layerCollision.getHeight(); j++) {
                     if (layerCollision.getCell(i,j) != null){
                         Entity mur = getWorld().createEntity(murArchetype);
+                        listeEntiteADesactiver.add(mur);
                         BodyDef bodyDef = new BodyDef();
                         mur.getComponent(PhysicsComponent.class).body = createBoundary((i*facteurX) - decalageX, (j*facteurY) - decalageY, facteur,facteur, bodyDef);
                         mur.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
@@ -101,8 +142,11 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
             Archetype teleporteurArchetype = GameArchetypes.TELEPORTEUR_ENTITY_ARCHETYPE
                     .build(getWorld());
 
-                Archetype powerUpArchetype = GameArchetypes.POWER_UP_ARCHETYPE
-                        .build(getWorld());
+            Archetype powerUpArchetype = GameArchetypes.POWER_UP_ARCHETYPE
+                    .build(getWorld());
+
+            Archetype armeArchetype = GameArchetypes.ARME_ARCHETYPE
+                    .build(getWorld());
 
 
             for (int i = 0; i < so.getCount(); i++) {
@@ -111,10 +155,11 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                 switch (so.get(i).getProperties().get("categorie").toString()){
                     case "monstre":
                         Entity monstre = getWorld().createEntity(monsterArchetype);
+                        listeEntiteADesactiver.add(monstre);
 
                         //Body Monstre
                         BodyDef playerBodyDef = new BodyDef();
-                        playerBodyDef.type = BodyDef.BodyType.DynamicBody;
+                        playerBodyDef.type = BodyDef.BodyType.KinematicBody;
                         playerBodyDef.position.set(Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX, Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY);
                         Body playerBody = box2dworld.createBody(playerBodyDef);
 
@@ -124,6 +169,9 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         FixtureDef boxFixtureDef = new FixtureDef();
                         boxFixtureDef.shape = boxShape;
                         boxFixtureDef.density = 1;
+                        boxFixtureDef.shape = boxShape;
+                        boxFixtureDef.density = 1;
+                        boxFixtureDef.isSensor=true;
 
                         Fixture fixture = playerBody.createFixture(boxFixtureDef);
                         fixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Monster, monstre));
@@ -133,10 +181,19 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         monstre.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
                         monstre.getComponent(ActiveEntity.class).active = false;
                         monstre.getComponent(PhysicsComponent.class).body = playerBody;
+                        monstre.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 4, "./skeleton_idle.png", 0.5f));
+                        monstre.getComponent(AnimationListComponent.class).setCurrentAnimation(0);
+                        //Composant relatif à la salle dans laquelle il se trouve
+                        monstre.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
+                        monstre.getComponent(ActiveEntity.class).active = false;
+                        monstre.getComponent(PhysicsComponent.class).body = playerBody;
+                        monstre.getComponent(MonsterMovementComponent.class).setMovementType(MonsterMovementType.MOVE_TOWARD_PLAYER_IGNORE_COLLISION);
+                        monstre.getComponent(MonsterMovementComponent.class).player=joueur;
 
                         break;
                     case "powerUps":
                         Entity powerUp = getWorld().createEntity(powerUpArchetype);
+                        listeEntiteADesactiver.add(powerUp);
 
                         BodyDef powerUpBodyDef = new BodyDef();
                         powerUpBodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -162,10 +219,12 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         powerUp.getComponent(PowerUpTypeComponent.class).powerUpType= PowerUpType.SPEED_TEMPO;
                         powerUp.getComponent(PowerUpTypeComponent.class).duration=3000;
                         powerUp.getComponent(PowerUpTypeComponent.class).value=3f;
+                        powerUp.getComponent(SpriteComponent.class).setSprite("./powerup_speed.png");
                         break;
 
                     case "porte":
                         Entity porte = getWorld().createEntity(porteArchetype);
+                        listeEntiteADesactiver.add(porte);
 
                         //Body porte
                         BodyDef porteBodyDef = new BodyDef();
@@ -193,6 +252,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
 
                     case "piege":
                         Entity trap = getWorld().createEntity(trapArchetype);
+                        listeEntiteADesactiver.add(trap);
 
                         //Body trap
                         BodyDef trapBodyDef = new BodyDef();
@@ -215,19 +275,21 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
 
                         trap.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
 
-                        trap.getComponent(PiegeActifComponent.class).action = true;
+                        trap.getComponent(ActifSalleActuelleComponent.class).action = true;
 
                         trap.getComponent(PhysicsComponent.class).body = trapBody;
+                        trap.getComponent(SpriteComponent.class).setSprite("./trap_pikes.png");
                         break;
 
                     case "teleporteur":
                         Entity teleporteur = getWorld().createEntity(teleporteurArchetype);
+                        listeEntiteADesactiver.add(teleporteur);
 
                         //Body Teleporteur
                         BodyDef teleporteurBodyDef = new BodyDef();
                         teleporteurBodyDef.type = BodyDef.BodyType.StaticBody;
-                        Float coordonneeX = Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX;
-                        Float coordonneeY = Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY;
+                        float coordonneeX = Float.parseFloat(so.get(i).getProperties().get("x spawn").toString())*facteurX - decalageX;
+                        float coordonneeY = Float.parseFloat(so.get(i).getProperties().get("y spawn").toString())*facteurY - decalageY;
                         teleporteurBodyDef.position.set(coordonneeX, coordonneeY);
                         Body teleporteurBody = box2dworld.createBody(teleporteurBodyDef);
 
@@ -251,12 +313,43 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         teleporteur.getComponent(InformationTPComponent.class).coordonneeX = coordonneeX;
                         teleporteur.getComponent(InformationTPComponent.class).coordonneeY = coordonneeY;
                         teleporteur.getComponent(InformationTPComponent.class).directionDeSortie = so.get(i).getProperties().get("directionSortie").toString();
+                        teleporteur.getComponent(SpriteComponent.class).setSprite("./test.png");
 
 
                         teleporteur.getComponent(PhysicsComponent.class).body = teleporteurBody;
 
                         listeTpSalle.add(teleporteur);
 
+                        break;
+                    case "arme":
+                        Entity arme = getWorld().createEntity(armeArchetype);
+                        listeEntiteADesactiver.add(arme);
+
+                        //Body trap
+                        BodyDef armeBodyDef = new BodyDef();
+                        armeBodyDef.type = BodyDef.BodyType.StaticBody;
+
+                        System.out.println( Math.round( (float) so.get(i).getProperties().get("x")/16));
+                        armeBodyDef.position.set((float) so.get(i).getProperties().get("x")/16*facteurX - decalageX, Math.round( (float) so.get(i).getProperties().get("y")/16)*facteurY - decalageY);
+                        Body armeBody = box2dworld.createBody(armeBodyDef);
+
+                        PolygonShape armeboxShape = new PolygonShape();
+                        armeboxShape.setAsBox(0.2f, 0.2f);
+
+                        FixtureDef armeboxFixtureDef = new FixtureDef();
+                        armeboxFixtureDef.shape = armeboxShape;
+                        armeboxFixtureDef.density = 1;
+
+                        Fixture armefixture = armeBody.createFixture(armeboxFixtureDef);
+                        armefixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Arme, arme));
+                        armeboxShape.dispose();
+
+                        arme.getComponent(ArmeComponent.class).nomArme = so.get(i).getProperties().get("type").toString();
+
+                        arme.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
+                        arme.getComponent(ActifSalleActuelleComponent.class).action = true;
+
+                        arme.getComponent(PhysicsComponent.class).body = armeBody;
                         break;
                 }
 
@@ -265,42 +358,42 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
             }
 
             //lier les teleporteurs entre eux
-                for (Entity tps: listeTpSalle) {
-                    //System.out.println(tps.getComponent(InformationTPComponent.class).);
-                    for (Entity tpsTmp: listeTpSalle) {
-                        if (tps.getComponent(InformationTPComponent.class).idTeleporteurAssocie == tpsTmp.getComponent(InformationTPComponent.class).idTeleporteur){
-                            Float decalageTpX = 0.0f;
-                            Float decalageTpY = 0.0f;
-                            switch (tps.getComponent(InformationTPComponent.class).directionDeSortie){
-                                case "droite" :
-                                    decalageTpX = facteurCase;
-                                    break;
-                                case "gauche" :
-                                    decalageTpX = -facteurCase;
-                                    break;
-                                case "haut" :
-                                    decalageTpY = facteurCase;
-                                    break;
-                                case "bas" :
-                                    decalageTpY = -facteurCase;
-                                    break;
-                            }
-                            System.out.println();
-
-                            tps.getComponent(InformationTPComponent.class).TPVersLaPositionX = tpsTmp.getComponent(InformationTPComponent.class).coordonneeX + decalageTpX;
-                            tps.getComponent(InformationTPComponent.class).TPVersLaPositionY = tpsTmp.getComponent(InformationTPComponent.class).coordonneeY + decalageTpY;
+            for (Entity tps: listeTpSalle) {
+                //System.out.println(tps.getComponent(InformationTPComponent.class).);
+                for (Entity tpsTmp: listeTpSalle) {
+                    if (tps.getComponent(InformationTPComponent.class).idTeleporteurAssocie == tpsTmp.getComponent(InformationTPComponent.class).idTeleporteur){
+                        Float decalageTpX = 0.0f;
+                        Float decalageTpY = 0.0f;
+                        switch (tps.getComponent(InformationTPComponent.class).directionDeSortie){
+                            case "droite" :
+                                decalageTpX = facteurCase;
+                                break;
+                            case "gauche" :
+                                decalageTpX = -facteurCase;
+                                break;
+                            case "haut" :
+                                decalageTpY = facteurCase;
+                                break;
+                            case "bas" :
+                                decalageTpY = -facteurCase;
+                                break;
                         }
+                        System.out.println();
+
+                        tps.getComponent(InformationTPComponent.class).TPVersLaPositionX = tpsTmp.getComponent(InformationTPComponent.class).coordonneeX + decalageTpX;
+                        tps.getComponent(InformationTPComponent.class).TPVersLaPositionY = tpsTmp.getComponent(InformationTPComponent.class).coordonneeY + decalageTpY;
                     }
                 }
+            }
 
 
 
             e.getComponent(LoadMapComponent.class).loaded = true;
             salleActuelle = joueur.getComponent(SalleAssocieeComponent.class).idMap;
-
-            }
-            }
+            mapChargeeActuelle = lmc;
+        }
     }
+}
 
     private Body createBoundary(float x, float y, float width, float height, BodyDef bdf) {
 
@@ -319,5 +412,9 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
 
     public void setJoueur(Entity joueur) {
         this.joueur = joueur;
+    }
+
+    public int getSalleActuelle() {
+        return salleActuelle;
     }
 }

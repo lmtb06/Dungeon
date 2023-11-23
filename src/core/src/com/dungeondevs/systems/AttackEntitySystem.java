@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.dungeondevs.components.AttackEntityComponent;
+import com.dungeondevs.components.DirectionComponent;
 import com.dungeondevs.components.PhysicsComponent;
 
 /**
@@ -19,6 +20,9 @@ public class AttackEntitySystem extends EntityProcessingSystem {
      * Le monde physique.
      */
     private World box2dWorld;
+
+    private Entity joueur;
+
 
     /**
      * Constructeur de base qui nécessite le monde physique.
@@ -37,12 +41,26 @@ public class AttackEntitySystem extends EntityProcessingSystem {
 
         // On récupère la position du corps à suivre et on bouge le corps du physicComponent pour suivre celui-ci, en fonction du décalage de l'entité.
         Vector2 boundPosition = attackEntityComponent.boundBody.getPosition();
-        physicsComponent.body.setTransform(boundPosition.x + attackEntityComponent.offset, boundPosition.y, 0);
+
+        if (joueur.getComponent(DirectionComponent.class).direction == "droite"){
+            physicsComponent.body.setTransform(boundPosition.x + attackEntityComponent.offset, boundPosition.y, 0);
+         }else if(joueur.getComponent(DirectionComponent.class).direction == "haut"){
+            physicsComponent.body.setTransform(boundPosition.x , boundPosition.y + attackEntityComponent.offset, 0);
+         }else if(joueur.getComponent(DirectionComponent.class).direction == "bas"){
+            physicsComponent.body.setTransform(boundPosition.x , boundPosition.y - attackEntityComponent.offset, 0);
+        }else if(joueur.getComponent(DirectionComponent.class).direction == "gauche"){
+            physicsComponent.body.setTransform(boundPosition.x - attackEntityComponent.offset, boundPosition.y , 0);
+        }
+
 
         // Si le temps de vie de l'entité d'attaque a expiré, on la supprime.
         if(TimeUtils.timeSinceMillis(attackEntityComponent.startTime) > attackEntityComponent.autoDestroyTime){
             world.deleteEntity(e);
             box2dWorld.destroyBody(e.getComponent(PhysicsComponent.class).body);
         }
+    }
+
+    public void setJoueur(Entity joueur) {
+        this.joueur = joueur;
     }
 }

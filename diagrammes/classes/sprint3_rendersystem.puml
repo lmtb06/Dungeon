@@ -1,0 +1,71 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package components {
+    class AnimationListComponent {
+
+        - currentAnimation : int
+        - animations : List<AnimationData>
+
+        + addAnimationData (AnimationData animationData) : void
+        + getCurrentAnimationData () : AnimationData
+        + setCurrentAnimation (int animation) : void
+
+    }
+    class SpriteComponent {
+        - sprite : Sprite
+         + setSprite (String textureFile)
+         + getSprite () : Sprite
+    }
+
+    class RoomRenderComponent {
+        - fileName : string
+        + RoomRenderComponent (String fileName)
+    }
+}
+
+
+package utils{
+    class AnimationData {
+        - animation : Animation<TextureRegion>
+        - stateTime : float
+        + AnimationData (int columns, int rows, String textureFile)
+        + AnimationData (int columns, int rows, String textureFile, float frameDuration)
+        + getAnimation() : Animation<TextureRegion>
+        + getStateTime () : float
+        + addToStateTime (float time)
+    }
+}
+
+package systems {
+
+    class EntityRenderSystem{
+        - batch : SpriteBatch
+        - viewport : Viewport
+        + EntityRenderSystem(Viewport viewport)
+        # process (Entity e)
+    }
+
+    class WorldRendererSystem {
+        - renderer : OrthogonalTiledMapRenderer
+        - viewport : Viewport
+        + WorldRenderSystem(Viewport viewport)
+        # process(Entity e)
+    }
+
+
+}
+
+package com.artemis {
+    class EntityProcessingSystem
+    class BaseSystem
+}
+
+EntityRenderSystem --> AnimationListComponent : "uses >"
+EntityRenderSystem --> SpriteComponent : "uses >"
+WorldRendererSystem --> RoomRenderComponent : "uses >"
+AnimationListComponent -->"*" AnimationData
+EntityRenderSystem -up-|> EntityProcessingSystem
+WorldRendererSystem -up-|> BaseSystem
+
+@enduml

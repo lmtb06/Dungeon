@@ -1,34 +1,28 @@
 # Interface graphique
-
-- En tant que joueur, je veux que le jeu affiche un écran de 'Game Over' avec une option de recommencer lorsque les points de vie de mon personnage arrivent à zéro, afin d’avoir un challenge et de comprendre la conséquence de la perte de tous mes points de vie  
-- En tant que joueur, je veux voir mes points de vie restants, afin de jauger le niveau de risque que je peux prendre sans mourir.  
+- En tant que joueur, je veux avoir des icônes dédiées pour savoir quelle arme j'ai en ma possession
+- En tant que joueur, je veux avoir un retour visuel rapide du temps qu'il me reste pour les différents power ups.
+- En tant que joueur, je veux avoir un écran de fin lorsque je quitte le dernier étage
+- En tant que joueur, je veux avoir une minimap qui met en évidence la salle où je suis, afin de ppouvoir me situer dans l'étage.
+- En tant que joueur, je veux avoir un rendu graphique du jeu.
+- En tant que joueur, je veux avoir certains rendus animes.
 
 # Personnage
 ## Actions
-- En tant que joueur, je veux pouvoir tuer des monstres et les faire disparaitre
-- En tant que joueur, je veux pouvoir améliorer les statistiques de mon personnage de façon temporaire et/ou permanente grâce à des power-ups, afin d’améliorer mon expérience de jeu et d’avoir une sensation de progression.  
-- En tant que joueur, je veux attaquer les ennemis qui se trouvent dans une certaine hitbox en appuyant sur une touche spécifique, afin de pouvoir combattre.
+- En tant que joueur, je veux pouvoir attaquer dans les 4 directions cardinales.
+- En tant que joueur, je souhaite pouvoir équiper les différentes armes qui seront dans le niveau
+
 ## Propriétés
-- En tant que joueur, je veux que le jeu se termine si les points de vie de mon personnage arrivent à zéro, afin d’avoir un challenge.
-- En tant que joueur, je veux que mon personnage soit invincible pendant 2 secondes après avoir reçu des dégâts, afin de ne pas me retrouver coincé entre plusieurs monstres et mourir sans pouvoir rien faire.
-- En tant que joueur, je veux que ma vitesse affecte mon déplacement, afin que les power-up puissent me permettre de naviguer plus rapidement dans le niveau.
-- En tant que joueur, je veux que mon personnage se déplace horizontalement, verticalement et en diagonal en fonction des touches (flèche gauche/droite, flèche haut/bas, combinaison composante horizontale et verticale)
+- En tant que joueur, je veux que l'arme que je possède modifie mes caractéristiques d'attaque.
 
 # Niveaux
 ## Actions
-- En tant que level designer, je veux pouvoir placer des monstres immobile dans le niveau
-- En tant que level designer, je souhaite pouvoir charger une carte via à un fichier (monstres, cases et power ups), afin de pouvoir créer des niveaux  
-- En tant que level designer, je veux pouvoir choisir la position initiale de différents monstres et du joueur au sein de chacune des salles
-- En tant que level designer, je veux pouvoir mettre différents power ups dans les cartes pour améliorer le personnage durant un laps de temps
-- En tant que level designer, je veux que ma salle puisse être connectée à d’autres salles via des portes placées sur les murs
-- En tant que level designer, je veux que certaines cases ne soient pas traversables
+- En tant que level designer, je veux pouvoir placer des armes dans les niveaux récupérables par le joueur
+- En tant que level designer, je veux que certaines entités ne réapparaissent pas lorsqu'on recharge la salle.
+- En tant que joueur, je veux pouvoir sauvegarder mon état de progression et continueras là où le joueur en était à chaque ois que je lance le jeu.
 
 # Monstres
 ## Attaques
-- En tant que level designer, je veux que certains monstres infligent des dégâts au personnage du joueur quand il entre en contact avec
-- En tant que level designer, je veux pouvoir placer des pièges et des téléporteurs pour amener de la difficulté et faire varier la manière dont le joueur doit appréhender chaque salle.
-
-
+- En tant que level designer, je veux pouvoir placer des monstres dans le niveau qui ne sont pas bloqués par les murs et qui sonc se décplacent en direction du joueur directeent.
 
 
 

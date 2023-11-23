@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+loop process
+    alt Si l'entité a un composant SpriteComponent
+        EntityRenderSystem -> Entity : Récupère le composant SpriteComponent
+        EntityRenderSystem <-- Entity : Retourne le composant
+        EntityRenderSystem -> Entity : Récupère le composant PhysicsComponent
+        EntityRenderSystem <-- Entity : Retourne le composant
+
+        EntityRenderSystem -> SpriteComponent : Demande le sprite
+        EntityRenderSystem <-- SpriteComponent : Retourne le sprite
+
+        EntityRenderSystem -> PhysicsComponent : Demande la position de l'entité
+        EntityRenderSystem <-- PhysicsComponent : Retourne la position
+
+        EntityRenderSystem -> EntityRenderSystem : affiche le sprite dans le batch à la \nposition correcte
+    else Si l'entité a un composant AnimationListComponent
+        EntityRenderSystem -> Entity : Récupère le composant AnimationListComponent
+        EntityRenderSystem <-- Entity : Retourne le composant
+        EntityRenderSystem -> Entity : Récupère le composant PhysicsComponent
+        EntityRenderSystem <-- Entity : Retourne le composant
+
+        EntityRenderSystem -> AnimationListComponent : Demande l'animation actuelle
+        EntityRenderSystem <-- AnimationListComponent : Retourne l'animation actuelle
+        EntityRenderSystem -> Animation : Récupère la texture au frame actuel
+        EntityRenderSystem <-- Animation : Renvoie la texture au frame actuel
+
+        EntityRenderSystem -> EntityRenderSystem : affiche le sprite dans le batch à la \nposition correcte
+    end
+end
+@enduml

@@ -4,11 +4,13 @@ import com.artemis.Entity;
 import com.artemis.annotations.All;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.physics.box2d.World;
-import com.dungeondevs.components.HealthComponent;
 import com.dungeondevs.components.PhysicsComponent;
-import com.dungeondevs.components.PiegeActifComponent;
+import com.dungeondevs.components.ActifSalleActuelleComponent;
 
-@All(PiegeActifComponent.class)
+/**
+ * System qui va boucler sur les pieges, si ils sont désactivés (quand quelqu'un marche dessus), le body sera supprimé du world
+ */
+@All(ActifSalleActuelleComponent.class)
 public class TrapExtinctionSystem extends EntityProcessingSystem {
     /**
      * Le monde physique.
@@ -24,7 +26,7 @@ public class TrapExtinctionSystem extends EntityProcessingSystem {
     }
     @Override
     protected void process(Entity e) {
-        PiegeActifComponent piegeActifComponent = e.getComponent(PiegeActifComponent.class);
+        ActifSalleActuelleComponent piegeActifComponent = e.getComponent(ActifSalleActuelleComponent.class);
         if(!piegeActifComponent.action){
             PhysicsComponent physicsComponent = e.getComponent(PhysicsComponent.class);
             box2DWorld.destroyBody(physicsComponent.body);
