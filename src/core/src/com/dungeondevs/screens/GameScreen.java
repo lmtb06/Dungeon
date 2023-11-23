@@ -193,7 +193,8 @@ public class GameScreen implements Screen, DungeonGameScreen {
         //Create a default box 1meter tall and 0.3 meter large and a mass of 10 kg for the box2d world
         BodyDef playerBodyDef = new BodyDef();
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
-        playerBodyDef.position.set(0, 0);
+        playerBodyDef.position.set(2, 2);
+        playerBodyDef.fixedRotation = true;
         Body playerBody = box2dWorld.createBody(playerBodyDef);
 
         PolygonShape boxShape = new PolygonShape();
@@ -210,23 +211,24 @@ public class GameScreen implements Screen, DungeonGameScreen {
         // Monde Artemis
         WorldConfiguration setup = new WorldConfigurationBuilder()
                 .with(new MapsLoaderSystem())
-                .with(new InputSystem())
-                .with(new MovementSystem())
+                .with(new RoomIntializerSystem(box2dWorld))
                 .with(new PhysicsSystem(box2dWorld, tempsParFrame))
+                .with(new InputSystem())
                 .with(new StateManagementSystem())
-                .with(new CollisionSystem(box2dWorld))
+                .with(new MovementSystem())
+                .with(new HealthSystem(box2dWorld))
+                .with(new InvincibilitySystem())
                 .with(new AttackSystem(box2dWorld))
                 .with(new AttackEntitySystem(box2dWorld))
-                .with(new RoomIntializerSystem(box2dWorld))
-                .with(new HealthSystem(box2dWorld))
-                .with(new HudSystem())
+                .with(new CollisionSystem(box2dWorld))
                 .with(new GameOverSystem(game))
                 .with(new PowerUpSystem(box2dWorld))
                 .with(new TrapExtinctionSystem(box2dWorld))
                 .with(new TeleportationSystem())
-                .with(new InvincibilitySystem())
+                .with(new HudSystem())
                 .with(new WorldRenderSystem(worldViewport))
                 .with(new EntityRenderSystem(worldViewport))
+                .with(new MonsterMovementSystem())
                 .build();
 
         artemisWorld = new World(setup);
@@ -246,6 +248,9 @@ public class GameScreen implements Screen, DungeonGameScreen {
         player.getComponent(MovementComponent.class).maxSpeedInMeterPerSecond = Constants.PLAYER_CHAR_MAX_VELOCITY;
         player.getComponent(MovementComponent.class).decelerationTimeInSeconds = Constants.PLAYER_CHAR_DECELERATION_TIME;
         player.getComponent(SalleAssocieeComponent.class).idMap = 0;
+        player.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 4, "characterAndTileset/player_idle.png", 0.5f));
+        player.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 4, "characterAndTileset/player_walk.png", 0.5f));
+        player.getComponent(AnimationListComponent.class).setCurrentAnimation(0);
 
         Archetype mapArchetype = GameArchetypes.MAP_ARCHETYPE
                 .build(artemisWorld);
