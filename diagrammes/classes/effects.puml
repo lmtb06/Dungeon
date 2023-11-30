@@ -1,0 +1,100 @@
+@startuml diagram name
+
+!include diagram_config.puml
+!include components.puml
+
+namespace effects {
+    interface Effect {
+        +apply(): void
+        +unapply(): void
+    }
+
+    namespace health {
+        abstract HealthEffect {
+            +HealthEffect(receiver: HealthComponent)
+            +final apply(): void
+            +final unapply(): void
+            #{abstract} newHealth(previousHealth:int): int
+            #{abstract} newMaxHealth(previousMaxHealth:int): int
+        }
+        HealthEffect ..|> Effect
+        HealthEffect ..> HealthComponent: acts on
+        class HealDefinedAmount {
+            +HealDefinedAmount(receiver: HealthComponent, amount: int)
+            #newHealth(previousHealth:int): int
+            #newMaxHealth(previousMaxHealth:int): int
+        }
+        HealDefinedAmount ..|> HealthEffect
+
+        class InflictDefinedAmountDamage {
+            +InflictDefinedAmountDamage(receiver: HealthComponent, amount: int)
+            #newHealth(previousHealth:int): int
+            #newMaxHealth(previousMaxHealth:int): int
+        }
+        InflictDefinedAmountDamage ..|> HealthEffect
+    }
+
+    namespace speed {
+        abstract SpeedEffect {
+            +SpeedEffect(receiver: SpeedComponent)
+            +final apply(): void
+            +final unapply(): void
+            #{abstract} newMaxSpeed(previousMaxSpeed:float): float
+            #{abstract} newDecelerationDuration(previousDecelerationDuration:float): float
+        }
+        SpeedEffect ..|> Effect
+        SpeedEffect ..> SpeedComponent: acts on
+
+        class SpeedUpDefinedAmount {
+            +SpeedUpDefinedAmount(receiver: SpeedComponent, amountInMeterPerSeconds: float)
+            #newMaxSpeed(previousMaxSpeed:float): float
+            #newDecelerationDuration(previousDecelerationDuration:float): float
+        }
+        SpeedUpDefinedAmount ..|> SpeedEffect
+
+        class SlowDownDefinedAmount {
+            +SloSlowDownDefinedAmount(receiver: SpeedComponent, amountInMeterPerSeconds: float)
+            #newMaxSpeed(previousMaxSpeed:float): float
+            #newDecelerationDuration(previousDecelerationDuration:float): float
+        }
+        SlowDownDefinedAmount ..|> SpeedEffect
+    }
+
+    namespace attack {
+        abstract AttackEffect {
+            +AttackEffect(receiver: AttackComponent)
+            +final apply(): void
+            +final unapply(): void
+            #{abstract} newDamage(previousDamage:int): int
+            #{abstract} newAttackSpeed(previousAttackSpeed:float): float
+        }
+        AttackEffect ..|> Effect
+        AttackEffect ..> AttackComponent: acts on
+
+        class DamageUpDefinedAmount {
+            +DamageUpDefinedAmount(receiver: AttackComponent, amount: int)
+            #newDamage(previousDamage:int): int
+            #newAttackSpeed(previousAttackSpeed:float): float
+        }
+        DamageUpDefinedAmount ..|> AttackEffect
+    }
+
+    namespace room {
+        abstract RoomEffect {
+            +RoomEffect(receiver: WorldRenderSystem, )
+            +final apply(): void
+            +final unapply(): void
+            #{abstract} newRoom(previousRoom:Room): Room
+        }
+        RoomEffect ..|> Effect
+        RoomEffect ..> RoomComponent: acts on
+
+        class RoomChange {
+            +RoomChange(receiver: RoomComponent, room: Room)
+            #newRoom(previousRoom:Room): Room
+        }
+        RoomChange ..|> RoomEffect
+    }
+}
+
+@enduml

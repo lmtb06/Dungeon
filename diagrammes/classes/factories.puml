@@ -1,0 +1,65 @@
+@startuml diagram name
+!include diagram_config.puml
+!include configs.puml
+
+namespace factory {
+    interface EntityFactory {
+        +createEntity() : void
+    }
+
+    namespace player {
+        abstract PlayerFactory {
+            #PlayerFactory(artemisWorld:$artemisWorldClass,box2dWorld:$box2dWorldClass)
+            +createEntity() : void
+            +setConfig(config:PlayerConfig) : void
+            +final addComponents(entity:Entity) : void
+            #abstract addStateComponent(entity:Entity) : void
+            #abstract addPhysicsComponent(entity:Entity) : void
+            #abstract addInputComponent(entity:Entity) : void
+            #abstract addHealthComponent(entity:Entity) : void
+            #abstract addMovementComponent(entity:Entity) : void
+            #abstract addAnimationComponent(entity:Entity) : void
+            #abstract addAttackComponent(entity:Entity) : void
+            #abstract addSpriteComponent(entity:Entity) : void
+        }
+
+        class UniquePlayerFactory extends PlayerFactory {
+            +UniquePlayerFactory(artemisWorld:$artemisWorldClass,box2dWorld:$box2dWorldClass)
+            #addStateComponent(entity:Entity) : void
+            #addPhysicsComponent(entity:Entity) : void
+            #addInputComponent(entity:Entity) : void
+            #addHealthComponent(entity:Entity) : void
+            #addMovementComponent(entity:Entity) : void
+            #addAnimationComponent(entity:Entity) : void
+            #addAttackComponent(entity:Entity) : void
+            #addSpriteComponent(entity:Entity) : void
+        }
+
+    }
+    PlayerFactory -() EntityFactory
+    PlayerFactory *-- $artemisWorldClass
+    PlayerFactory *-- $box2dWorldClass
+    PlayerFactory *-- PlayerConfig : uses >
+    
+
+    namespace monster {
+        abstract MonsterFactory {
+            #MonsterFactory(artemisWorld:$artemisWorldClass,box2dWorld:$box2dWorldClass)
+            +createEntity() : void
+            +setConfig(config:MonsterConfig) : void
+            +final addComponents(entity:Entity) : void
+            #abstract addStateComponent(entity:Entity) : void
+            #abstract addPhysicsComponent(entity:Entity) : void
+            #abstract addHealthComponent(entity:Entity) : void
+            #abstract addMovementComponent(entity:Entity) : void
+            #abstract addAnimationComponent(entity:Entity) : void
+            #abstract addAttackComponent(entity:Entity) : void
+            #abstract addSpriteComponent(entity:Entity) : void
+        }
+    }
+    MonsterFactory -() EntityFactory
+    MonsterFactory *-- $artemisWorldClass
+    MonsterFactory *-- $box2dWorldClass
+}
+
+@enduml

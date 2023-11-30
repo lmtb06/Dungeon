@@ -1,0 +1,20 @@
+@startuml diagram name
+!include diagram_config.puml
+!include configs.puml
+
+namespace files {
+    interface ConfigManager {
+        +getLevelConfig(): LevelConfig
+        +getPlayerConfig(): PlayerConfig
+        +saveConfig(): void
+    }
+
+    class JsonConfigManager{
+        +loadConfig(): void
+        +saveConfig(): void
+    }
+
+    JsonConfigManager -() ConfigManager
+}
+
+@enduml

@@ -1,0 +1,128 @@
+@startuml diagram name
+!include diagram_config.puml
+
+namespace config {
+    interface SpawnableConfig {
+        +getBodyDef(): BodyDef
+        +getTextureRegion(): TextureRegion
+        +getEntityType(): EntityType
+    }
+
+    interface ConsumableConfig {
+        +getHealthBonus(): int
+        +getSpeedBonus(): float
+        +getDamageBonus(): float
+        +getMaxHealthBonus(): int
+        +getMaxSpeedBonus(): float
+        +getMaxDamageBonus(): float
+    }
+
+    class WeaponConfig {
+        +name:String
+        +damage:float
+        +cooldown:float
+        +texture:TextureRegion
+        +bodyDef:BodyDef
+    }
+    WeaponConfig ..|> SpawnableConfig
+
+    class IABehaviorConfig {
+
+    }
+
+    class PlayerConfig {
+        +bodyDef: BodyDef
+        +health:int
+        +maxHealth:int
+        +maxSpeed:float
+        +decelerationTime:float
+        +idleAnimation:TextureRegion
+        +runAnimation:TextureRegion
+        +slowDownAnimation:TextureRegion
+        +equipedWeapon:WeaponConfig
+    }
+
+    class MonsterConfig {
+        +bodyDef: BodyDef
+        +health:int
+        +maxHealth:int
+        +maxSpeed:float
+        +idleAnimation:TextureRegion
+        +runAnimation:TextureRegion
+        +equipedWeapon:WeaponConfig
+    }
+
+    class TrapConfig {
+        +itemConfig:ItemConfig
+        +damage:float
+    }
+
+    class PowerUpConfig {
+        +itemConfig:ItemConfig
+        +healthBonus:int
+        +speedBonus:float
+        +damageBonus:float
+        +maxHealthBonus:int
+        +maxSpeedBonus:float
+        +maxDamageBonus:float
+    }
+
+    class ItemConfig {
+        +bodyDef: BodyDef
+        +texture:TextureRegion
+        +oneTimeUse:boolean
+    }
+
+    class LevelConfig {
+        +fichier:String
+        +idSalleDepart:int
+        +salles:List<RoomConfig>
+    }
+
+    class RoomConfig {
+        +id:int
+        +fichierTMX:String
+        +portes:List<DoorConfig>
+        +escaliers:List<StairConfig>
+        +spawnPoints:List<SpawnPointConfig>
+    }
+
+    class DoorConfig {
+        +id:int
+        +idSalleDestionation:int
+        +idPorteDestination:int
+        +spawnPoint:SpawnPointConfig
+    }
+
+    class StairConfig {
+        +niveauDestinationFile:String
+    }
+
+    class SpawnPointConfig {
+        +id:int
+        +typeOfEntity:EntityType
+        +intervalBetweenSpawns:float
+        +uniqueSpawn:boolean
+    }
+    SpawnPointConfig *-- EntityType : has >
+    SpawnPointConfig *-- SpawnableConfig : has >
+
+    enum EntityType {
+        PLAYER
+        MONSTER
+        TRAP
+        POWERUP
+    }
+}
+PlayerConfig ..|> SpawnableConfig
+PlayerConfig *-- WeaponConfig : uses >
+MonsterConfig *-- WeaponConfig : uses >
+MonsterConfig *-- IABehaviorConfig : uses >
+TrapConfig *-- ItemConfig : uses >
+PowerUpConfig *-- ItemConfig : uses >
+LevelConfig *-- RoomConfig : has >
+RoomConfig *-- DoorConfig : has >
+RoomConfig *-- StairConfig : has >
+RoomConfig *-- SpawnPointConfig : has >
+DoorConfig *-- SpawnPointConfig : has >
+@enduml

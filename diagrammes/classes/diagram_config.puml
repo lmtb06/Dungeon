@@ -1,0 +1,7 @@
+@startuml diagram name
+
+skinparam linetype ortho
+!$artemisWorldClass = com.Artemis.World
+!$box2dWorldClass = com.badlogic.gdx.physics.box2d.World
+
+@enduml

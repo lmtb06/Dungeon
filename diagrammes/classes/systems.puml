@@ -1,0 +1,15 @@
+@startuml 
+
+!include diagram_config.puml
+
+namespace systems {
+    class WorldRenderSystem {
+        - tiledMapRenderer: OrthogonalTiledMapRenderer
+        - viewport: Viewport
+        +setMap(map: TiledMap):void
+        #processSystem():void
+    }
+
+}
+
+@enduml

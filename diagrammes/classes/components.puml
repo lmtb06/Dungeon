@@ -1,0 +1,80 @@
+@startuml diagram name
+
+!include diagram_config.puml
+
+namespace components {
+    class HealthComponent {
+        -int health
+        -int maxHealth
+        +getHealth(): int
+        +setHealth(int health): void
+        +getMaxHealth(): int
+        +setMaxHealth(int maxHealth): void
+    }
+
+    class SpeedComponent {
+        - maxSpeed : float
+        - decelerationDuration : float
+        - timeRemainingTillStop : float
+        - initialVelocityAtDeceleration : Vector2
+        +getMaxSpeed(): float
+        +setMaxSpeed(float maxSpeedInMetersPerSecond): void
+        +getDecelerationTime(): float
+        +setDecelerationTime(float decelerationDurationInSeconds): void
+    }
+
+    class AttackComponent {
+        - attackDamage : int
+        - attackCooldown : float
+        - lastAttackTime : float
+        +getAttackDamage(): int
+        +setAttackDamage(int attackDamage): void
+        +getAttackCooldown(): float
+        +setAttackCooldown(attackCooldownInSeconds:float): void
+    }
+
+    class SpriteComponent {
+        - textureRegion : TextureRegion
+        - position : Vector3
+        +getTextureRegion(): TextureRegion
+        +setTextureRegion(textureRegion:TextureRegion): void
+        +getPosition(): Vector3
+        +setPosition(position:Vector3): void
+    }
+
+    class AnimationComponent {
+        - animation : Animation<TextureRegion>
+        - stateTime : float
+        +getAnimation(): Animation<TextureRegion>
+        +setAnimation(animation:Animation<TextureRegion>): void
+        +getStateTime(): float
+        +setStateTime(stateTime:float): void
+    }
+
+    class SpawnerComponent {
+        - spawnInterval : float
+        - lastSpawnTime : float
+        - infiniteSpawns : boolean
+        - counterSpawn : int
+        - maxSpawn : int
+        - factory : EntityFactory
+        +getSpawnInterval(): float
+        +setSpawnInterval(spawnIntervalInSeconds:float): void
+        +getSpawnTime(): float
+        +setSpawnTime(spawnTimeInSeconds:float): void
+        +getSpawnPoint(): SpawnPoint
+        +setSpawnPoint(spawnPoint:SpawnPoint): void
+    }
+
+    class RoomComponent {
+        - portes:List<Entity>
+        - escaliers:List<Entity>
+        - enemies:List<Entity>
+        - spawnPoint:Entity
+        + load():void
+        + unload():void
+    }
+}
+
+
+@enduml
