@@ -67,6 +67,10 @@ namespace effects {
             +final unapply(): void
             #{abstract} newDamage(previousDamage:int): int
             #{abstract} newAttackSpeed(previousAttackSpeed:float): float
+            #{abstract} newLastAttackTime(previousLastAttackTime:float): float
+            #{abstract} newWeaponName(previousWeaponName:string): string
+            #{abstract} newAttackCooldown(previousAttackCooldown:float): float
+            #{abstract} newAttackCooldown(previousAttackCooldown:float): float
         }
         AttackEffect ..|> Effect
         AttackEffect ..> AttackComponent: acts on
@@ -77,6 +81,38 @@ namespace effects {
             #newAttackSpeed(previousAttackSpeed:float): float
         }
         DamageUpDefinedAmount ..|> AttackEffect
+
+        class WeaponChange {
+            +WeaponChange(receiver: AttackComponent, weapon: Weapon)
+            #newDamage(previousDamage:int): int
+            #newAttackSpeed(previousAttackSpeed:float): float
+            
+        }
+        WeaponChange ..|> AttackEffect
+
+        class LastAttackTimeChange {
+            +LastAttackTimeChange(receiver: AttackComponent, lastAttackTime: float)
+            #newDamage(previousDamage:int): int
+            #newAttackSpeed(previousAttackSpeed:float): float
+
+        }
+    }
+
+    namespace position {
+        abstract PositionEffect {
+            +PositionEffect(receiver: PositionComponent)
+            +final apply(): void
+            +final unapply(): void
+            #{abstract} newPosition(previousPosition:Vector2): Vector2
+        }
+        PositionEffect ..|> Effect
+        PositionEffect ..> PositionComponent: acts on
+
+        class Teleport {
+            +Teleport(receiver: PositionComponent, position: Vector2)
+            #newPosition(previousPosition:Vector2): Vector2
+        }
+        Teleport ..|> PositionEffect
     }
 
     namespace room {
@@ -96,5 +132,16 @@ namespace effects {
         RoomChange ..|> RoomEffect
     }
 }
+
+/' 
+    Lors de l'attaque:
+    - met à jour le component attack (pour dire le moment d'attaque)
+    - met à jour le component sprite (active)
+    - active la hitbox
+    Lors de la fin de l'attaque:
+    - met à jour le component sprite (cache)
+    - désactive la hitbox
+'/
+
 
 @enduml

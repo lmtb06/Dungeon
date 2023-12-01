@@ -3,6 +3,40 @@
 !include diagram_config.puml
 
 namespace components {
+    class InputComponent {
+        + left : bool
+        + right : bool
+        + up : bool
+        + down : bool
+        + attack : bool
+    }
+
+    class EntityStateComponent {
+        - timeRemainingInCurrentState : float
+        - currentState : State
+        + getState(): State
+        + setState(state: State): void
+        + getTimeRemainingInCurrentState(): float
+        + setTimeRemainingInCurrentState(timeRemainingInCurrentState: float): void
+    }
+    EntityStateComponent ..> State: has a
+
+    class State {
+        
+    }
+
+    class PhysicsComponent {
+        - body: Body
+        + applyForce(force: Vector2): void
+        + applyImpulse(impulse: Vector2): void
+        + setLinearVelocity(velocity: Vector2): void
+        + getLinearVelocity(): Vector2
+        + setPosition(position: Vector2): void
+        + getPosition(): Vector2
+        + setRotation(rotation: float): void
+        + getRotation(): float
+    }
+
     class HealthComponent {
         -int health
         -int maxHealth
@@ -21,21 +55,33 @@ namespace components {
         +setMaxSpeed(float maxSpeedInMetersPerSecond): void
         +getDecelerationTime(): float
         +setDecelerationTime(float decelerationDurationInSeconds): void
+        +getTimeRemainingTillStop(): float
+        +setTimeRemainingTillStop(timeRemainingTillStopInSeconds): void
     }
 
     class AttackComponent {
         - attackDamage : int
         - attackCooldown : float
         - lastAttackTime : float
+        - weaponName : String
+        - hitbox : Rectangle
         +getAttackDamage(): int
         +setAttackDamage(int attackDamage): void
         +getAttackCooldown(): float
         +setAttackCooldown(attackCooldownInSeconds:float): void
+        +getLastAttackTime(): float
+        +setLastAttackTime(lastAttackTimeInSeconds:float): void
+        +getWeaponName(): String
+        +setWeaponName(weaponName:String): void
+        +getHitbox(): Rectangle
+        +setHitbox(hitbox:Rectangle): void
     }
 
     class SpriteComponent {
+        - show : boolean
         - textureRegion : TextureRegion
         - position : Vector3
+        - rotation : float
         +getTextureRegion(): TextureRegion
         +setTextureRegion(textureRegion:TextureRegion): void
         +getPosition(): Vector3
@@ -70,9 +116,20 @@ namespace components {
         - portes:List<Entity>
         - escaliers:List<Entity>
         - enemies:List<Entity>
-        - spawnPoint:Entity
+        - items:List<Entity>
+        - traps:List<Entity>
+        - spawnPoint:Vector2
         + load():void
         + unload():void
+        + pause():void
+        + resume():void
+        + getPortes():List<Entity>
+        + getEscaliers():List<Entity>
+        + getEnemies():List<Entity>
+        + getItems():List<Entity>
+        + getTraps():List<Entity>
+        + getSpawnPoint():Vector2
+        + setSpawnPoint(spawnPoint:Vector2):void
     }
 }
 
