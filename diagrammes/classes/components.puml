@@ -2,7 +2,8 @@
 
 !include diagram_config.puml
 
-namespace components {
+namespace components { 
+
     class InputComponent {
         + left : bool
         + right : bool
@@ -22,8 +23,22 @@ namespace components {
     EntityStateComponent ..> State: has a
 
     class State {
-        
+        + run(Vector2 direction, speedComponent:speedComponent, physicsComponent:physicsComponent): void
+        + slowDown(speedComponent:speedComponent, physicsComponent:physicsComponent): void
+        + idle(speedComponent:speedComponent, physicsComponent:physicsComponent): void
+        + meleeAttack(attackComponent:attackComponent): void
+        + rangedAttack(attackComponent:attackComponent): void
     }
+
+    class StateIdle {
+        + run(Vector2 direction, speedComponent:speedComponent, physicsComponent:physicsComponent): void
+        + slowDown(speedComponent:speedComponent, physicsComponent:physicsComponent): void
+        + idle(speedComponent:speedComponent, physicsComponent:physicsComponent): void
+        + meleeAttack(attackComponent:attackComponent): void
+        + rangedAttack(attackComponent:attackComponent): void
+    }
+
+    ' differents state heritant de State
 
     class PhysicsComponent {
         - body: Body
@@ -38,12 +53,15 @@ namespace components {
     }
 
     class HealthComponent {
-        -int health
-        -int maxHealth
+        -health : int
+        -maxHealth : int
+        -invincible : boolean
         +getHealth(): int
         +setHealth(int health): void
         +getMaxHealth(): int
         +setMaxHealth(int maxHealth): void
+        +isInvincible(): boolean
+        +setInvincible(boolean invincible): void
     }
 
     class SpeedComponent {
@@ -110,6 +128,7 @@ namespace components {
         +setSpawnTime(spawnTimeInSeconds:float): void
         +getSpawnPoint(): SpawnPoint
         +setSpawnPoint(spawnPoint:SpawnPoint): void
+        +spawn(): void
     }
 
     class RoomComponent {
@@ -131,6 +150,27 @@ namespace components {
         + getSpawnPoint():Vector2
         + setSpawnPoint(spawnPoint:Vector2):void
     }
+
+    class PlayerCharacterComponent {}
+    class MonsterComponent {
+        
+    }
+
+    class TemporaryEffectComponent {
+        - effect : Effect
+        - timeRemaining : float
+        + getTimeRemaining(): float
+        + setTimeRemaining(timeRemainingInSeconds:float): void
+        + getEffect(): Effect
+    }
+    TemporaryEffectComponent ..> Effect: has a
+
+    class TemporaryLifetimeComponent {
+        - timeRemaining : float
+        + getTimeRemaining(): float
+        + setTimeRemaining(timeRemainingInSeconds:float): void
+    }
+    
 }
 
 

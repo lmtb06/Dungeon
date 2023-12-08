@@ -1,14 +1,95 @@
 @startuml 
 
 !include diagram_config.puml
+!include components.puml
 
 namespace systems {
     class WorldRenderSystem {
         - tiledMapRenderer: OrthogonalTiledMapRenderer
         - viewport: Viewport
+        +WorldRenderSystem(orthogonalTiledMapRenderer: OrthogonalTiledMapRenderer, viewport: Viewport)
         +setMap(map: TiledMap):void
+        +render():void
         #processSystem():void
     }
+
+    class EntityRenderSystem {
+        ' ordered by z axis
+        - batch: Batch
+        - viewport: Viewport
+        +EntityRenderSystem(batch: Batch, viewport: Viewport)
+        #process(Entity e):void
+    }
+    EntityRenderSystem ..> SpriteComponent
+
+    class AnimationSystem {
+        +AnimationSystem()
+        #process(Entity e):void
+    }
+    AnimationSystem ..> AnimationComponent
+
+    class PhysicsSystem {
+        - timeStep : float
+        - VELOCITY_ITERATIONS : int
+        - POSITION_ITERATIONS : int
+        - world : $box2dWorldClass
+        +PhysicsSystem(timeStep: float, velocityIterations: int, positionIterations: int, world: $box2dWorldClass)
+        # processSystem()
+    }
+
+    class InputSystem {
+        - ComponentMapper<InputComponent> inputMapper
+        +InputSystem(inputMapper: ComponentMapper<InputComponent>)
+        # process(entity: Entity)
+    }
+
+    class HudRenderSystem {
+        ' points de vies, powerups actifs, arme actuelle
+        - hudStage: Stage
+        - healthLabel: Label
+        - weaponLabel: Label
+        - powerupLabel: Label
+        +HudRenderSystem(hudStage: Stage, healthLabel: Label, weaponLabel: Label, powerupLabel: Label)
+        - updateHealthLabel(HealthComponent healthComponent):void
+        - updateWeaponLabel(AttackComponent attackComponent):void
+        - updatePowerupLabel(powerups List<String>):void
+        # processSystem():void
+    }
+    HudRenderSystem ..> HealthComponent
+    HudRenderSystem ..> AttackComponent
+
+    ' class de singleton ou injection de dep pour l'association effect powerup
+
+    class GameOverSystem {
+        - game: DungeonGame
+        +GameOverSystem(game: Game, healthMapper: ComponentMapper<HealthComponent>)
+        # processSystem():void
+    }
+    GameOverSystem ..> DungeonGame
+    GameOverSystem ..> HealthComponent
+    GameOverSystem ..> PlayerCharacterComponent
+
+    class AttackSystem {
+        # process(entity: Entity)
+    }
+
+    class SpawnerSystem {
+        +SpawnerSystem()
+        # process(entity: Entity)
+    }
+    SpawnerSystem ..> SpawnerComponent
+
+    class TemporaryEntitySystem {
+        +TemporaryEntitySystem()
+        # process(entity: Entity)
+    }
+
+    class MovementSystem {
+        +MovementSystem()
+        # processSystem()
+    }
+    MovementSystem ..> StateComponent
+    MovementSystem ..> State
 
 }
 

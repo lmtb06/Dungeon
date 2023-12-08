@@ -1,0 +1,13 @@
+@startuml diagram name
+
+!include diagram_config.puml
+
+class WorldCollisionListener {
+    +WorldCollisionListener(box2dWorld: World)
+    +beginContact(contact: Contact)
+    +endContact(contact: Contact)
+    +preSolve(contact: Contact, oldManifold: Manifold)
+    +postSolve(contact: Contact, impulse: ContactImpulse)
+}
+
+@enduml

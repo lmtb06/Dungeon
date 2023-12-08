@@ -16,6 +16,7 @@ namespace effects {
             +final unapply(): void
             #{abstract} newHealth(previousHealth:int): int
             #{abstract} newMaxHealth(previousMaxHealth:int): int
+            #{abstract} newInvincible(previousInvincible:boolean): boolean
         }
         HealthEffect ..|> Effect
         HealthEffect ..> HealthComponent: acts on
@@ -32,6 +33,11 @@ namespace effects {
             #newMaxHealth(previousMaxHealth:int): int
         }
         InflictDefinedAmountDamage ..|> HealthEffect
+
+        class SetInvincible {
+            +SetInvincible(receiver: HealthComponent, isInvincible: boolean)
+            #newInvincible(previousInvincible:boolean): boolean
+        }
     }
 
     namespace speed {
