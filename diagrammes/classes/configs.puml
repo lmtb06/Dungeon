@@ -8,15 +8,6 @@ namespace config {
         +getEntityType(): EntityType
     }
 
-    interface ConsumableConfig {
-        +getHealthBonus(): int
-        +getSpeedBonus(): float
-        +getDamageBonus(): float
-        +getMaxHealthBonus(): int
-        +getMaxSpeedBonus(): float
-        +getMaxDamageBonus(): float
-    }
-
     class WeaponConfig {
         +name:String
         +damage:float
@@ -74,7 +65,7 @@ namespace config {
     }
 
     class LevelConfig {
-        +fichier:String
+        +fichier: String
         +idSalleDepart:int
         +salles:List<RoomConfig>
     }
@@ -100,15 +91,15 @@ namespace config {
 
     class SpawnPointConfig {
         +id:int
-        +typeOfEntity:EntityType
         +intervalBetweenSpawns:float
+        +nbEntitySpawned: int
+        +nbMaxEntitySpawn: int
         +uniqueSpawn:boolean
     }
     SpawnPointConfig *-- EntityType : has >
     SpawnPointConfig *-- SpawnableConfig : has >
 
     enum EntityType {
-        PLAYER
         MONSTER
         TRAP
         POWERUP
