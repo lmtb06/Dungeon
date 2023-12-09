@@ -61,7 +61,7 @@ namespace factory {
     MonsterFactory *-- $artemisWorldClass
     MonsterFactory *-- $box2dWorldClass
 
-    namespace 
+
 }
 
 @enduml

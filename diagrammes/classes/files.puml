@@ -4,6 +4,7 @@
 
 namespace files {
     interface ConfigManager {
+        +loadConfig(): void
         +getLevelConfig(): LevelConfig
         +getPlayerConfig(): PlayerConfig
         +saveConfig(): void
