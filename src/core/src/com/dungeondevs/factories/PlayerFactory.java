@@ -5,7 +5,7 @@ import com.artemis.World;
 import com.dungeondevs.configs.PlayerConfig;
 
 /**
- * Factory qui construit l'entité
+ * Factory qui construit l'entité player et ses components à partir de la config.
  */
 public abstract class PlayerFactory implements EntityFactory{
 
@@ -22,8 +22,13 @@ public abstract class PlayerFactory implements EntityFactory{
         this.playerConfig = config;
     }
 
+    /**
+     * {@inheritDoc}
+     * Cette méthode crée l'entité player et ses components à partir de la config.
+     *
+     */
     @Override
-    public final void createEntity() {
+    public void createEntity() {
         Entity playerEntity = artemisWorld.createEntity();
         addComponent(playerEntity);
     }

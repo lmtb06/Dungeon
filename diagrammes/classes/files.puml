@@ -11,6 +11,7 @@ namespace files {
     }
 
     class JsonConfigManager{
+        +JsonConfigManager(String filePath)
         +loadConfig(): void
         +saveConfig(): void
     }
