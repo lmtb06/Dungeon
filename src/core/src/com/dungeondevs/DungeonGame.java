@@ -1,6 +1,7 @@
 package com.dungeondevs;
 
 import com.badlogic.gdx.Game;
+import com.dungeondevs.files.JsonConfigManager;
 import com.dungeondevs.screens.GameOverScreen;
 import com.dungeondevs.screens.GameScreen;
 

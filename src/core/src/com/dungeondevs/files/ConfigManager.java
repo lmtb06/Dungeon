@@ -1,7 +1,7 @@
 package com.dungeondevs.files;
 
-import com.dungeondevs.configs.LevelConfig;
-import com.dungeondevs.configs.PlayerConfig;
+import com.dungeondevs.configs.Level.LevelConfig;
+import com.dungeondevs.configs.Level.PlayerConfig;
 
 public interface ConfigManager {
 

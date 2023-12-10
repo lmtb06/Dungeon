@@ -30,6 +30,9 @@ import com.dungeondevs.utils.Constants;
 import com.dungeondevs.utils.FixtureUserData;
 import com.dungeondevs.utils.GameArchetypes;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 public class GameScreen implements Screen, DungeonGameScreen {
     private final DungeonGame game;
     private final Viewport worldViewport;
@@ -91,7 +94,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
 
         // Monde box2d
         //Create a default box 1meter tall and 0.3 meter large and a mass of 10 kg for the box2d world
-        BodyDef playerBodyDef = new BodyDef();
+        /**BodyDef playerBodyDef = new BodyDef();
         playerBodyDef.type = BodyDef.BodyType.DynamicBody;
         playerBodyDef.position.set(2f, 2f);
         playerBodyDef.fixedRotation = true;
@@ -127,7 +130,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
                 .with(new TeleportationSystem())
                 .with(new HudSystem())
                 .with(new WorldRenderSystem(worldViewport))
-                .with(new EntityRenderSystem(worldViewport))
+                //.with(new EntityRenderSystem(worldViewport))
                 .with(new MonsterMovementSystem())
                 .build();
 
@@ -191,7 +194,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
     @Override
     public void resize(int width, int height) {
         worldViewport.update(width, height);
-        hudSystem.resize(width, height);
+        //hudSystem.resize(width, height);
     }
 
     @Override
@@ -218,7 +221,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
     @Override
     public void reinitialize() {
         // 1. Réinitialiser le monde Box2D
-        box2dWorld.dispose();
+        /**box2dWorld.dispose();
         box2dWorld = new com.badlogic.gdx.physics.box2d.World(new Vector2(0, 0), true);
 
         // Vous devrez recréer les corps et les fixations ici.
@@ -271,7 +274,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
                 .with(new TeleportationSystem())
                 .with(new HudSystem())
                 .with(new WorldRenderSystem(worldViewport))
-                .with(new EntityRenderSystem(worldViewport))
+                //.with(new EntityRenderSystem(worldViewport))
                 .with(new MonsterMovementSystem())
                 .build();
 

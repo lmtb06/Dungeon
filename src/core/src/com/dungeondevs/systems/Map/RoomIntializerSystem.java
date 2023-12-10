@@ -219,7 +219,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         powerUp.getComponent(PowerUpTypeComponent.class).powerUpType= PowerUpType.SPEED_TEMPO;
                         powerUp.getComponent(PowerUpTypeComponent.class).duration=3000;
                         powerUp.getComponent(PowerUpTypeComponent.class).value=3f;
-                        powerUp.getComponent(SpriteComponent.class).setSprite("./powerup_speed.png");
+                        //powerUp.getComponent(SpriteComponent.class).setSprite("./powerup_speed.png");
                         break;
 
                     case "porte":
@@ -278,7 +278,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         trap.getComponent(ActifSalleActuelleComponent.class).action = true;
 
                         trap.getComponent(PhysicsComponent.class).body = trapBody;
-                        trap.getComponent(SpriteComponent.class).setSprite("./trap_pikes.png");
+                        //trap.getComponent(SpriteComponent.class).setSprite("./trap_pikes.png");
                         break;
 
                     case "teleporteur":
@@ -313,7 +313,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         teleporteur.getComponent(InformationTPComponent.class).coordonneeX = coordonneeX;
                         teleporteur.getComponent(InformationTPComponent.class).coordonneeY = coordonneeY;
                         teleporteur.getComponent(InformationTPComponent.class).directionDeSortie = so.get(i).getProperties().get("directionSortie").toString();
-                        teleporteur.getComponent(SpriteComponent.class).setSprite("./test.png");
+                        //teleporteur.getComponent(SpriteComponent.class).setSprite("./test.png");
 
 
                         teleporteur.getComponent(PhysicsComponent.class).body = teleporteurBody;
