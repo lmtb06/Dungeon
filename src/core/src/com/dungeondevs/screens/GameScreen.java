@@ -2,8 +2,13 @@ package com.dungeondevs.screens;
 
 import com.artemis.World;
 import com.artemis.*;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -13,6 +18,8 @@ import com.dungeondevs.DungeonGame;
 import com.dungeondevs.components.*;
 import com.dungeondevs.components.Level.SalleAssocieeComponent;
 import com.dungeondevs.components.rendering.AnimationListComponent;
+import com.dungeondevs.factories.spawnable.WeaponFactory;
+import com.dungeondevs.files.JsonConfigManager;
 import com.dungeondevs.systems.*;
 import com.dungeondevs.systems.Map.MapsLoaderSystem;
 import com.dungeondevs.systems.Map.RoomIntializerSystem;
@@ -30,9 +37,11 @@ public class GameScreen implements Screen, DungeonGameScreen {
     private com.badlogic.gdx.physics.box2d.World box2dWorld;
     private final Box2DDebugRenderer debugRenderer;
     private HudSystem hudSystem;
+    private SpriteBatch spriteBatch;
 
     public GameScreen(DungeonGame game) {
         this.game = game;
+        spriteBatch = new SpriteBatch();
         this.worldViewport = new ExtendViewport(10, 10);
 
         box2dWorld = new com.badlogic.gdx.physics.box2d.World(new Vector2(0, 0), true);
@@ -44,6 +53,41 @@ public class GameScreen implements Screen, DungeonGameScreen {
         // Viewport FitViewport
         worldViewport.getCamera().position.set(0,0,0);
         worldViewport.getCamera().update();
+
+        JsonConfigManager jcm = new JsonConfigManager("oi");
+        jcm.LoadJsonSpawnable();
+
+        WorldConfiguration setup = new WorldConfigurationBuilder()
+                //.with(new MapsLoaderSystem())
+                //.with(new RoomIntializerSystem(box2dWorld))
+                .with(new PhysicsSystem(box2dWorld, tempsParFrame))
+                //.with(new InputSystem())
+                //.with(new StateManagementSystem())
+                //.with(new MovementSystem())
+                //.with(new HealthSystem(box2dWorld))
+                //.with(new InvincibilitySystem())
+                //.with(new AttackSystem(box2dWorld))
+                //.with(new AttackEntitySystem(box2dWorld))
+                //.with(new CollisionSystem(box2dWorld))
+                //.with(new GameOverSystem(game))
+                //.with(new PowerUpSystem(box2dWorld))
+                //.with(new TrapExtinctionSystem(box2dWorld))
+                //.with(new TeleportationSystem())
+                //.with(new HudSystem())
+                .with(new WorldRenderSystem(worldViewport))
+                .with(new EntityRenderSystem(spriteBatch, worldViewport))
+                //.with(new MonsterMovementSystem())
+                .build();
+
+        artemisWorld = new World(setup);
+
+        WeaponFactory weaponFactory = new WeaponFactory(artemisWorld, box2dWorld);
+        weaponFactory.setConfig(jcm.getWeaponConfigs().get(0));
+        weaponFactory.createEntity();
+
+
+
+        return;
 
         // Monde box2d
         //Create a default box 1meter tall and 0.3 meter large and a mass of 10 kg for the box2d world
@@ -117,7 +161,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
 
         //artemisWorld.getSystem(ChangeurDeSalleSystem.class).setJoueur(player);
         artemisWorld.getSystem(RoomIntializerSystem.class).setJoueur(player);
-        artemisWorld.getSystem(AttackEntitySystem.class).setJoueur(player);
+        artemisWorld.getSystem(AttackEntitySystem.class).setJoueur(player);*/
     }
 
     @Override
@@ -260,6 +304,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
         //artemisWorld.getSystem(MapsLoaderSystem.class).process();
 
         //artemisWorld.getSystem(ChangeurDeSalleSystem.class).setJoueur(player);
-        artemisWorld.getSystem(RoomIntializerSystem.class).setJoueur(player);
+        artemisWorld.getSystem(RoomIntializerSystem.class).setJoueur(player);*/
+
     }
 }

@@ -36,6 +36,10 @@ public class JsonConfigManager implements ConfigManager {
         return playerConfig;
     }
 
+    public List<WeaponConfig> getWeaponConfigs () {
+        return weapons;
+    }
+
     @Override
     public void loadConfig() {
 
