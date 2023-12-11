@@ -73,10 +73,10 @@ public class EntityRenderSystem extends EntityProcessingSystem {
         }else{
             // Sinon c'est un simple Sprite qu'on fait afficher.
             Sprite sprite = spriteComponent.getSprite();
-            sprite.setSize(16,  16);
+            //sprite.setSize(16,  16);
             sprite.setScale(unitScale);
 
-            sprite.setPosition(body.getPosition().x-10.5f, body.getPosition().y-9.75f);
+            sprite.setPosition(body.getPosition().x-10.25f - (sprite.getWidth() * unitScale / 2) , body.getPosition().y-9.5f - (sprite.getHeight() * unitScale / 2) );
 
             batch.begin();
             sprite.draw(batch);

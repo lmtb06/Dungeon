@@ -21,13 +21,10 @@ public class GameArchetypes {
             .add(HealthComponent.class)
             .add(MovementComponent.class)
             .add(PowerUpUserComponent.class)
-            .add(MovementComponent.class)
             .add(PlayerCharacterComponent.class)
             .add(TeleportationComponent.class)
-            .add(MovementComponent.class)
             .add(DirectionComponent.class)
-            .add(AnimationListComponent.class)
-            .add(MovementComponent.class);
+            .add(AnimationListComponent.class);
 
     public static final ArchetypeBuilder MAP_ARCHETYPE = new ArchetypeBuilder()
             .add(RoomRendererComponent.class)
@@ -57,6 +54,7 @@ public class GameArchetypes {
     public static final ArchetypeBuilder ATTACK_ENTITY_ARCHETYPE = new ArchetypeBuilder()
             .add(PhysicsComponent.class)
             .add(ContactDamageComponent.class)
+            .add(SpriteComponent.class)
             .add(AttackEntityComponent.class);
 
     public static final ArchetypeBuilder TRAP_ENTITY_ARCHETYPE = new ArchetypeBuilder()

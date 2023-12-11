@@ -97,6 +97,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
         fixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Player, player));
         player.getComponent(EntityStateComponent.class).state = EntityState.IDLE;
         player.getComponent(PhysicsComponent.class).body = playerBody;
+        player.getComponent(DirectionComponent.class).direction = "droite";
         player.getComponent(InputComponent.class).left = false;
         player.getComponent(InputComponent.class).right = false;
         player.getComponent(InputComponent.class).up = false;
