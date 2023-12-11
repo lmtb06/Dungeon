@@ -10,6 +10,7 @@ import com.dungeondevs.utils.FixtureUserData;
 
 public class CollisionSystem extends BaseSystem implements ContactListener {
 
+
     public CollisionSystem (World box2dWorld) {
         box2dWorld.setContactListener(this);
     }
@@ -106,6 +107,15 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
             if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
                 fixtureUserDataA.getEntity().getComponent(AttackComponent.class).arme = fixtureUserDataB.getEntity().getComponent(ArmeComponent.class).nomArme;
                 fixtureUserDataB.getEntity().getComponent(ActifSalleActuelleComponent.class).action = false;
+            }
+        }
+
+        // Collision d'un projectile avec un mur
+        if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Attack){
+            if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Mur){
+                if (fixtureUserDataB.getEntity().getComponent(AttackEntityComponent.class).projectile){
+                    fixtureUserDataB.getEntity().getComponent(AttackEntityComponent.class).adetruire = true;
+                }
             }
         }
     }

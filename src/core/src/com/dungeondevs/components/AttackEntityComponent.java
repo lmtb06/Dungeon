@@ -28,4 +28,7 @@ public class AttackEntityComponent extends Component {
      */
     public float offset = 0.55f;
 
+    public boolean projectile = false;
+    public boolean dejaLance = false;
+    public boolean adetruire = false;
 }

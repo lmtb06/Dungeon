@@ -113,9 +113,25 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                 for (int j = 0; j < layerCollision.getHeight(); j++) {
                     if (layerCollision.getCell(i,j) != null){
                         Entity mur = getWorld().createEntity(murArchetype);
+
                         listeEntiteADesactiver.add(mur);
                         BodyDef bodyDef = new BodyDef();
+
+                        /**
+                         *                         FixtureDef armeboxFixtureDef = new FixtureDef();
+                         *                         armeboxFixtureDef.shape = armeboxShape;
+                         *                         armeboxFixtureDef.density = 1;
+                         *
+                         *                         Fixture armefixture = armeBody.createFixture(armeboxFixtureDef);
+                         *                         armefixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Arme, arme));
+                         */
+
                         mur.getComponent(PhysicsComponent.class).body = createBoundary((i*facteurX) - decalageX, (j*facteurY) - decalageY, facteur,facteur, bodyDef);
+                        System.out.println(mur.getComponent(PhysicsComponent.class).body);
+                        FixtureDef wallboxFixtureDef = new FixtureDef();
+
+                        Fixture wallFixture = mur.getComponent(PhysicsComponent.class).body.getFixtureList().get(0);
+                        wallFixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Mur, mur));
                         mur.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
                         mur.getComponent(ActiveEntity.class).active = false;
                     }

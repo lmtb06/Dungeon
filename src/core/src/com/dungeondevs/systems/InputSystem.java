@@ -20,5 +20,6 @@ public class InputSystem extends EntityProcessingSystem {
         inputComponent.up = Gdx.input.isKeyPressed(Input.Keys.UP);
         inputComponent.down = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         inputComponent.space = Gdx.input.isKeyPressed(Input.Keys.SPACE);
+        inputComponent.bomb = Gdx.input.isKeyPressed(Input.Keys.B);
     }
 }

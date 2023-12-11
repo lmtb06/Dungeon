@@ -39,25 +39,55 @@ public class AttackEntitySystem extends EntityProcessingSystem {
         AttackEntityComponent attackEntityComponent = e.getComponent(AttackEntityComponent.class);
         PhysicsComponent physicsComponent = e.getComponent(PhysicsComponent.class);
 
-        // On récupère la position du corps à suivre et on bouge le corps du physicComponent pour suivre celui-ci, en fonction du décalage de l'entité.
-        Vector2 boundPosition = attackEntityComponent.boundBody.getPosition();
+        if (!attackEntityComponent.projectile){
+            // On récupère la position du corps à suivre et on bouge le corps du physicComponent pour suivre celui-ci, en fonction du décalage de l'entité.
+            Vector2 boundPosition = attackEntityComponent.boundBody.getPosition();
 
-        if (joueur.getComponent(DirectionComponent.class).direction == "droite"){
-            physicsComponent.body.setTransform(boundPosition.x + attackEntityComponent.offset, boundPosition.y, 0);
-         }else if(joueur.getComponent(DirectionComponent.class).direction == "haut"){
-            physicsComponent.body.setTransform(boundPosition.x , boundPosition.y + attackEntityComponent.offset, 0);
-         }else if(joueur.getComponent(DirectionComponent.class).direction == "bas"){
-            physicsComponent.body.setTransform(boundPosition.x , boundPosition.y - attackEntityComponent.offset, 0);
-        }else if(joueur.getComponent(DirectionComponent.class).direction == "gauche"){
-            physicsComponent.body.setTransform(boundPosition.x - attackEntityComponent.offset, boundPosition.y , 0);
+            if (joueur.getComponent(DirectionComponent.class).direction == "droite"){
+                physicsComponent.body.setTransform(boundPosition.x + attackEntityComponent.offset, boundPosition.y, 0);
+            }else if(joueur.getComponent(DirectionComponent.class).direction == "haut"){
+                physicsComponent.body.setTransform(boundPosition.x , boundPosition.y + attackEntityComponent.offset, 0);
+            }else if(joueur.getComponent(DirectionComponent.class).direction == "bas"){
+                physicsComponent.body.setTransform(boundPosition.x , boundPosition.y - attackEntityComponent.offset, 0);
+            }else if(joueur.getComponent(DirectionComponent.class).direction == "gauche"){
+                physicsComponent.body.setTransform(boundPosition.x - attackEntityComponent.offset, boundPosition.y , 0);
+            }
+        }else {
+            if (!attackEntityComponent.dejaLance) {
+
+                float projectileSpeed = 5f;
+
+                Vector2 boundPosition = attackEntityComponent.boundBody.getPosition();
+                if (joueur.getComponent(DirectionComponent.class).direction == "droite") {
+                    physicsComponent.body.setTransform(boundPosition.x + attackEntityComponent.offset, boundPosition.y, 0);
+                    physicsComponent.body.setLinearVelocity(projectileSpeed, 0);
+                } else if (joueur.getComponent(DirectionComponent.class).direction == "haut") {
+                    physicsComponent.body.setTransform(boundPosition.x , boundPosition.y + attackEntityComponent.offset, 0);
+                    physicsComponent.body.setLinearVelocity(0, projectileSpeed);
+                } else if (joueur.getComponent(DirectionComponent.class).direction == "bas") {
+                    physicsComponent.body.setTransform(boundPosition.x , boundPosition.y - attackEntityComponent.offset, 0);
+                    physicsComponent.body.setLinearVelocity(0, -projectileSpeed);
+                } else if (joueur.getComponent(DirectionComponent.class).direction == "gauche") {
+                    physicsComponent.body.setTransform(boundPosition.x - attackEntityComponent.offset, boundPosition.y , 0);
+                    physicsComponent.body.setLinearVelocity(-projectileSpeed, 0);
+                }
+                attackEntityComponent.dejaLance = true;
+            }
         }
 
-
-        // Si le temps de vie de l'entité d'attaque a expiré, on la supprime.
-        if(TimeUtils.timeSinceMillis(attackEntityComponent.startTime) > attackEntityComponent.autoDestroyTime){
+        if (attackEntityComponent.projectile && attackEntityComponent.adetruire) {
             world.deleteEntity(e);
             box2dWorld.destroyBody(e.getComponent(PhysicsComponent.class).body);
         }
+
+        // Si le temps de vie de l'entité d'attaque a expiré, on la supprime.
+        if (attackEntityComponent != null){
+            if(TimeUtils.timeSinceMillis(attackEntityComponent.startTime) > attackEntityComponent.autoDestroyTime && !attackEntityComponent.projectile){
+                world.deleteEntity(e);
+                box2dWorld.destroyBody(e.getComponent(PhysicsComponent.class).body);
+            }
+        }
+
     }
 
     public void setJoueur(Entity joueur) {

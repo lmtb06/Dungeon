@@ -8,4 +8,5 @@ public class InputComponent extends Component {
     public boolean up;
     public boolean down;
     public boolean space;
+    public boolean bomb;
 }

@@ -44,8 +44,10 @@ public class AttackSystem extends EntityProcessingSystem {
         // Durée depuis la dernière attaque
         long elapsedTime = TimeUtils.timeSinceMillis(lastAttack);
 
+        boolean bomb = inputComponent.bomb;
+
         // Si on appuie sur espace et que le temps passé depuis la dernière attaque est supérieur au délai d'attaque
-        if(inputComponent.space && elapsedTime > attackComponent.getAttackDelay()){
+        if((inputComponent.space || bomb) && elapsedTime > attackComponent.getAttackDelay()){
 
             PhysicsComponent physicsComponent = e.getComponent(PhysicsComponent.class);
             float offset = .5f;
@@ -58,29 +60,37 @@ public class AttackSystem extends EntityProcessingSystem {
             attackBodyDef.position.set(playerPosition.x + offset, playerPosition.y); // On récupère la position du joueur et on place l'attaque avec un décalage
             Body attackBody = box2dWorld.createBody(attackBodyDef);
 
+
             PolygonShape boxShape = new PolygonShape();
             float longueurAxeX = 0.1f;
             float longueurAxeY = 0.1f;
             int damageArme = 0;
 
 
-            /** On change la hitbox et les caractéristiques de l'attaque en fonction des armes ici **/
-            if (e.getComponent(AttackComponent.class).arme.equals("epee")){
-                damageArme = 4;
-                e.getComponent(AttackComponent.class).setAttackDelay(500);
-                longueurAxeX = 0.2f;
-                longueurAxeY = 0.2f;
-            } else if (e.getComponent(AttackComponent.class).arme.equals("couteau")) {
-                damageArme = 2;
-                e.getComponent(AttackComponent.class).setAttackDelay(300);
+            if (bomb){
+                e.getComponent(AttackComponent.class).setAttackDelay(1000);
                 longueurAxeX = 0.1f;
                 longueurAxeY = 0.1f;
-            } else if (e.getComponent(AttackComponent.class).arme.equals("lance")) {
-                damageArme = 8;
-                e.getComponent(AttackComponent.class).setAttackDelay(1500);
-                longueurAxeX = 0.3f;
-                longueurAxeY = 0.1f;
+            }else {
+                /** On change la hitbox et les caractéristiques de l'attaque en fonction des armes ici **/
+                if (e.getComponent(AttackComponent.class).arme.equals("epee")){
+                    damageArme = 4;
+                    e.getComponent(AttackComponent.class).setAttackDelay(500);
+                    longueurAxeX = 0.2f;
+                    longueurAxeY = 0.2f;
+                } else if (e.getComponent(AttackComponent.class).arme.equals("couteau")) {
+                    damageArme = 2;
+                    e.getComponent(AttackComponent.class).setAttackDelay(300);
+                    longueurAxeX = 0.1f;
+                    longueurAxeY = 0.1f;
+                } else if (e.getComponent(AttackComponent.class).arme.equals("lance")) {
+                    damageArme = 8;
+                    e.getComponent(AttackComponent.class).setAttackDelay(1500);
+                    longueurAxeX = 0.3f;
+                    longueurAxeY = 0.1f;
+                }
             }
+
 
             /** on inverse l'axe x et y si l'attaque est orientée vers le haut **/
             if (e.getComponent(DirectionComponent.class).direction.equals("haut") || e.getComponent(DirectionComponent.class).direction.equals("bas")){
@@ -107,10 +117,19 @@ public class AttackSystem extends EntityProcessingSystem {
             fixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Attack, attack));
             attack.getComponent(PhysicsComponent.class).body = attackBody;
             attack.getComponent(AttackEntityComponent.class).startTime = TimeUtils.millis();
-            attack.getComponent(AttackEntityComponent.class).autoDestroyTime = 100;
+            if (bomb){
+                attack.getComponent(AttackEntityComponent.class).autoDestroyTime = 10000;
+                attack.getComponent(AttackEntityComponent.class).projectile = true;
+                attack.getComponent(ContactDamageComponent.class).setDamages(2);
+                e.getComponent(AttackComponent.class).setAttackDelay(500);
+            }else {
+                attack.getComponent(AttackEntityComponent.class).autoDestroyTime = 100;
+                attack.getComponent(ContactDamageComponent.class).setDamages(damageArme);
+            }
+
             attack.getComponent(AttackEntityComponent.class).boundBody = physicsComponent.body;
             attack.getComponent(AttackEntityComponent.class).offset = offset;
-            attack.getComponent(ContactDamageComponent.class).setDamages(damageArme);
+
         }
     }
 }
