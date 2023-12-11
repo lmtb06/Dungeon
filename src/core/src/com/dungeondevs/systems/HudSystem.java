@@ -4,16 +4,25 @@ import com.artemis.BaseEntitySystem;
 import com.artemis.ComponentMapper;
 import com.artemis.annotations.All;
 import com.artemis.utils.IntBag;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dungeondevs.components.*;
+
+import java.util.HashMap;
 
 @All(PlayerCharacterComponent.class)
 public class HudSystem extends BaseEntitySystem {
@@ -21,27 +30,36 @@ public class HudSystem extends BaseEntitySystem {
     private Label healthLabel;
     private Label weaponLabel;
     private Label powerUpLabel;
+    private Image weaponImage;
     private ComponentMapper<HealthComponent> healthMapper;
     private ComponentMapper<AttackComponent> weaponMapper;
     private ComponentMapper<PowerUpUserComponent> powerUpMapper;
+
+    private HashMap<String, String> weaponSpritesMap;
+    private Cell<Image> weaponCell;
 
     @Override
     protected void initialize() {
         Viewport viewport = new ScreenViewport();
         hudStage = new Stage(viewport);
+        weaponSpritesMap = new HashMap<>();
+        weaponSpritesMap.put("epee", "./weapon_sword_icon.png");
+        weaponSpritesMap.put("lance", "./weapon_spear_icon.png");
+        weaponSpritesMap.put("couteau", "./weapon_dagger_icon.png");
 
         // Create the Label that will display the health
         Label.LabelStyle labelStyle = new Label.LabelStyle(new BitmapFont(),new Color(1,1,1,1));
 
         healthLabel = new Label("Health: ", labelStyle);
-        weaponLabel = new Label("Weapon : ", labelStyle);
+        weaponLabel = new Label("epee", labelStyle);
         powerUpLabel = new Label("", labelStyle);
+
+        weaponImage = new Image(new Texture("./weapon_sword_icon.png"));
 
         Table table = new Table(); // Create the layout table
         table.setFillParent(true);
         hudStage.addActor(table);
         table.add(healthLabel).padTop(10).padRight(10);
-        table.add(weaponLabel).padTop(10).padRight(10);
         table.top().right();
 
         Table powerUpTable = new Table();
@@ -49,6 +67,18 @@ public class HudSystem extends BaseEntitySystem {
         hudStage.addActor(powerUpTable);
         powerUpTable.add(powerUpLabel);
         powerUpTable.top().left();
+
+        float percentageWidth = 0.1f; // Ajustez ce pourcentage comme nécessaire
+        float imageSize = Gdx.graphics.getWidth() * percentageWidth;
+
+        Table weaponTable = new Table();
+        weaponTable.setFillParent(true);
+        hudStage.addActor(weaponTable);
+        weaponImage.setSize(32f, 32f);
+        weaponTable.add(weaponLabel).padRight(10).padBottom(5);
+        weaponTable.row();
+        weaponTable.bottom().right();
+        weaponCell = weaponTable.add(weaponImage).padRight(10).padBottom(10).size(imageSize);
     }
 
     @Override
@@ -71,7 +101,14 @@ public class HudSystem extends BaseEntitySystem {
     }
 
     private void updateWeaponLabel(AttackComponent attackComponent) {
-        weaponLabel.setText("Arme actuelle: " + attackComponent.arme);
+        weaponLabel.setText(attackComponent.arme.substring(0, 1).toUpperCase() + attackComponent.arme.substring(1));
+        String fileLink = weaponSpritesMap.get(attackComponent.arme);
+
+        Texture newTexture = new Texture(fileLink);
+        TextureRegion newTextureRegion = new TextureRegion(newTexture);
+        Drawable newDrawable = new TextureRegionDrawable(newTextureRegion);
+
+        weaponImage.setDrawable(newDrawable);
     }
 
     private void updatePowerupLabel(PowerUpUserComponent powerUpUserComponent) {
@@ -89,6 +126,9 @@ public class HudSystem extends BaseEntitySystem {
     }
 
     public void resize(int width, int height) {
+        float percentageWidth = 0.1f; // Ajustez ce pourcentage comme nécessaire
+        float imageSize = Gdx.graphics.getWidth() * percentageWidth;
+        weaponCell.size(imageSize);
         hudStage.getViewport().update(width, height, true);
     }
 }
