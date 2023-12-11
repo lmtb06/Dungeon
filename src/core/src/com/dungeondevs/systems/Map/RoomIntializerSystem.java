@@ -181,7 +181,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         monstre.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
                         monstre.getComponent(ActiveEntity.class).active = false;
                         monstre.getComponent(PhysicsComponent.class).body = playerBody;
-                        monstre.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 4, "./skeleton_idle.png", 0.5f));
+                        monstre.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 4, "./skull_idle.png", 0.5f));
                         monstre.getComponent(AnimationListComponent.class).setCurrentAnimation(0);
                         //Composant relatif à la salle dans laquelle il se trouve
                         monstre.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
