@@ -65,7 +65,7 @@ public class AttackSystem extends EntityProcessingSystem {
             PolygonShape boxShape = new PolygonShape();
             float longueurAxeX = 0.1f;
             float longueurAxeY = 0.1f;
-            int damageArme = 0;
+            int damageArme = attackComponent.getDamages();
             String weaponFileName = "./weapon_sword.png";
 
 
@@ -76,17 +76,17 @@ public class AttackSystem extends EntityProcessingSystem {
             }else {
                 /** On change la hitbox et les caractéristiques de l'attaque en fonction des armes ici **/
                 if (e.getComponent(AttackComponent.class).arme.equals("epee")){
-                    damageArme = 4;
+                    damageArme += 4;
                     e.getComponent(AttackComponent.class).setAttackDelay(500);
                     longueurAxeX = 0.2f;
                     longueurAxeY = 0.2f;
                 } else if (e.getComponent(AttackComponent.class).arme.equals("couteau")) {
-                    damageArme = 2;
+                    damageArme += 2;
                     e.getComponent(AttackComponent.class).setAttackDelay(300);
                     longueurAxeX = 0.1f;
                     longueurAxeY = 0.1f;
                 } else if (e.getComponent(AttackComponent.class).arme.equals("lance")) {
-                    damageArme = 8;
+                    damageArme += 8;
                     e.getComponent(AttackComponent.class).setAttackDelay(1500);
                     longueurAxeX = 0.3f;
                     longueurAxeY = 0.1f;

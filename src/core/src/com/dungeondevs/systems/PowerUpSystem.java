@@ -49,6 +49,7 @@ public class PowerUpSystem extends EntityProcessingSystem {
 
                 case ATTACK_DEFIN:
                     attackComponent.setDamage(attackComponent.getDamages()+(int) powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value);
+                    System.out.println(attackComponent.getDamages());
                     break;
 
                 case ATTACK_TEMPO:

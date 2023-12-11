@@ -66,6 +66,9 @@
   <object id="9" x="111.301" y="80.1305" width="16.3199" height="15.9935">
    <properties>
     <property name="categorie" value="powerUps"/>
+    <property name="duration" value="4000"/>
+    <property name="power_up_type" value="speed_tempo"/>
+    <property name="value" value="3"/>
     <property name="x spawn" value="7"/>
     <property name="y spawn" value="1"/>
    </properties>

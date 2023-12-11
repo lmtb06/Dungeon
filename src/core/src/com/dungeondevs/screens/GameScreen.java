@@ -114,6 +114,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
 
         Entity map1 = artemisWorld.createEntity(mapArchetype);
         Entity map2 = artemisWorld.createEntity(mapArchetype);
+        Entity map3 = artemisWorld.createEntity(mapArchetype);
         //artemisWorld.getSystem(MapsLoaderSystem.class).process();
 
         //artemisWorld.getSystem(ChangeurDeSalleSystem.class).setJoueur(player);
@@ -258,6 +259,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
 
         Entity map1 = artemisWorld.createEntity(mapArchetype);
         Entity map2 = artemisWorld.createEntity(mapArchetype);
+        Entity map3 = artemisWorld.createEntity(mapArchetype);
         //artemisWorld.getSystem(MapsLoaderSystem.class).process();
 
         //artemisWorld.getSystem(ChangeurDeSalleSystem.class).setJoueur(player);

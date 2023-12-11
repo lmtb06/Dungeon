@@ -45,6 +45,14 @@ public class MapsLoaderSystem extends EntitySystem {
                     m.getComponent(RoomRendererComponent.class).setFileName("maps/test3.tmx");
                     System.out.println("salut : "+m.getComponent(LoadMapComponent.class).map);
                 }
+                if (idMapCourant == 2){
+                    m.getComponent(LoadMapComponent.class).lienAsset = "maps/map2.tmx";
+                    m.getComponent(LoadMapComponent.class).idmap = idMapCourant;
+                    m.getComponent(LoadMapComponent.class).loaded = false;
+                    m.getComponent(LoadMapComponent.class).map = loader.load(m.getComponent(LoadMapComponent.class).lienAsset);
+                    m.getComponent(RoomRendererComponent.class).setFileName("maps/test3.tmx");
+                    System.out.println("salut : "+m.getComponent(LoadMapComponent.class).map);
+                }
                 idMapCourant ++;
 
             }

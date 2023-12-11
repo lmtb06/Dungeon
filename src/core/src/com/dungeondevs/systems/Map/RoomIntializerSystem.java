@@ -232,9 +232,34 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         powerUp.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
                         powerUp.getComponent(ActiveEntity.class).active = false;
                         powerUp.getComponent(PhysicsComponent.class).body = powerUpBody;
-                        powerUp.getComponent(PowerUpTypeComponent.class).powerUpType= PowerUpType.SPEED_TEMPO;
-                        powerUp.getComponent(PowerUpTypeComponent.class).duration=3000;
-                        powerUp.getComponent(PowerUpTypeComponent.class).value=3f;
+                        switch (so.get(i).getProperties().get("power_up_type").toString()){
+                            case ("speed_tempo"):
+                                powerUp.getComponent(PowerUpTypeComponent.class).powerUpType= PowerUpType.SPEED_TEMPO;
+                                powerUp.getComponent(SpriteComponent.class).setSprite("./powerup_speed.png");
+                                break;
+                            case ("speed_defin"):
+                                powerUp.getComponent(PowerUpTypeComponent.class).powerUpType= PowerUpType.SPEED_DEFIN;
+                                powerUp.getComponent(SpriteComponent.class).setSprite("./powerup_speed.png");
+                                break;
+                            case ("attack_tempo"):
+                                powerUp.getComponent(PowerUpTypeComponent.class).powerUpType= PowerUpType.ATTACK_TEMPO;
+                                powerUp.getComponent(SpriteComponent.class).setSprite("./powerup_damages_icon.png");
+                                break;
+                            case ("attack_defin"):
+                                powerUp.getComponent(PowerUpTypeComponent.class).powerUpType= PowerUpType.ATTACK_DEFIN;
+                                powerUp.getComponent(SpriteComponent.class).setSprite("./powerup_damages_icon.png");
+                                break;
+                            case ("health_defin"):
+                                powerUp.getComponent(PowerUpTypeComponent.class).powerUpType= PowerUpType.HEALTH_DEFIN;
+                                powerUp.getComponent(SpriteComponent.class).setSprite("./powerup_health_icon.png");
+                                break;
+                            case ("health_heal"):
+                                powerUp.getComponent(PowerUpTypeComponent.class).powerUpType= PowerUpType.HEALTH_HEAL;
+                                powerUp.getComponent(SpriteComponent.class).setSprite("./powerup_health_icon.png");
+                                break;
+                        }
+                        powerUp.getComponent(PowerUpTypeComponent.class).duration= Long.parseLong(so.get(i).getProperties().get("duration").toString());
+                        powerUp.getComponent(PowerUpTypeComponent.class).value=Float.parseFloat(so.get(i).getProperties().get("value").toString());
                         powerUp.getComponent(SpriteComponent.class).setSprite("./powerup_speed.png");
                         break;
 
