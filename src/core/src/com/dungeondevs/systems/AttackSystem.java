@@ -67,6 +67,7 @@ public class AttackSystem extends EntityProcessingSystem {
             float longueurAxeY = 0.1f;
             int damageArme = attackComponent.getDamages();
             String weaponFileName = "./weapon_sword.png";
+            Vector2 weaponDimensions = new Vector2(16,16);
 
 
             if (bomb){
@@ -74,7 +75,7 @@ public class AttackSystem extends EntityProcessingSystem {
                 longueurAxeX = 0.1f;
                 longueurAxeY = 0.1f;
             }else {
-                /** On change la hitbox et les caractéristiques de l'attaque en fonction des armes ici **/
+                /** On change la hiweaponFileName = "./weapon_sword.png";tbox et les caractéristiques de l'attaque en fonction des armes ici **/
                 if (e.getComponent(AttackComponent.class).arme.equals("epee")){
                     damageArme += 4;
                     e.getComponent(AttackComponent.class).setAttackDelay(500);
@@ -85,11 +86,14 @@ public class AttackSystem extends EntityProcessingSystem {
                     e.getComponent(AttackComponent.class).setAttackDelay(300);
                     longueurAxeX = 0.1f;
                     longueurAxeY = 0.1f;
+                    weaponFileName = "./weapon_dagger.png";
                 } else if (e.getComponent(AttackComponent.class).arme.equals("lance")) {
                     damageArme += 8;
                     e.getComponent(AttackComponent.class).setAttackDelay(1500);
                     longueurAxeX = 0.3f;
                     longueurAxeY = 0.1f;
+                    weaponFileName = "./weapon_spear.png";
+                    //weaponDimensions = new Vector2(32, 8);
                 }
             }
 
@@ -132,7 +136,7 @@ public class AttackSystem extends EntityProcessingSystem {
             Entity attack = world.createEntity(attackArchetype);
             fixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Attack, attack));
             attack.getComponent(PhysicsComponent.class).body = attackBody;
-            attack.getComponent(SpriteComponent.class).setSprite(weaponFileName, 16, 16, weaponSpriteAngle);
+            attack.getComponent(SpriteComponent.class).setSprite(weaponFileName, (int)weaponDimensions.x, (int)weaponDimensions.y, weaponSpriteAngle);
             attack.getComponent(AttackEntityComponent.class).startTime = TimeUtils.millis();
             if (bomb){
                 attack.getComponent(AttackEntityComponent.class).autoDestroyTime = 10000;

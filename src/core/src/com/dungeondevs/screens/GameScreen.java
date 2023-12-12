@@ -247,6 +247,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
         player.getComponent(InputComponent.class).right = false;
         player.getComponent(InputComponent.class).up = false;
         player.getComponent(InputComponent.class).down = false;
+        player.getComponent(DirectionComponent.class).direction = "droite";
         player.getComponent(MovementComponent.class).maxSpeedInMeterPerSecond = Constants.PLAYER_CHAR_MAX_VELOCITY;
         player.getComponent(MovementComponent.class).decelerationTimeInSeconds = Constants.PLAYER_CHAR_DECELERATION_TIME;
         player.getComponent(SalleAssocieeComponent.class).idMap = 0;
