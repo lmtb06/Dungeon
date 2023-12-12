@@ -74,6 +74,7 @@ public class AttackSystem extends EntityProcessingSystem {
                 e.getComponent(AttackComponent.class).setAttackDelay(1000);
                 longueurAxeX = 0.1f;
                 longueurAxeY = 0.1f;
+                weaponFileName = "./weapon_bomb.png";
             }else {
                 /** On change la hiweaponFileName = "./weapon_sword.png";tbox et les caractéristiques de l'attaque en fonction des armes ici **/
                 if (e.getComponent(AttackComponent.class).arme.equals("epee")){
