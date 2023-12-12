@@ -85,6 +85,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
                 .with(new WorldRenderSystem(worldViewport))
                 .with(new EntityRenderSystem(worldViewport))
                 .with(new MonsterMovementSystem())
+                .with(new WinningSystem(game))
                 .build();
 
         artemisWorld = new World(setup);
@@ -141,7 +142,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
         artemisWorld.process();
 
         // rendu debug du monde box2d
-        debugRenderer.render(box2dWorld, camera.combined);
+        //debugRenderer.render(box2dWorld, camera.combined);
 
 
     }
@@ -231,6 +232,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
                 .with(new WorldRenderSystem(worldViewport))
                 .with(new EntityRenderSystem(worldViewport))
                 .with(new MonsterMovementSystem())
+                .with(new WinningSystem(game))
                 .build();
 
         artemisWorld = new World(setup);

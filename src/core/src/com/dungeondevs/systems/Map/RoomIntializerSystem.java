@@ -164,6 +164,9 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
             Archetype armeArchetype = GameArchetypes.ARME_ARCHETYPE
                     .build(getWorld());
 
+            Archetype tresorArchetype = GameArchetypes.TRESOR_ARCHETYPE
+                    .build(getWorld());
+
 
             for (int i = 0; i < so.getCount(); i++) {
                 System.out.println("siu:" +Float.parseFloat(so.get(i).getProperties().get("x spawn").toString()));
@@ -366,7 +369,7 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         Entity arme = getWorld().createEntity(armeArchetype);
                         listeEntiteADesactiver.add(arme);
 
-                        //Body trap
+                        //Body arme
                         BodyDef armeBodyDef = new BodyDef();
                         armeBodyDef.type = BodyDef.BodyType.StaticBody;
 
@@ -391,6 +394,38 @@ public class RoomIntializerSystem extends EntityProcessingSystem {
                         arme.getComponent(ActifSalleActuelleComponent.class).action = true;
 
                         arme.getComponent(PhysicsComponent.class).body = armeBody;
+
+                        arme.getComponent(SpriteComponent.class).setSprite("weapon_sword.png");
+                        break;
+
+                    case "tresor":
+                        Entity tresor = getWorld().createEntity(armeArchetype);
+                        listeEntiteADesactiver.add(tresor);
+
+                        //Body arme
+                        BodyDef tresorBodyDef = new BodyDef();
+                        tresorBodyDef.type = BodyDef.BodyType.StaticBody;
+
+                        System.out.println( Math.round( (float) so.get(i).getProperties().get("x")/16));
+                        tresorBodyDef.position.set((float) so.get(i).getProperties().get("x")/16*facteurX - decalageX, Math.round( (float) so.get(i).getProperties().get("y")/16)*facteurY - decalageY);
+                        Body tresorBody = box2dworld.createBody(tresorBodyDef);
+
+                        PolygonShape tresorboxShape = new PolygonShape();
+                        tresorboxShape.setAsBox(0.2f, 0.2f);
+
+                        FixtureDef tresorFixtureDef = new FixtureDef();
+                        tresorFixtureDef.shape = tresorboxShape;
+                        tresorFixtureDef.density = 1;
+
+                        Fixture tresorfixture = tresorBody.createFixture(tresorFixtureDef);
+                        tresorfixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Tresor, tresor));
+                        tresorboxShape.dispose();
+
+                        tresor.getComponent(SalleAssocieeComponent.class).idMap = lmc.idmap;
+
+                        tresor.getComponent(PhysicsComponent.class).body = tresorBody;
+
+                        tresor.getComponent(SpriteComponent.class).setSprite("items and trap_animation/chest/chest_3.png");
                         break;
                 }
 

@@ -83,5 +83,12 @@ public class GameArchetypes {
             .add(SalleAssocieeComponent.class)
             .add(ActiveEntity.class)
             .add(ActifSalleActuelleComponent.class)
+            .add(SpriteComponent.class)
             .add(ArmeComponent.class);
+
+    public static final ArchetypeBuilder TRESOR_ARCHETYPE = new ArchetypeBuilder()
+            .add(PhysicsComponent.class)
+            .add(SpriteComponent.class)
+            //.add(ActiveEntity.class)
+            .add(ActifSalleActuelleComponent.class);
 }

@@ -118,6 +118,13 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
                 }
             }
         }
+
+        // Collision du joueur avec les téléporteurs
+        if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Player){
+            if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Tresor){
+                fixtureUserDataA.getEntity().getComponent(PlayerCharacterComponent.class).aGagne = true;
+            }
+        }
     }
 
     @Override

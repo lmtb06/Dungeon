@@ -49,7 +49,7 @@ public class EntityRenderSystem extends EntityProcessingSystem {
 
         // On fait afficher le batch sur la matrice de rendu du viewport, pour ne pas avoir des images étirées lors du
         // redimensionnement de la fenêtre.
-        batch.setProjectionMatrix(viewport.getCamera().projection);
+        batch.setProjectionMatrix(viewport.getCamera().combined);
         float unitScale = 1 / 32f;
 
         // S'il n'y a pas de composant SpriteComponent ...
@@ -68,7 +68,7 @@ public class EntityRenderSystem extends EntityProcessingSystem {
             TextureRegion currentFrame = currentanimation.getKeyFrame(animationListComponent.getCurrentAnimationData().getStateTime(), true);
 
             batch.begin();
-            batch.draw(currentFrame, body.getPosition().x-2.5f - (currentFrame.getRegionWidth() * unitScale / 2), body.getPosition().y-1.75f- (currentFrame.getRegionHeight() * unitScale / 2), unitScale * 16f, unitScale * 16f);
+            batch.draw(currentFrame, body.getPosition().x - (currentFrame.getRegionWidth() * unitScale / 2), body.getPosition().y- (currentFrame.getRegionHeight() * unitScale / 2), unitScale * 16f, unitScale * 16f);
             batch.end();
         }else{
             // Sinon c'est un simple Sprite qu'on fait afficher.
@@ -76,7 +76,7 @@ public class EntityRenderSystem extends EntityProcessingSystem {
             //sprite.setSize(16,  16);
             sprite.setScale(unitScale);
 
-            sprite.setPosition(body.getPosition().x-10.25f - (sprite.getWidth() * unitScale / 2) , body.getPosition().y-9.5f - (sprite.getHeight() * unitScale / 2) );
+            sprite.setPosition(body.getPosition().x-7.75f - (sprite.getWidth() * unitScale / 2) , body.getPosition().y-7.75f - (sprite.getHeight() * unitScale / 2) );
 
             batch.begin();
             sprite.draw(batch);
