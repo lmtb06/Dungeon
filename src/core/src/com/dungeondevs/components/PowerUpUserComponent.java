@@ -3,6 +3,8 @@ package com.dungeondevs.components;
 import com.artemis.Component;
 import com.artemis.Entity;
 
+import java.util.HashMap;
+
 public class PowerUpUserComponent extends Component{
 
     //PowerUp avec lequel le joueur est entrée en collision qui doit être traité
@@ -44,5 +46,7 @@ public class PowerUpUserComponent extends Component{
     public void applyPowerUP(Entity PowerUp){
         this.powerUpNTBA = PowerUp;
     }
+
+    public HashMap<PowerUpType, Long> activePowerups = new HashMap<>();
 
 }

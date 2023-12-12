@@ -34,7 +34,11 @@ public class PowerUpSystem extends EntityProcessingSystem {
         HealthComponent healthComponent = e.getComponent(HealthComponent.class);
        powerUpUserComponent.getSpeedLastAppliedTime();
         if(powerUpUserComponent.powerUpNTBA!=null){
-            switch(powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).powerUpType){
+            PowerUpType powerUpType = powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).powerUpType;
+            long expireTime = powerUpType.toString().contains("TEMPO") ? (TimeUtils.millis() + powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).duration) : -1L;
+
+            powerUpUserComponent.activePowerups.put(powerUpType, expireTime);
+            switch(powerUpType){
                 case SPEED_DEFIN:
                     movementComponent.maxSpeedInMeterPerSecond+= powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value;
                     break;
@@ -80,6 +84,7 @@ public class PowerUpSystem extends EntityProcessingSystem {
             movementComponent.maxSpeedInMeterPerSecond= powerUpUserComponent.getOriginalSpeed();
             powerUpUserComponent.setOriginalSpeed(1);
             powerUpUserComponent.setSpeedLastAppliedTime(0);
+            powerUpUserComponent.activePowerups.remove(PowerUpType.SPEED_TEMPO);
         }
 
         //Retrait du bonus d'attack une fois que la durée du powerUp est passée
@@ -87,6 +92,7 @@ public class PowerUpSystem extends EntityProcessingSystem {
             attackComponent.setDamage((int) powerUpUserComponent.originalAttack);
             powerUpUserComponent.originalAttack = 1;
             powerUpUserComponent.attackLastAppliedTime = 0;
+            powerUpUserComponent.activePowerups.remove(PowerUpType.ATTACK_TEMPO);
 
         }
     }

@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -37,6 +38,7 @@ public class HudSystem extends BaseEntitySystem {
 
     private HashMap<String, String> weaponSpritesMap;
     private Cell<Image> weaponCell;
+    private Table powerUpTable;
 
     @Override
     protected void initialize() {
@@ -62,11 +64,11 @@ public class HudSystem extends BaseEntitySystem {
         table.add(healthLabel).padTop(10).padRight(10);
         table.top().right();
 
-        Table powerUpTable = new Table();
+        powerUpTable = new Table();
         powerUpTable.setFillParent(true);
         hudStage.addActor(powerUpTable);
-        powerUpTable.add(powerUpLabel);
-        powerUpTable.top().left();
+        //powerUpTable.add(powerUpLabel);
+        powerUpTable.bottom().left().padBottom(5);
 
         float percentageWidth = 0.1f; // Ajustez ce pourcentage comme nécessaire
         float imageSize = Gdx.graphics.getWidth() * percentageWidth;
@@ -112,12 +114,34 @@ public class HudSystem extends BaseEntitySystem {
     }
 
     private void updatePowerupLabel(PowerUpUserComponent powerUpUserComponent) {
-        boolean speedPowerUpActive = powerUpUserComponent.speedLastAppliedTime > 0;
-        float remainingSpeedTime = (float) (powerUpUserComponent.speedLastAppliedTime + powerUpUserComponent.speedDuration - TimeUtils.millis()) / 1000L;
+        //boolean speedPowerUpActive = powerUpUserComponent.speedLastAppliedTime > 0;
+        //float remainingSpeedTime = (float) (powerUpUserComponent.speedLastAppliedTime + powerUpUserComponent.speedDuration - TimeUtils.millis()) / 1000L;
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(speedPowerUpActive ? "Bonus de vitesse : " + String.format("%.1f", remainingSpeedTime) : "");
-        powerUpLabel.setText(stringBuilder.toString());
+        powerUpTable.clearChildren();
+        for (PowerUpType key : powerUpUserComponent.activePowerups.keySet()) {
+
+
+            float percentageWidth = 0.05f; // Ajustez ce pourcentage comme nécessaire
+            float imageSize = Gdx.graphics.getWidth() * percentageWidth;
+
+            Image powerupIcon = new Image(new Texture(getPowerUpIcon(key)));
+            powerupIcon.setSize(32f, 32f);
+
+            long endTime = powerUpUserComponent.activePowerups.get(key);
+            float remainingSpeedTime = (endTime - TimeUtils.millis()) / 1000f;
+
+            Label.LabelStyle labelStyle = new Label.LabelStyle(new BitmapFont(),new Color(1,1,1,1));
+            Label powerupTime = new Label(endTime == -1 ? ("Permanent") : (String.format("%.1f", remainingSpeedTime) + " s"), labelStyle);
+            powerupTime.setAlignment(Align.left);
+
+            powerUpTable.add(powerupIcon).padLeft(10).padBottom(5).size(imageSize);
+            powerUpTable.add(powerupTime).padLeft(5);
+            powerUpTable.row();
+        }
+
+        //StringBuilder stringBuilder = new StringBuilder();
+        //stringBuilder.append(speedPowerUpActive ? "Bonus de vitesse : " + String.format("%.1f", remainingSpeedTime) : "");
+        //powerUpLabel.setText(stringBuilder.toString());
     }
 
     @Override
@@ -130,5 +154,22 @@ public class HudSystem extends BaseEntitySystem {
         float imageSize = Gdx.graphics.getWidth() * percentageWidth;
         weaponCell.size(imageSize);
         hudStage.getViewport().update(width, height, true);
+    }
+
+    private String getPowerUpIcon (PowerUpType type) {
+        String res = "";
+        switch (type){
+            case SPEED_TEMPO:
+                res = "./powerup_speed_icon.png";
+                break;
+            case ATTACK_TEMPO:
+            case ATTACK_DEFIN:
+                res =  "./powerup_damages_icon.png";
+                break;
+            default:
+                res =  "";
+                break;
+        }
+        return res;
     }
 }

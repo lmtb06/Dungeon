@@ -68,7 +68,7 @@ public class EntityRenderSystem extends EntityProcessingSystem {
             TextureRegion currentFrame = currentanimation.getKeyFrame(animationListComponent.getCurrentAnimationData().getStateTime(), true);
 
             batch.begin();
-            batch.draw(currentFrame, body.getPosition().x-2.75f, body.getPosition().y-2f, unitScale * 16f, unitScale * 16f);
+            batch.draw(currentFrame, body.getPosition().x-2.5f - (currentFrame.getRegionWidth() * unitScale / 2), body.getPosition().y-1.75f- (currentFrame.getRegionHeight() * unitScale / 2), unitScale * 16f, unitScale * 16f);
             batch.end();
         }else{
             // Sinon c'est un simple Sprite qu'on fait afficher.
