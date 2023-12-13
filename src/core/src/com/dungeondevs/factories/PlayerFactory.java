@@ -2,7 +2,7 @@ package com.dungeondevs.factories;
 
 import com.artemis.Entity;
 import com.artemis.World;
-import com.dungeondevs.configs.PlayerConfig;
+import com.dungeondevs.configs.Level.PlayerConfig;
 
 /**
  * Factory qui construit l'entité player et ses components à partir de la config.

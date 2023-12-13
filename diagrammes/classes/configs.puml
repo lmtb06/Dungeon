@@ -105,13 +105,21 @@ namespace config {
         POWERUP
     }
 }
-PlayerConfig ..|> SpawnableConfig
+MonsterConfig ..|> SpawnableConfig
+TrapConfig ..|> SpawnableConfig
+PowerUpConfig ..|> SpawnableConfig
+
 PlayerConfig *-- WeaponConfig : uses >
 MonsterConfig *-- WeaponConfig : uses >
 MonsterConfig *-- IABehaviorConfig : uses >
 TrapConfig *-- ItemConfig : uses >
 PowerUpConfig *-- ItemConfig : uses >
+
 LevelConfig *-- RoomConfig : has >
+MonsterConfig *-- EntityType : has >
+WeaponConfig *-- EntityType : has >
+PowerUpConfig *-- EntityType : has >
+TrapConfig *-- EntityType : has >
 RoomConfig *-- DoorConfig : has >
 RoomConfig *-- StairConfig : has >
 RoomConfig *-- SpawnPointConfig : has >

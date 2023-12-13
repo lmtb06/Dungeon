@@ -1,0 +1,20 @@
+[
+  {
+    "name": "lance",
+    "damage": 6,
+    "cooldown": 2,
+    "textureRegion": {
+      "textureFichier": "weaponAsset/lance.png",
+      "x" : 0,
+      "y" : 0,
+      "width": 16,
+      "height": 16
+    },
+    "bodyDef": {
+      "x" : 3,
+      "y" : 2,
+      "width": 16,
+      "height": 16
+    }
+  }
+]

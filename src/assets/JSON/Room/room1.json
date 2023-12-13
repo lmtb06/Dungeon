@@ -1,0 +1,31 @@
+{
+  "id": 1,
+  "fichierTmx": "maps/test1.tmx",
+  "listeDoor": [
+    {
+      "id":1,
+      "idSalleDestination": 2,
+      "idSpawnPointDestination": 1
+    }
+  ],
+  "listeEscalier": [
+    {
+      "niveauDestinationFile":"JSON/Level/level2.json",
+      "idSalleDestination": 2,
+      "idSpawnPointDestination": 1
+    }
+  ],
+  "listeSpawnPoint": [
+    {
+      "idSpawnPointAuSeinDeLaSalle": 1,
+      "intervalBetweenSpawns" :-1,
+      "nbEntitySpawned": 0,
+      "nbMaxEntitySpawn": 1,
+      "uniqueSpawn": true,
+      "typeSpawnable": "WeaponFactory",
+      "spawnConfig": "JSON/Weapon/lance.json",
+      "x": 2,
+      "y": 3
+    }
+  ]
+}
