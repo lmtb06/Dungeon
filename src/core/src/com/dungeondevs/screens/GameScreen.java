@@ -68,7 +68,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
         WorldConfiguration setup = new WorldConfigurationBuilder()
                 .with(new MapsLoaderSystem())
                 .with(new RoomIntializerSystem(box2dWorld))
-                .with(new PhysicsSystem(box2dWorld, tempsParFrame))
+                .with(new PhysicsSystem(tempsParFrame, 6, 2, box2dWorld))
                 .with(new InputSystem())
                 .with(new StateManagementSystem())
                 .with(new MovementSystem())
@@ -95,14 +95,14 @@ public class GameScreen implements Screen, DungeonGameScreen {
 
         Entity player = artemisWorld.createEntity(playerArchetype);
         fixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Player, player));
-        player.getComponent(EntityStateComponent.class).state = EntityState.IDLE;
+        player.getComponent(EntityStateComponent.class).setCurrentState(EntityState.IDLE);
         player.getComponent(PhysicsComponent.class).body = playerBody;
-        player.getComponent(InputComponent.class).left = false;
-        player.getComponent(InputComponent.class).right = false;
-        player.getComponent(InputComponent.class).up = false;
-        player.getComponent(InputComponent.class).down = false;
-        player.getComponent(MovementComponent.class).maxSpeedInMeterPerSecond = Constants.PLAYER_CHAR_MAX_VELOCITY;
-        player.getComponent(MovementComponent.class).decelerationTimeInSeconds = Constants.PLAYER_CHAR_DECELERATION_TIME;
+        player.getComponent(InputComponent.class).setLeft(false);
+        player.getComponent(InputComponent.class).setRight(false);
+        player.getComponent(InputComponent.class).setUp(false);
+        player.getComponent(InputComponent.class).setDown(false);
+        player.getComponent(VelocityComponent.class).setMaxSpeed(Constants.PLAYER_CHAR_MAX_VELOCITY);
+        player.getComponent(VelocityComponent.class).setDecelerationDuration(Constants.PLAYER_CHAR_DECELERATION_TIME);
         player.getComponent(SalleAssocieeComponent.class).idMap = 0;
         player.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 4, "characterAndTileset/player_idle.png", 0.5f));
         player.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 4, "characterAndTileset/player_walk.png", 0.5f));
@@ -212,7 +212,7 @@ public class GameScreen implements Screen, DungeonGameScreen {
         WorldConfiguration setup = new WorldConfigurationBuilder()
                 .with(new MapsLoaderSystem())
                 .with(new RoomIntializerSystem(box2dWorld))
-                .with(new PhysicsSystem(box2dWorld, tempsParFrame))
+                .with(new PhysicsSystem(tempsParFrame, 6, 2, box2dWorld))
                 .with(new InputSystem())
                 .with(new StateManagementSystem())
                 .with(new MovementSystem())
@@ -239,14 +239,14 @@ public class GameScreen implements Screen, DungeonGameScreen {
 
         Entity player = artemisWorld.createEntity(playerArchetype);
         fixture.setUserData(new FixtureUserData(FixtureUserData.EntityTypes.Player, player));
-        player.getComponent(EntityStateComponent.class).state = EntityState.IDLE;
+        player.getComponent(EntityStateComponent.class).setCurrentState(EntityState.IDLE);
         player.getComponent(PhysicsComponent.class).body = playerBody;
-        player.getComponent(InputComponent.class).left = false;
-        player.getComponent(InputComponent.class).right = false;
-        player.getComponent(InputComponent.class).up = false;
-        player.getComponent(InputComponent.class).down = false;
-        player.getComponent(MovementComponent.class).maxSpeedInMeterPerSecond = Constants.PLAYER_CHAR_MAX_VELOCITY;
-        player.getComponent(MovementComponent.class).decelerationTimeInSeconds = Constants.PLAYER_CHAR_DECELERATION_TIME;
+        player.getComponent(InputComponent.class).setLeft(false);
+        player.getComponent(InputComponent.class).setRight(false);
+        player.getComponent(InputComponent.class).setUp(false);
+        player.getComponent(InputComponent.class).setDown(false);
+        player.getComponent(VelocityComponent.class).setMaxSpeed(Constants.PLAYER_CHAR_MAX_VELOCITY);
+        player.getComponent(VelocityComponent.class).setDecelerationDuration(Constants.PLAYER_CHAR_DECELERATION_TIME);
         player.getComponent(SalleAssocieeComponent.class).idMap = 0;
         player.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 4, "characterAndTileset/player_idle.png", 0.5f));
         player.getComponent(AnimationListComponent.class).addAnimationData(new AnimationData(1, 4, "characterAndTileset/player_walk.png", 0.5f));

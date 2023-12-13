@@ -67,7 +67,7 @@ public class HudSystem extends BaseEntitySystem {
     }
 
     private void updateHealthLabel(HealthComponent healthComponent) {
-        healthLabel.setText("Points de vie: " + healthComponent.health);
+        healthLabel.setText("Points de vie: " + healthComponent.getHealth());
     }
 
     private void updateWeaponLabel(AttackComponent attackComponent) {

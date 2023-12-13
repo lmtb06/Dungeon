@@ -30,7 +30,7 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
                 Entity player = fixtureUserDataA.getEntity();
                 // If the player don't have an InvincibilityComponent, he takes damages and activate invicibility frame
                 if(player.getComponent(InvincibilityComponent.class) == null){
-                    player.getComponent(HealthComponent.class).damage(
+                    player.getComponent(HealthComponent.class).inflictDamage(
                             monster.getComponent(ContactDamageComponent.class).getDamages()
                     );
                     InvincibilityComponent invincibilityComponent = new InvincibilityComponent();
@@ -44,7 +44,7 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
         // Dégâts de l'entité d'attaque contre le monstre
         if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Attack){
             if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Monster){
-                fixtureUserDataA.getEntity().getComponent(HealthComponent.class).damage(
+                fixtureUserDataA.getEntity().getComponent(HealthComponent.class).inflictDamage(
                         fixtureUserDataB.getEntity().getComponent(ContactDamageComponent.class).getDamages()
                 );
             }
@@ -67,7 +67,7 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
         // Dégâts de l'entité d'attaque contre le monstre
         if(fixtureUserDataA.getEntityType() == FixtureUserData.EntityTypes.Attack){
             if(fixtureUserDataB.getEntityType() == FixtureUserData.EntityTypes.Monster){
-                fixtureUserDataB.getEntity().getComponent(HealthComponent.class).damage(
+                fixtureUserDataB.getEntity().getComponent(HealthComponent.class).inflictDamage(
                         fixtureUserDataA.getEntity().getComponent(ContactDamageComponent.class).getDamages()
                 );
             }
@@ -81,7 +81,7 @@ public class CollisionSystem extends BaseSystem implements ContactListener {
                 Entity player = fixtureUserDataA.getEntity();
                 //TODO Appliquer les deats
                 if(player.getComponent(InvincibilityComponent.class) == null){
-                    player.getComponent(HealthComponent.class).damage(
+                    player.getComponent(HealthComponent.class).inflictDamage(
                             trap.getComponent(ContactDamageComponent.class).getDamages()
                     );
                     InvincibilityComponent invincibilityComponent = new InvincibilityComponent();

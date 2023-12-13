@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 /**
  * Système faisant fonctionner les power ups
  */
-@All({MovementComponent.class})
+@All({VelocityComponent.class})
 public class PowerUpSystem extends EntityProcessingSystem {
 
     /**
@@ -29,20 +29,20 @@ public class PowerUpSystem extends EntityProcessingSystem {
     @Override
     protected void process(Entity e) {
         PowerUpUserComponent powerUpUserComponent = e.getComponent(PowerUpUserComponent.class);
-        MovementComponent movementComponent = e.getComponent(MovementComponent.class);
+        VelocityComponent velocityComponent = e.getComponent(VelocityComponent.class);
         AttackComponent attackComponent = e.getComponent(AttackComponent.class);
         HealthComponent healthComponent = e.getComponent(HealthComponent.class);
        powerUpUserComponent.getSpeedLastAppliedTime();
         if(powerUpUserComponent.powerUpNTBA!=null){
             switch(powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).powerUpType){
                 case SPEED_DEFIN:
-                    movementComponent.maxSpeedInMeterPerSecond+= powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value;
+                    velocityComponent.setMaxSpeed(velocityComponent.getMaxSpeed() + powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value);
                     break;
                 case SPEED_TEMPO:
                     powerUpUserComponent.speedDuration= powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).duration;
                     if(powerUpUserComponent.getSpeedLastAppliedTime()==0){
-                        powerUpUserComponent.setOriginalSpeed(movementComponent.maxSpeedInMeterPerSecond);
-                        movementComponent.maxSpeedInMeterPerSecond += powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value;
+                        powerUpUserComponent.setOriginalSpeed(velocityComponent.getMaxSpeed());
+                        velocityComponent.setMaxSpeed(velocityComponent.getMaxSpeed() + powerUpUserComponent.powerUpNTBA.getComponent(PowerUpTypeComponent.class).value);
                     }
                     powerUpUserComponent.setSpeedLastAppliedTime(TimeUtils.millis());
                     break;
@@ -76,7 +76,7 @@ public class PowerUpSystem extends EntityProcessingSystem {
 
         //Retrait du bonus de vitesse une fois que la durée du powerUp est passée
         if((powerUpUserComponent.getSpeedLastAppliedTime()!=0)&&(TimeUtils.timeSinceMillis(powerUpUserComponent.getSpeedLastAppliedTime())> powerUpUserComponent.speedDuration)){
-            movementComponent.maxSpeedInMeterPerSecond= powerUpUserComponent.getOriginalSpeed();
+            velocityComponent.setMaxSpeed(powerUpUserComponent.getOriginalSpeed());
             powerUpUserComponent.setOriginalSpeed(1);
             powerUpUserComponent.setSpeedLastAppliedTime(0);
         }

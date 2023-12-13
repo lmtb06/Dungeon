@@ -19,15 +19,15 @@ public class GameArchetypes {
             .add(SalleAssocieeComponent.class)
             .add(AttackComponent.class)
             .add(HealthComponent.class)
-            .add(MovementComponent.class)
+            .add(VelocityComponent.class)
             .add(PowerUpUserComponent.class)
-            .add(MovementComponent.class)
+            .add(VelocityComponent.class)
             .add(PlayerCharacterComponent.class)
             .add(TeleportationComponent.class)
-            .add(MovementComponent.class)
+            .add(VelocityComponent.class)
             .add(DirectionComponent.class)
             .add(AnimationListComponent.class)
-            .add(MovementComponent.class);
+            .add(VelocityComponent.class);
 
     public static final ArchetypeBuilder MAP_ARCHETYPE = new ArchetypeBuilder()
             .add(RoomRendererComponent.class)

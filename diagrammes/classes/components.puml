@@ -5,35 +5,48 @@
 namespace components { 
 
     class InputComponent {
-        + left : bool
-        + right : bool
-        + up : bool
-        + down : bool
-        + attack : bool
+        - left : bool
+        - right : bool
+        - up : bool
+        - down : bool
+        - attack : bool
+        - rangedAttack : bool
+        + isLeft(): bool
+        + setLeft(left: bool): void
+        + isRight(): bool
+        + setRight(right: bool): void
+        + isUp(): bool
+        + setUp(up: bool): void
+        + isDown(): bool
+        + setDown(down: bool): void
+        + isAttack(): bool
+        + setAttack(attack: bool): void
+        + isRangedAttack(): bool
+        + setRangedAttack(rangedAttack: bool): void
     }
 
     class EntityStateComponent {
         - timeRemainingInCurrentState : float
-        - currentState : State
-        + getState(): State
+        - currentState : StateComponent
+        + getState(): StateComponent
         + setState(state: State): void
         + getTimeRemainingInCurrentState(): float
         + setTimeRemainingInCurrentState(timeRemainingInCurrentState: float): void
     }
-    EntityStateComponent ..> State: has a
+    EntityStateComponent ..> StateComponent: has a
 
-    class State {
-        + run(Vector2 direction, speedComponent:speedComponent, physicsComponent:physicsComponent): void
-        + slowDown(speedComponent:speedComponent, physicsComponent:physicsComponent): void
-        + idle(speedComponent:speedComponent, physicsComponent:physicsComponent): void
+    abstract State {
+        + run(Vector2 direction, velocityComponent:VelocityComponent, physicsComponent:physicsComponent): void
+        + slowDown(velocityComponent:VelocityComponent, physicsComponent:physicsComponent): void
+        + idle(velocityComponent:VelocityComponent, physicsComponent:physicsComponent): void
         + meleeAttack(attackComponent:attackComponent): void
         + rangedAttack(attackComponent:attackComponent): void
     }
 
     class StateIdle {
-        + run(Vector2 direction, speedComponent:speedComponent, physicsComponent:physicsComponent): void
-        + slowDown(speedComponent:speedComponent, physicsComponent:physicsComponent): void
-        + idle(speedComponent:speedComponent, physicsComponent:physicsComponent): void
+        + run(Vector2 direction, velocityComponent:VelocityComponent, physicsComponent:physicsComponent): void
+        + slowDown(velocityComponent:VelocityComponent, physicsComponent:physicsComponent): void
+        + idle(velocityComponent:VelocityComponent, physicsComponent:physicsComponent): void
         + meleeAttack(attackComponent:attackComponent): void
         + rangedAttack(attackComponent:attackComponent): void
     }
@@ -50,6 +63,7 @@ namespace components {
         + getPosition(): Vector2
         + setRotation(rotation: float): void
         + getRotation(): float
+        + destroyBody(): void
     }
 
     class HealthComponent {
@@ -62,19 +76,23 @@ namespace components {
         +setMaxHealth(int maxHealth): void
         +isInvincible(): boolean
         +setInvincible(boolean invincible): void
+        +inflictDamage(int damage): void
+        +heal(int hpAmount): void
     }
 
-    class SpeedComponent {
+    class VelocityComponent {
         - maxSpeed : float
         - decelerationDuration : float
         - timeRemainingTillStop : float
         - initialVelocityAtDeceleration : Vector2
         +getMaxSpeed(): float
         +setMaxSpeed(float maxSpeedInMetersPerSecond): void
-        +getDecelerationTime(): float
-        +setDecelerationTime(float decelerationDurationInSeconds): void
+        +getDecelerationDuration(): float
+        +setDecelerationDuration(decelerationDuration:float): void
         +getTimeRemainingTillStop(): float
         +setTimeRemainingTillStop(timeRemainingTillStopInSeconds): void
+        +getInitialVelocityAtStartOfDeceleration(): Vector2
+        +setInitialVelocityAtStartOfDeceleration(initialVelocityAtStartOfDeceleration:Vector2): void
     }
 
     class AttackComponent {

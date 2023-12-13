@@ -7,5 +7,5 @@ public class GameAspects {
     public static final Aspect.Builder PLAYER_CHARACTER_ASPECT = Aspect.all(EntityStateComponent.class
             ,PhysicsComponent.class
             ,InputComponent.class
-            , MovementComponent.class);
+            , VelocityComponent.class);
 }

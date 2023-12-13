@@ -8,19 +8,29 @@ import com.badlogic.gdx.physics.box2d.World;
 public class PhysicsSystem extends IntervalEntitySystem {
     private final World box2dWorld;
     private final float timeStep;
-    private static final int VELOCITY_ITERATIONS = 6;
-    private static final int POSITION_ITERATIONS = 2;
+    private final int velocityIterations;
+    private final int positionIterations;
 
-    public PhysicsSystem(World box2dWorld, float timeStep) {
+    /**
+     * Crée un nouveau PhysicsSystem.
+     * @param timeStep le pas de temps
+     * @param velocityIterations le nombre d'itérations pour la vitesse
+     * @param positionIterations le nombre d'itérations pour la position
+     */
+    public PhysicsSystem(float timeStep, int velocityIterations, int positionIterations, World box2dWorld) {
         super(Aspect.all(),timeStep);
-        this.box2dWorld = box2dWorld;
         this.timeStep = timeStep;
+        this.velocityIterations = velocityIterations;
+        this.positionIterations = positionIterations;
+        this.box2dWorld = box2dWorld;
     }
 
 
-
+    /**
+     * Met à jour le monde box2d.
+     */
     @Override
     protected void processSystem() {
-        box2dWorld.step(timeStep, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+        box2dWorld.step(timeStep, velocityIterations, positionIterations);
     }
 }

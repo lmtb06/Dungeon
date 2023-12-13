@@ -45,7 +45,6 @@ public class WorldRenderSystem extends EntityProcessingSystem {
         oc.zoom = 0.75f;
         renderer.setView(oc);
         renderer.render();
-
     }
 
 

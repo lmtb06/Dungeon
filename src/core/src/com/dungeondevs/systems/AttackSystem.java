@@ -45,7 +45,7 @@ public class AttackSystem extends EntityProcessingSystem {
         long elapsedTime = TimeUtils.timeSinceMillis(lastAttack);
 
         // Si on appuie sur espace et que le temps passé depuis la dernière attaque est supérieur au délai d'attaque
-        if(inputComponent.space && elapsedTime > attackComponent.getAttackDelay()){
+        if(inputComponent.isAttack() && elapsedTime > attackComponent.getAttackDelay()){
 
             PhysicsComponent physicsComponent = e.getComponent(PhysicsComponent.class);
             float offset = .5f;

@@ -16,7 +16,7 @@ public class MovementSystem extends EntityProcessingSystem {
     private StateManagementSystem stateManagementSystem;
     private ComponentMapper<EntityStateComponent> stateMapper;
     private ComponentMapper<PhysicsComponent> physicsMapper;
-    private ComponentMapper<MovementComponent> movementSpecsMapper;
+    private ComponentMapper<VelocityComponent> movementSpecsMapper;
     private ComponentMapper<InputComponent> inputMapper;
 
     public MovementSystem() {
@@ -28,94 +28,94 @@ public class MovementSystem extends EntityProcessingSystem {
         EntityStateComponent stateComponent = stateMapper.get(e);
         InputComponent inputComponent = inputMapper.get(e);
         PhysicsComponent physicsComponent = physicsMapper.get(e);
-        MovementComponent movementComponent = movementSpecsMapper.get(e);
+        VelocityComponent velocityComponent = movementSpecsMapper.get(e);
         Vector2 movementVector = calculateMovementVector(inputComponent, e);
         boolean shouldMove = !movementVector.isZero();
-        switch (stateComponent.state) {
+        switch (stateComponent.getCurrentState()) {
             case IDLE:
                 if (shouldMove) {
-                    transitionAndRun(e, movementVector, movementComponent, physicsComponent);
+                    transitionAndRun(e, movementVector, velocityComponent, physicsComponent);
                 }
                 break;
             case RUNNING:
                 if (shouldMove) {
-                    transitionAndRun(e, movementVector, movementComponent, physicsComponent);
+                    transitionAndRun(e, movementVector, velocityComponent, physicsComponent);
                 } else {
-                    transitionToSlowingDown(e, movementComponent, physicsComponent);
+                    transitionToSlowingDown(e, velocityComponent, physicsComponent);
                 }
                 break;
             case SLOWING_DOWN:
                 if (shouldMove) {
-                    transitionAndRun(e, movementVector, movementComponent, physicsComponent);
+                    transitionAndRun(e, movementVector, velocityComponent, physicsComponent);
                 } else {
-                    slowDown(e, stateComponent, movementComponent, physicsComponent);
+                    slowDown(e, stateComponent, velocityComponent, physicsComponent);
                 }
                 break;
             default:
-                logger.error("Unhandled state: " + stateComponent.state);
+                logger.error("Unhandled state: " + stateComponent.getCurrentState());
                 break;
         }
     }
 
     private Vector2 calculateMovementVector(InputComponent input, Entity e) {
         Vector2 vector = new Vector2();
-        if (input.up){
+        if (input.isUp()){
             vector.y += 1;
             e.getComponent(DirectionComponent.class).direction = "haut";
         }
-        if (input.down){
+        if (input.isDown()){
             vector.y -= 1;
             e.getComponent(DirectionComponent.class).direction = "bas";
         }
-        if (input.left){
+        if (input.isLeft()){
             vector.x -= 1;
             e.getComponent(DirectionComponent.class).direction = "gauche";
         }
-        if (input.right){
+        if (input.isRight()){
             vector.x += 1;
             e.getComponent(DirectionComponent.class).direction = "droite";
         }
         return vector;
     }
 
-    private void transitionAndRun(Entity e, Vector2 movementVector, MovementComponent movementComponent, PhysicsComponent physicsComponent) {
+    private void transitionAndRun(Entity e, Vector2 movementVector, VelocityComponent velocityComponent, PhysicsComponent physicsComponent) {
         if (stateManagementSystem.transition(stateMapper.get(e), EntityState.RUNNING)) {
-            physicsComponent.body.setLinearVelocity(movementVector.nor().scl(movementComponent.maxSpeedInMeterPerSecond));
+            physicsComponent.body.setLinearVelocity(movementVector.nor().scl(velocityComponent.getMaxSpeed()));
         } else {
             logger.error("Cannot transition to running state for entity: " + e);
         }
     }
 
-    private void transitionToSlowingDown(Entity e, MovementComponent movementComponent, PhysicsComponent physicsComponent) {
+    private void transitionToSlowingDown(Entity e, VelocityComponent velocityComponent, PhysicsComponent physicsComponent) {
         if (stateManagementSystem.transition(stateMapper.get(e), EntityState.SLOWING_DOWN)) {
-            movementComponent.initialVelocityAtStartOfDeceleration = physicsComponent.body.getLinearVelocity().cpy();
+            velocityComponent.setInitialVelocityAtStartOfDeceleration(physicsComponent.body.getLinearVelocity().cpy());
         } else {
             logger.error("Cannot transition to slowing down state for entity: " + e);
         }
     }
 
-    private void transitionToIdle(Entity e, PhysicsComponent physicsComponent, MovementComponent movementComponent) {
+    private void transitionToIdle(Entity e, PhysicsComponent physicsComponent, VelocityComponent velocityComponent) {
         // Ensure the entity is fully stopped
         physicsComponent.body.setLinearVelocity(0, 0);
         // Reset initial velocity at start of deceleration as it is no longer required in the IDLE state
-        movementComponent.initialVelocityAtStartOfDeceleration.set(0, 0);
+        velocityComponent.getInitialVelocityAtStartOfDeceleration().set(0, 0);
         if (!stateManagementSystem.transition(stateMapper.get(e), EntityState.IDLE)) {
             // Consider using a logger here
             logger.error("Cannot transition to idle state.");
         }
     }
 
-    private void slowDown(Entity e, EntityStateComponent stateComponent, MovementComponent movementComponent, PhysicsComponent physicsComponent) {
-        Vector2 initialVelocity = movementComponent.initialVelocityAtStartOfDeceleration;
-        if (stateComponent.timeRemainingInCurrentState > 0 && initialVelocity != null) {
+    private void slowDown(Entity e, EntityStateComponent stateComponent, VelocityComponent velocityComponent, PhysicsComponent physicsComponent) {
+        Vector2 initialVelocity = velocityComponent.getInitialVelocityAtStartOfDeceleration();
+        if (stateComponent.getTimeRemainingInCurrentState() > 0 && initialVelocity != null) {
             Interpolation interpolation = Interpolation.linear;
-            float alpha = 1 - stateComponent.timeRemainingInCurrentState / movementComponent.decelerationTimeInSeconds;
+            float alpha = 1 - stateComponent.getTimeRemainingInCurrentState() / velocityComponent.getDecelerationDuration();
             alpha = Math.min(Math.max(alpha, 0), 1);
             float scale = 1 - interpolation.apply(alpha);
             Vector2 newVelocity = initialVelocity.cpy().scl(scale);
             physicsComponent.body.setLinearVelocity(newVelocity);
         } else {
-            transitionToIdle(e, physicsComponent, movementComponent);
+            transitionToIdle(e, physicsComponent, velocityComponent);
         }
     }
 }

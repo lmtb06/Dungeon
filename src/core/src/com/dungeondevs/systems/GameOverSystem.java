@@ -8,6 +8,10 @@ import com.dungeondevs.DungeonGame;
 import com.dungeondevs.components.HealthComponent;
 import com.dungeondevs.components.PlayerCharacterComponent;
 
+/**
+ * Système qui gère la fin de partie si le joueur meurt
+ * Le joueur meurt si sa santé est à zéro
+ */
 @All({PlayerCharacterComponent.class, HealthComponent.class})
 public class GameOverSystem extends EntityProcessingSystem {
     private ComponentMapper<HealthComponent> healthMapper;
@@ -21,7 +25,7 @@ public class GameOverSystem extends EntityProcessingSystem {
     protected void process(Entity e) {
         HealthComponent health = healthMapper.get(e);
 
-        if (health.health <= 0) {
+        if (health.getHealth() <= 0) {
             // La santé est à zéro, le joueur est mort.
             dungeonGame.gameOver();
         }

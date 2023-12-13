@@ -12,37 +12,37 @@ public class StateManagementSystem extends EntityProcessingSystem {
     @Override
     protected void process(Entity e) {
         EntityStateComponent stateComponent = e.getComponent(EntityStateComponent.class);
-        stateComponent.timeRemainingInCurrentState = Math.max(stateComponent.timeRemainingInCurrentState - world.getDelta(), 0);
+        stateComponent.setTimeRemainingInCurrentState(Math.max(stateComponent.getTimeRemainingInCurrentState() - world.getDelta(), 0));
     }
 
     public boolean transition(EntityStateComponent stateComponent, EntityState state) {
         boolean transitioned = false;
-        switch (stateComponent.state) {
+        switch (stateComponent.getCurrentState()) {
             case IDLE:
                 if (state == EntityState.RUNNING) {
-                    stateComponent.state = EntityState.RUNNING;
-                    stateComponent.timeRemainingInCurrentState = 0f;
+                    stateComponent.setCurrentState(EntityState.RUNNING);
+                    stateComponent.setTimeRemainingInCurrentState(0f);
                     transitioned = true;
                 }
                 break;
             case RUNNING:
                 if (state == EntityState.SLOWING_DOWN) {
-                    stateComponent.state = EntityState.SLOWING_DOWN;
-                    stateComponent.timeRemainingInCurrentState = Constants.PLAYER_CHAR_DECELERATION_TIME;
+                    stateComponent.setCurrentState(EntityState.SLOWING_DOWN);
+                    stateComponent.setTimeRemainingInCurrentState(Constants.PLAYER_CHAR_DECELERATION_TIME);
                     transitioned = true;
                 } else if (state == EntityState.RUNNING) {
-                    stateComponent.timeRemainingInCurrentState = 0f;
+                    stateComponent.setTimeRemainingInCurrentState(0f);
                     transitioned = true;
                 }
                 break;
             case SLOWING_DOWN:
-                if (state == EntityState.IDLE && stateComponent.timeRemainingInCurrentState <= 0) {
-                    stateComponent.state = EntityState.IDLE;
-                    stateComponent.timeRemainingInCurrentState = 0f;
+                if (state == EntityState.IDLE && stateComponent.getTimeRemainingInCurrentState() <= 0) {
+                    stateComponent.setCurrentState(EntityState.IDLE);
+                    stateComponent.setTimeRemainingInCurrentState(0f);
                     transitioned = true;
                 } else if (state == EntityState.RUNNING) {
-                    stateComponent.state = EntityState.RUNNING;
-                    stateComponent.timeRemainingInCurrentState = 0f;
+                    stateComponent.setCurrentState(EntityState.RUNNING);
+                    stateComponent.setTimeRemainingInCurrentState(0f);
                     transitioned = true;
                 }
                 break;
